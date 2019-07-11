@@ -1,0 +1,21 @@
+spipu:
+    configuration:
+        label:
+            single:  "Configuration"
+            plurial: "Configurations"
+
+        page:
+            admin:
+                list:     "Configurations"
+                edit:     "Edit Configuration"
+
+        field:
+            code:           "Code"
+            value:          "Value"
+            type:           "Type"
+            required:       "Required"
+
+        role:
+            admin:          "Manage Configuration"
+            admin_show:     "Manage Configuration - Show"
+            admin_edit:     "Manage Configuration - Edit"

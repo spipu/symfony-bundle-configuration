@@ -1,0 +1,10 @@
+{% extends 'base.html.twig' %}
+{% import '@SpipuUi/macro/buttons.html.twig' as buttons %}
+
+{% set menuCurrentItem='spipu-configuration-admin' %}
+
+{% block header_title %}{{ parent() }} - {{ block('main_title') }}{% endblock %}
+
+{% block main_title %}{{ 'spipu.configuration.page.admin.list'|trans() }}{% endblock %}
+
+{% block body %}{{ renderManager(manager) }}{% endblock %}

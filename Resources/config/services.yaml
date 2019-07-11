@@ -1,0 +1,74 @@
+parameters:
+    spipu.configuration.file.allow: true
+    spipu.configuration.file.path: "public/media/config/"
+    spipu.configuration.file.url: "media/config/"
+
+services:
+    # Generic Declaration
+    Spipu\ConfigurationBundle\:
+        resource: '../../*'
+        exclude: '../../{DependencyInjection,Entity,Tests,SpipuConfigurationBundle.php}'
+        autowire: true
+        autoconfigure: true
+
+    # API Services
+    Spipu\ConfigurationBundle\Service\Manager:
+        public: true
+        arguments:
+            - '@service_container'
+            - '@doctrine.orm.default_entity_manager'
+            - '@cache.app'
+            - '@Spipu\ConfigurationBundle\Repository\ConfigurationRepository'
+            - '@Spipu\ConfigurationBundle\Service\FieldList'
+
+    # Role Definition
+    Spipu\ConfigurationBundle\Service\RoleDefinition:
+        tags: ['spipu.user.role']
+
+    # Internal Services
+    Spipu\ConfigurationBundle\Command\ShowCommand:
+        arguments:
+            - '@Spipu\ConfigurationBundle\Service\Manager'
+        tags: ['console.command']
+
+    Spipu\ConfigurationBundle\Repository\ConfigurationRepository:
+        tags: ['doctrine.repository_service']
+        arguments:
+            - '@doctrine'
+
+    Spipu\ConfigurationBundle\Field\:
+        resource: '../../Field'
+        tags: ['spipu.configuration.field']
+
+    Spipu\ConfigurationBundle\Field\FieldBoolean:
+        tags: ['spipu.configuration.field']
+        arguments:
+            - '@service_container'
+
+    Spipu\ConfigurationBundle\Field\FieldSelect:
+        tags: ['spipu.configuration.field']
+        arguments:
+            - '@service_container'
+
+    Spipu\ConfigurationBundle\Service\FieldList:
+        arguments:
+            - !tagged 'spipu.configuration.field'
+
+    Spipu\ConfigurationBundle\Ui\ConfigurationForm:
+        arguments:
+            - '@Spipu\ConfigurationBundle\Service\Manager'
+
+    Spipu\ConfigurationBundle\Ui\ConfigurationGrid:
+        arguments:
+            - '@Spipu\UiBundle\Form\Options\YesNo'
+
+    Spipu\ConfigurationBundle\Ui\Grid\DataProvider:
+        public: true
+        arguments:
+            - '@Spipu\ConfigurationBundle\Service\Manager'
+
+    Spipu\ConfigurationBundle\Twig\ConfigurationExtension:
+        tags:
+            - "twig.extension"
+        arguments:
+            - '@Spipu\ConfigurationBundle\Service\Manager'

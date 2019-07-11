@@ -1,0 +1,7 @@
+{% if manager.definition.getOption('lastRowMainCode')!=row.mainCategory %}
+    {{ manager.definition.addOption('lastRowMainCode', row.mainCategory) }}
+<tr class="table-success">
+    <th colspan="{{ (manager.definition.massActions|length > 0) + (manager.definition.rowActions|length > 0) + manager.definition.columns|length }}">{{ row.mainCategory }}</th>
+</tr>
+{% endif %}
+{% include '@SpipuUi/grid/row.html.twig' with {'manager': manager, 'row': row} %}

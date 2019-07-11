@@ -1,0 +1,10 @@
+spipu_configuration:
+    app.website.url:
+        type:     url
+        required: true
+        default:  "https://my-website.fr"
+
+    app.email.sender:
+        type:     url
+        required: true
+        default:  "no-reply@my-website.fr"

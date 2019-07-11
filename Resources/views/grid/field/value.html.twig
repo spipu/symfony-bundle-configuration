@@ -1,0 +1,5 @@
+{% if (row.type == 'select' or row.type == 'boolean') %}
+    <td class="{{ column.option('td-css-class', 'text-left') }}">{{ column.option('prefix', '') }}{{ data|label_from_option_name(row.options)|trans }}{{ column.option('suffix', '') }}</td>
+{% else %}
+    <td class="{{ column.option('td-css-class', 'text-left') }}">{{ column.option('prefix', '') }}{{ data }}{% if row.unit %} <i>{{ row.unit }}</i>{% endif %}{{ column.option('suffix', '') }}</td>
+{% endif %}
