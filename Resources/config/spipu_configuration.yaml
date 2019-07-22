@@ -5,6 +5,6 @@ spipu_configuration:
         default:  "https://my-website.fr"
 
     app.email.sender:
-        type:     url
+        type:     email
         required: true
         default:  "no-reply@my-website.fr"
