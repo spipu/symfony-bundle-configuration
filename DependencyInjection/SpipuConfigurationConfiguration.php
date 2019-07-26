@@ -14,7 +14,7 @@ class SpipuConfigurationConfiguration implements ConfigurationInterface
      */
     public function getAvailableTypes(): array
     {
-        return ['string', 'text', 'integer', 'float', 'boolean', 'select', 'email', 'url', 'file'];
+        return ['string', 'text', 'integer', 'float', 'boolean', 'select', 'email', 'url', 'file', 'color'];
     }
 
     /**

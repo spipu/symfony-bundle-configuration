@@ -1,5 +1,9 @@
-{% if (row.type == 'select' or row.type == 'boolean') %}
-    <td class="{{ column.option('td-css-class', 'text-left') }}">{{ column.option('prefix', '') }}{{ data|label_from_option_name(row.options)|trans }}{{ column.option('suffix', '') }}</td>
-{% else %}
-    <td class="{{ column.option('td-css-class', 'text-left') }}">{{ column.option('prefix', '') }}{{ data }}{% if row.unit %} <i>{{ row.unit }}</i>{% endif %}{{ column.option('suffix', '') }}</td>
-{% endif %}
+<td class="{{ column.option('td-css-class', 'text-left') }}">
+    {% if (row.type == 'select' or row.type == 'boolean') %}
+        {{ column.option('prefix', '') }}{{ data|label_from_option_name(row.options)|trans }}{{ column.option('suffix', '') }}
+    {% elseif (row.type == 'color') %}
+        <div class="badge badge-pill badge-secondary w-100" style="background-color: {{ data }}">{{ column.option('prefix', '') }}{{ data }}{{ column.option('suffix', '') }}</div>
+    {% else %}
+        {{ column.option('prefix', '') }}{{ data }}{% if row.unit %} <i>{{ row.unit }}</i>{% endif %}{{ column.option('suffix', '') }}
+    {% endif %}
+</td>
