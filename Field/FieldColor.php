@@ -28,7 +28,7 @@ class FieldColor extends AbstractField implements FieldInterface
     {
         $value = $this->validateValueType($definition, $value, null);
 
-        if ($value !== null && !preg_match('/^#[0-9a-f]{6}$/', $value)) {
+        if ($value !== null && !preg_match('/^#[0-9a-fA-F]{6}$/', $value)) {
             throw new ConfigurationException(
                 sprintf(
                     'Configuration "%s" must be a valid hexa rgb color',
