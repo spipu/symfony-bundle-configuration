@@ -14,6 +14,14 @@ class Entity extends Definition implements EntityInterface
     private $value;
 
     /**
+     * @return int|null
+     */
+    public function getId(): ?int
+    {
+        return null;
+    }
+
+    /**
      * @param mixed $value
      * @return self
      */
