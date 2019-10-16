@@ -2,7 +2,6 @@
 namespace Spipu\ConfigurationBundle\Tests\Functional\Entity;
 
 use Spipu\CoreBundle\Tests\WebTestCase;
-use Symfony\Bundle\SwiftmailerBundle\DataCollector\MessageDataCollector;
 
 class ConfigurationTest extends WebTestCase
 {
