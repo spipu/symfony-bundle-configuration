@@ -18,6 +18,7 @@ class EntityTest extends TestCase
             ['test', 'ext']
         );
 
+        $this->assertNull($entity->getId());
         $entity->setValue('test');
         $this->assertSame('test', $entity->getValue());
     }
