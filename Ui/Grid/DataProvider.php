@@ -51,6 +51,8 @@ class DataProvider extends AbstractDataProvider
             return false;
         }
 
+        $this->validate();
+
         $this->items = [];
 
         foreach ($this->manager->getDefinitions() as $definition) {
@@ -80,7 +82,7 @@ class DataProvider extends AbstractDataProvider
      */
     private function filterItem(Entity $item): bool
     {
-        foreach ($this->request->getFilters() as $filterField => $filterValue) {
+        foreach ($this->getFilters() as $filterField => $filterValue) {
             $filterValue = (string) $filterValue;
             $itemValue = (string) $item->{'get' . ucfirst($filterField)}();
             if (strpos($itemValue, $filterValue) === false) {
