@@ -5,6 +5,7 @@ namespace Spipu\ConfigurationBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Spipu\UiBundle\Entity\EntityInterface;
+use Spipu\UiBundle\Entity\TimestampableInterface;
 use Spipu\UiBundle\Entity\TimestampableTrait;
 
 /**
@@ -15,7 +16,7 @@ use Spipu\UiBundle\Entity\TimestampableTrait;
  *     uniqueConstraints={@ORM\UniqueConstraint(name="UNIQ_CODE", columns={"code"})}
  * )
  */
-class Configuration implements EntityInterface
+class Configuration implements EntityInterface, TimestampableInterface
 {
     use TimestampableTrait;
 
