@@ -1,4 +1,4 @@
-<td class="{{ column.option('td-css-class', 'text-left') }}">
+<td data-grid-field-name="{{ column.code }}" class="{{ column.option('td-css-class', 'text-left') }}">
     {% if (row.type == 'select' or row.type == 'boolean') %}
         {{ column.option('prefix', '') }}{{ data|label_from_option_name(row.options)|trans }}{{ column.option('suffix', '') }}
     {% elseif (row.type == 'color') %}
