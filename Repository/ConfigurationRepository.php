@@ -5,7 +5,7 @@ namespace Spipu\ConfigurationBundle\Repository;
 
 use Spipu\ConfigurationBundle\Entity\Configuration;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
-use Doctrine\Common\Persistence\ManagerRegistry;
+use Doctrine\Persistence\ManagerRegistry;
 
 /**
  * @method Configuration|null find($id, $lockMode = null, $lockVersion = null)
