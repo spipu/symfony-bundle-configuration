@@ -4,7 +4,7 @@ namespace Spipu\ConfigurationBundle\Tests\Unit\DependencyInjection;
 use PHPUnit\Framework\TestCase;
 use Spipu\ConfigurationBundle\DependencyInjection\SpipuConfigurationConfiguration;
 use Spipu\ConfigurationBundle\DependencyInjection\SpipuConfigurationExtension;
-use Spipu\CoreBundle\DependencyInjection\RolesHierarchiExtensionExtensionInterface;
+use Spipu\CoreBundle\DependencyInjection\RolesHierarchyExtensionExtensionInterface;
 use Spipu\CoreBundle\Service\RoleDefinitionInterface;
 use Spipu\CoreBundle\Tests\SymfonyMock;
 use Spipu\UiBundle\Form\Options\BooleanStatus;
@@ -25,7 +25,7 @@ class SpipuConfigurationExtensionTest extends TestCase
 
         $this->assertSame('spipu_configuration', $extension->getAlias());
 
-        $this->assertInstanceOf(RolesHierarchiExtensionExtensionInterface::class, $extension);
+        $this->assertInstanceOf(RolesHierarchyExtensionExtensionInterface::class, $extension);
         $this->assertInstanceOf(RoleDefinitionInterface::class, $extension->getRolesHierarchy());
 
         $this->assertInstanceOf(ConfigurationExtensionInterface::class, $extension);

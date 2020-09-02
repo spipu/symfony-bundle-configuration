@@ -4,7 +4,7 @@ declare(strict_types = 1);
 namespace Spipu\ConfigurationBundle\DependencyInjection;
 
 use Spipu\ConfigurationBundle\Service\RoleDefinition;
-use Spipu\CoreBundle\DependencyInjection\RolesHierarchiExtensionExtensionInterface;
+use Spipu\CoreBundle\DependencyInjection\RolesHierarchyExtensionExtensionInterface;
 use Spipu\CoreBundle\Service\RoleDefinitionInterface;
 use Symfony\Component\Config\Definition\ConfigurationInterface;
 use Symfony\Component\Config\Definition\Exception\InvalidConfigurationException;
@@ -13,7 +13,7 @@ use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Extension\Extension;
 use Symfony\Component\DependencyInjection\Loader\YamlFileLoader;
 
-final class SpipuConfigurationExtension extends Extension implements RolesHierarchiExtensionExtensionInterface
+final class SpipuConfigurationExtension extends Extension implements RolesHierarchyExtensionExtensionInterface
 {
     /**
      * Get the alias in config file
