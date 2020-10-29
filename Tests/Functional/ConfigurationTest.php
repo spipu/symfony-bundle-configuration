@@ -42,10 +42,10 @@ class ConfigurationTest extends WebTestCase
         $crawler = $client->clickLink('Configurations');
         $this->assertEquals(200, $client->getResponse()->getStatusCode());
         $this->assertGreaterThan(0, $crawler->filter('h1:contains("Configurations")')->count());
-        $this->assertGreaterThan(0, $crawler->filter('button:contains("Search")')->count());
+        $this->assertGreaterThan(0, $crawler->filter('button:contains("Advanced Search")')->count());
 
         // Conf List with filter
-        $crawler = $client->submit($crawler->selectButton('Search')->form(), ['fl[code]' => 'app.website.url']);
+        $crawler = $client->submit($crawler->selectButton('Advanced Search')->form(), ['fl[code]' => 'app.website.url']);
         $this->assertEquals(200, $client->getResponse()->getStatusCode());
         $this->assertGreaterThan(0, $crawler->filter('h1:contains("Configurations")')->count());
         $this->assertEquals(1, $crawler->filter('span[data-grid-role=total-rows]:contains("1 item found")')->count());
