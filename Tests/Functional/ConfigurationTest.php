@@ -1,5 +1,5 @@
 <?php
-namespace Spipu\ConfigurationBundle\Tests\Functional\Entity;
+namespace Spipu\ConfigurationBundle\Tests\Functional;
 
 use Spipu\CoreBundle\Tests\WebTestCase;
 
