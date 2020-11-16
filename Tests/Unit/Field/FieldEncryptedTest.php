@@ -2,18 +2,18 @@
 namespace Spipu\ConfigurationBundle\Tests\Unit\Field;
 
 use Spipu\ConfigurationBundle\Entity\Definition;
-use Spipu\ConfigurationBundle\Field\FieldFile;
+use Spipu\ConfigurationBundle\Field\FieldEncrypted;
 
-class FieldFileTest extends AbstractFieldTest
+class FieldEncryptedTest extends AbstractFieldTest
 {
     protected function getCode()
     {
-        return 'file';
+        return 'encrypted';
     }
 
     protected function getField()
     {
-        return new FieldFile();
+        return new FieldEncrypted();
     }
 
     protected function getDefinition(bool $required)
@@ -38,6 +38,6 @@ class FieldFileTest extends AbstractFieldTest
 
     protected function getFieldClassName()
     {
-        return \Symfony\Component\Form\Extension\Core\Type\FileType::class;
+        return \Symfony\Component\Form\Extension\Core\Type\PasswordType::class;
     }
 }

@@ -14,12 +14,7 @@ services:
     # API Services
     Spipu\ConfigurationBundle\Service\Manager:
         public: true
-        arguments:
-            - '@service_container'
-            - '@doctrine.orm.default_entity_manager'
-            - '@cache.app'
-            - '@Spipu\ConfigurationBundle\Repository\ConfigurationRepository'
-            - '@Spipu\ConfigurationBundle\Service\FieldList'
+        autowire: true
 
     # Role Definition
     Spipu\ConfigurationBundle\Service\RoleDefinition:
@@ -27,9 +22,8 @@ services:
 
     # Internal Services
     Spipu\ConfigurationBundle\Command\ShowCommand:
-        arguments:
-            - '@Spipu\ConfigurationBundle\Service\Manager'
         tags: ['console.command']
+        autowire: true
 
     Spipu\ConfigurationBundle\Repository\ConfigurationRepository:
         tags: ['doctrine.repository_service']
@@ -39,36 +33,23 @@ services:
     Spipu\ConfigurationBundle\Field\:
         resource: '../../Field'
         tags: ['spipu.configuration.field']
-
-    Spipu\ConfigurationBundle\Field\FieldBoolean:
-        tags: ['spipu.configuration.field']
-        arguments:
-            - '@service_container'
-
-    Spipu\ConfigurationBundle\Field\FieldSelect:
-        tags: ['spipu.configuration.field']
-        arguments:
-            - '@service_container'
+        autowire: true
 
     Spipu\ConfigurationBundle\Service\FieldList:
         arguments:
             - !tagged 'spipu.configuration.field'
 
     Spipu\ConfigurationBundle\Ui\ConfigurationForm:
-        arguments:
-            - '@Spipu\ConfigurationBundle\Service\Manager'
+        autowire: true
 
     Spipu\ConfigurationBundle\Ui\ConfigurationGrid:
-        arguments:
-            - '@Spipu\UiBundle\Form\Options\YesNo'
+        autowire: true
 
     Spipu\ConfigurationBundle\Ui\Grid\DataProvider:
         public: true
-        arguments:
-            - '@Spipu\ConfigurationBundle\Service\Manager'
+        autowire: true
 
     Spipu\ConfigurationBundle\Twig\ConfigurationExtension:
         tags:
             - "twig.extension"
-        arguments:
-            - '@Spipu\ConfigurationBundle\Service\Manager'
+        autowire: true

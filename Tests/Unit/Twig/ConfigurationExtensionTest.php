@@ -5,12 +5,13 @@ use Spipu\ConfigurationBundle\Service\Manager;
 use Spipu\ConfigurationBundle\Tests\SpipuConfigurationMock;
 use Spipu\ConfigurationBundle\Twig\ConfigurationExtension;
 use PHPUnit\Framework\TestCase;
+use Twig\Extension\ExtensionInterface;
 
 class ConfigurationExtensionTest extends TestCase
 {
     public function getExtension(): ConfigurationExtension
     {
-        $manager = $manager = SpipuConfigurationMock::getManager($this);
+        $manager = SpipuConfigurationMock::getManager($this);
 
         /** @var Manager $manager */
         $extension = new ConfigurationExtension($manager);
@@ -21,10 +22,11 @@ class ConfigurationExtensionTest extends TestCase
     public function testExtension()
     {
         $extension = $this->getExtension();
-        $this->assertTrue($extension instanceof \Twig_ExtensionInterface);
+        $this->assertTrue($extension instanceof ExtensionInterface);
 
         $allowedNames = [
             'get_config',
+            'get_config_file_url',
         ];
         $filters = $extension->getFilters();
 
@@ -36,6 +38,7 @@ class ConfigurationExtensionTest extends TestCase
         }
 
         $this->assertSame(count($allowedNames), count($foundNames));
-        $this->assertSame('test', $extension->getConfiguration('test'));
+        $this->assertSame('test', $extension->getValue('test'));
+        $this->assertSame('/folder/mock/test.jpg', $extension->getFileUrl('test.jpg'));
     }
 }

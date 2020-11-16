@@ -74,7 +74,7 @@ class ConfigurationForm implements EntityDefinitionInterface
         $definition = $this->getFieldDefinition();
 
         $field = $this->configurationManager->getField($this->configurationCode)->getFormField($definition);
-        if ($definition->getType() !== 'file') {
+        if (!in_array($definition->getType(), ['file', 'encrypted', 'password'])) {
             $field->setValue($this->configurationManager->get($this->configurationCode));
         }
 
@@ -107,11 +107,23 @@ class ConfigurationForm implements EntityDefinitionInterface
     public function setSpecificFields(FormInterface $form, EntityInterface $resource = null): void
     {
         $value = $form['value']->getData();
-        if ($this->getFieldDefinition()->getType() === 'file') {
-            $this->configurationManager->setFile($this->configurationCode, $value);
-            return;
-        }
 
-        $this->configurationManager->set($this->configurationCode, $value);
+        switch ($this->getFieldDefinition()->getType()) {
+            case 'file':
+                $this->configurationManager->setFile($this->configurationCode, $value);
+                break;
+
+            case 'password':
+                $this->configurationManager->setPassword($this->configurationCode, $value);
+                break;
+
+            case 'encrypted':
+                $this->configurationManager->setEncrypted($this->configurationCode, $value);
+                break;
+
+            default:
+                $this->configurationManager->set($this->configurationCode, $value);
+                break;
+        }
     }
 }

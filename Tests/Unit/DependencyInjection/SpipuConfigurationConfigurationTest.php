@@ -110,7 +110,20 @@ class SpipuConfigurationConfigurationTest extends TestCase
         $processor = new Processor();
 
         $types = $configuration->getAvailableTypes();
-        $expected = ['string', 'text', 'integer', 'float', 'boolean', 'select', 'email', 'url', 'file', 'color'];
+        $expected = [
+            'boolean',
+            'color',
+            'email',
+            'encrypted',
+            'file',
+            'float',
+            'integer',
+            'password',
+            'select',
+            'string',
+            'text',
+            'url',
+        ];
         $this->assertSame($expected, $types);
 
         foreach ($types as $type) {

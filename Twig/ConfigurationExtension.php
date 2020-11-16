@@ -30,7 +30,8 @@ class ConfigurationExtension extends AbstractExtension
     public function getFilters(): array
     {
         return [
-            new TwigFilter('get_config', [$this, 'getConfiguration']),
+            new TwigFilter('get_config', [$this, 'getValue']),
+            new TwigFilter('get_config_file_url', [$this, 'getFileUrl']),
         ];
     }
 
@@ -39,8 +40,18 @@ class ConfigurationExtension extends AbstractExtension
      * @return mixed
      * @throws ConfigurationException
      */
-    public function getConfiguration(string $key)
+    public function getValue(string $key)
     {
         return $this->configurationManager->get($key);
+    }
+
+    /**
+     * @param string $key
+     * @return string
+     * @throws ConfigurationException
+     */
+    public function getFileUrl(string $key): string
+    {
+        return '/' . $this->configurationManager->getFileUrl() . $this->getValue($key);
     }
 }

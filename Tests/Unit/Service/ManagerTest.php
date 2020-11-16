@@ -9,6 +9,7 @@ use Spipu\ConfigurationBundle\Repository\ConfigurationRepository;
 use Spipu\ConfigurationBundle\Service\FieldList;
 use Spipu\ConfigurationBundle\Service\Manager;
 use PHPUnit\Framework\TestCase;
+use Spipu\CoreBundle\Service\EncoderFactory;
 use Spipu\CoreBundle\Tests\SymfonyMock;
 
 class ManagerTest extends TestCase
@@ -64,9 +65,10 @@ class ManagerTest extends TestCase
         $entityManager = SymfonyMock::getEntityManager($this);
         $cachePool = SymfonyMock::getCachePool($this);
         $repository = $this->createMock(ConfigurationRepository::class);
+        $encoderFactory = new EncoderFactory();
         $fieldList = new FieldList([new Field\FieldString(), new Field\FieldInteger(), new Field\FieldFile()]);
 
-        $manager = new Manager($container, $entityManager, $cachePool, $repository, $fieldList);
+        $manager = new Manager($container, $entityManager, $cachePool, $repository, $encoderFactory, $fieldList);
 
         $this->assertSame(
             $parameters['spipu.configuration.file.url'],
@@ -87,9 +89,10 @@ class ManagerTest extends TestCase
         $entityManager = SymfonyMock::getEntityManager($this);
         $cachePool = SymfonyMock::getCachePool($this);
         $repository = $this->createMock(ConfigurationRepository::class);
+        $encoderFactory = new EncoderFactory();
         $fieldList = new FieldList([new Field\FieldString(), new Field\FieldInteger(), new Field\FieldFile()]);
 
-        $manager = new Manager($container, $entityManager, $cachePool, $repository, $fieldList);
+        $manager = new Manager($container, $entityManager, $cachePool, $repository, $encoderFactory, $fieldList);
 
         $definitions = $manager->getDefinitions();
         self::assertSame(array_keys($configurations), array_keys($definitions));
@@ -124,6 +127,7 @@ class ManagerTest extends TestCase
         $container = SymfonyMock::getContainer($this, [], ['spipu_configuration' => $configurations]);
         $entityManager = SymfonyMock::getEntityManager($this);
         $cachePool = SymfonyMock::getCachePool($this);
+        $encoderFactory = new EncoderFactory();
         $fieldList = new FieldList([new Field\FieldString(), new Field\FieldInteger(), new Field\FieldFile()]);
 
         $repository = $this->createMock(ConfigurationRepository::class);
@@ -137,7 +141,7 @@ class ManagerTest extends TestCase
                 ]
             );
 
-        $manager = new Manager($container, $entityManager, $cachePool, $repository, $fieldList);
+        $manager = new Manager($container, $entityManager, $cachePool, $repository, $encoderFactory, $fieldList);
 
         $expected = [
             'mock.test.string'  => 'default value',
@@ -157,7 +161,7 @@ class ManagerTest extends TestCase
         $this->assertSame($expected, unserialize($cacheItem->get()));
         
         // Third Time : Cache Pool
-        $manager = new Manager($container, $entityManager, $cachePool, $repository, $fieldList);
+        $manager = new Manager($container, $entityManager, $cachePool, $repository, $encoderFactory, $fieldList);
         $this->assertSame($expected, $manager->getAll());
 
         foreach ($expected as $key => $value) {
@@ -174,6 +178,7 @@ class ManagerTest extends TestCase
 
         $container = SymfonyMock::getContainer($this, [], ['spipu_configuration' => $configurations]);
         $cachePool = SymfonyMock::getCachePool($this);
+        $encoderFactory = new EncoderFactory();
         $fieldList = new FieldList([new Field\FieldString(), new Field\FieldInteger(), new Field\FieldFile()]);
 
         $entity = new Configuration();
@@ -218,7 +223,7 @@ class ManagerTest extends TestCase
                 ]
             );
 
-        $manager = new Manager($container, $entityManager, $cachePool, $repository, $fieldList);
+        $manager = new Manager($container, $entityManager, $cachePool, $repository, $encoderFactory, $fieldList);
 
         $this->assertSame('default value', $manager->get('mock.test.string'));
         $this->assertSame(42, $manager->get('mock.test.integer'));
@@ -242,11 +247,12 @@ class ManagerTest extends TestCase
 
         $container = SymfonyMock::getContainer($this, [], $parameters);
         $cachePool = SymfonyMock::getCachePool($this);
+        $encoderFactory = new EncoderFactory();
         $fieldList = new FieldList([new Field\FieldString(), new Field\FieldInteger(), new Field\FieldFile()]);
         $entityManager = SymfonyMock::getEntityManager($this);
         $repository = $this->createMock(ConfigurationRepository::class);
 
-        $manager = new Manager($container, $entityManager, $cachePool, $repository, $fieldList);
+        $manager = new Manager($container, $entityManager, $cachePool, $repository, $encoderFactory, $fieldList);
 
         $file = SymfonyMock::getUploadedFile($this);
 
@@ -265,11 +271,12 @@ class ManagerTest extends TestCase
 
         $container = SymfonyMock::getContainer($this, [], $parameters);
         $cachePool = SymfonyMock::getCachePool($this);
+        $encoderFactory = new EncoderFactory();
         $fieldList = new FieldList([new Field\FieldString(), new Field\FieldInteger(), new Field\FieldFile()]);
         $entityManager = SymfonyMock::getEntityManager($this);
         $repository = $this->createMock(ConfigurationRepository::class);
 
-        $manager = new Manager($container, $entityManager, $cachePool, $repository, $fieldList);
+        $manager = new Manager($container, $entityManager, $cachePool, $repository, $encoderFactory, $fieldList);
 
         $file = SymfonyMock::getUploadedFile($this);
 
@@ -288,11 +295,12 @@ class ManagerTest extends TestCase
 
         $container = SymfonyMock::getContainer($this, [], $parameters);
         $cachePool = SymfonyMock::getCachePool($this);
+        $encoderFactory = new EncoderFactory();
         $fieldList = new FieldList([new Field\FieldString(), new Field\FieldInteger(), new Field\FieldFile()]);
         $entityManager = SymfonyMock::getEntityManager($this);
         $repository = $this->createMock(ConfigurationRepository::class);
 
-        $manager = new Manager($container, $entityManager, $cachePool, $repository, $fieldList);
+        $manager = new Manager($container, $entityManager, $cachePool, $repository, $encoderFactory, $fieldList);
 
         $file = SymfonyMock::getUploadedFile($this, '/tmp/f.pdf', 'document.pdf', 'pdf', 'application/pdf');
 
@@ -313,11 +321,12 @@ class ManagerTest extends TestCase
 
         $container = SymfonyMock::getContainer($this, [], $parameters);
         $cachePool = SymfonyMock::getCachePool($this);
+        $encoderFactory = new EncoderFactory();
         $fieldList = new FieldList([new Field\FieldString(), new Field\FieldInteger(), new Field\FieldFile()]);
         $entityManager = SymfonyMock::getEntityManager($this);
         $repository = $this->createMock(ConfigurationRepository::class);
 
-        $manager = new Manager($container, $entityManager, $cachePool, $repository, $fieldList);
+        $manager = new Manager($container, $entityManager, $cachePool, $repository, $encoderFactory, $fieldList);
 
         $file = SymfonyMock::getUploadedFile($this);
 
@@ -338,6 +347,7 @@ class ManagerTest extends TestCase
 
         $container = SymfonyMock::getContainer($this, [], $parameters);
         $cachePool = SymfonyMock::getCachePool($this);
+        $encoderFactory = new EncoderFactory();
         $fieldList = new FieldList([new Field\FieldString(), new Field\FieldInteger(), new Field\FieldFile()]);
 
         $list = [];
@@ -372,7 +382,7 @@ class ManagerTest extends TestCase
             ->method('findOneBy')
             ->willReturn(null);
 
-        $manager = new Manager($container, $entityManager, $cachePool, $repository, $fieldList);
+        $manager = new Manager($container, $entityManager, $cachePool, $repository, $encoderFactory, $fieldList);
 
 
         $this->assertSame('', $manager->get('mock.test.file'));

@@ -9,9 +9,11 @@ use Spipu\ConfigurationBundle\Entity\Configuration;
 use Spipu\ConfigurationBundle\Exception\ConfigurationException;
 use Spipu\ConfigurationBundle\Field\FieldInterface;
 use Spipu\ConfigurationBundle\Repository\ConfigurationRepository;
+use Spipu\CoreBundle\Service\EncoderFactory;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Psr\Cache\CacheItemPoolInterface;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
+use Symfony\Component\Security\Core\Encoder\PasswordEncoderInterface;
 
 class Manager
 {
@@ -23,14 +25,29 @@ class Manager
     private $container;
 
     /**
+     * @var EntityManagerInterface
+     */
+    private $entityManager;
+
+    /**
+     * @var CacheItemPoolInterface
+     */
+    private $cache;
+
+    /**
      * @var ConfigurationRepository
      */
     private $configurationRepository;
 
     /**
-     * @var EntityManagerInterface
+     * @var EncoderFactory
      */
-    private $entityManager;
+    private $encoderFactory;
+
+    /**
+     * @var PasswordEncoderInterface
+     */
+    private $encoder;
 
     /**
      * @var FieldList
@@ -41,11 +58,6 @@ class Manager
      * @var Definition[]
      */
     private $definitions;
-
-    /**
-     * @var CacheItemPoolInterface
-     */
-    private $cache;
 
     /**
      * @var mixed
@@ -63,6 +75,7 @@ class Manager
      * @param EntityManagerInterface $entityManager
      * @param CacheItemPoolInterface $cache
      * @param ConfigurationRepository $configurationRepository
+     * @param EncoderFactory $encoderFactory
      * @param FieldList $fieldList
      * @throws ConfigurationException
      */
@@ -71,13 +84,15 @@ class Manager
         EntityManagerInterface $entityManager,
         CacheItemPoolInterface $cache,
         ConfigurationRepository $configurationRepository,
+        EncoderFactory $encoderFactory,
         FieldList $fieldList
     ) {
         $this->container = $container;
         $this->entityManager = $entityManager;
         $this->cache = $cache;
-        $this->fieldList = $fieldList;
         $this->configurationRepository = $configurationRepository;
+        $this->encoderFactory = $encoderFactory;
+        $this->fieldList = $fieldList;
 
         $this->loadDefinitions();
     }
@@ -198,6 +213,85 @@ class Manager
 
         $this->cleanValues();
     }
+
+    /**
+     * @param string $key
+     * @param string $raw
+     * @return bool
+     * @throws ConfigurationException
+     */
+    public function isPasswordValid(string $key, string $raw): bool
+    {
+        $encoded = $this->get($key);
+
+        return $this->getEncoder()->isPasswordValid($encoded, $raw, null);
+    }
+
+    /**
+     * @param string $key
+     * @param ?string $value
+     * @return void
+     * @throws ConfigurationException
+     */
+    public function setPassword(string $key, ?string $value): void
+    {
+        if ($value !== null) {
+            $value = $this->getEncoder()->encodePassword($value, null);
+        }
+
+        $this->set($key, $value);
+    }
+
+    /**
+     * @return PasswordEncoderInterface
+     */
+    private function getEncoder(): PasswordEncoderInterface
+    {
+        if (!$this->encoder) {
+            $this->encoder = $this->encoderFactory->create();
+        }
+
+        return $this->encoder;
+    }
+
+    /**
+     * @param string $key
+     * @return string|null
+     * @throws ConfigurationException
+     */
+    public function getEncrypted(string $key): ?string
+    {
+        $value = $this->get($key);
+
+        if ($value === null) {
+            return null;
+        }
+        $value = (string) $value;
+
+        // @todo decrypt
+
+        return $value;
+    }
+
+    /**
+     * @param string $key
+     * @param ?string $value
+     * @return void
+     * @throws ConfigurationException
+     */
+    public function setEncrypted(string $key, ?string $value): void
+    {
+        if ($value === null) {
+            $this->set($key, null);
+            return;
+        }
+        $value = (string) $value;
+
+        // @todo encrypt
+
+        $this->set($key, $value);
+    }
+
 
     /**
      * @param string $key

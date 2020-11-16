@@ -31,6 +31,10 @@ class SpipuConfigurationMock extends TestCase
 
         $service = $testCase->createMock(Manager::class);
 
+        $service
+            ->method('getFileUrl')
+            ->willReturn('folder/mock/');
+
         if (count($values) === 0) {
             $service
                 ->method('get')
