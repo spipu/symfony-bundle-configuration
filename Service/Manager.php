@@ -10,11 +10,16 @@ use Spipu\ConfigurationBundle\Exception\ConfigurationException;
 use Spipu\ConfigurationBundle\Field\FieldInterface;
 use Spipu\ConfigurationBundle\Repository\ConfigurationRepository;
 use Spipu\CoreBundle\Service\EncoderFactory;
+use Spipu\CoreBundle\Service\EncryptorInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Psr\Cache\CacheItemPoolInterface;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\Security\Core\Encoder\PasswordEncoderInterface;
 
+/**
+ * Class Manager
+ * @SuppressWarnings(PMD.CouplingBetweenObjects)
+ */
 class Manager
 {
     const CACHE_KEY = "spipu_configuration_cache";
@@ -50,6 +55,11 @@ class Manager
     private $encoder;
 
     /**
+     * @var EncryptorInterface
+     */
+    private $encryptor;
+
+    /**
      * @var FieldList
      */
     private $fieldList;
@@ -76,6 +86,7 @@ class Manager
      * @param CacheItemPoolInterface $cache
      * @param ConfigurationRepository $configurationRepository
      * @param EncoderFactory $encoderFactory
+     * @param EncryptorInterface $encryptor
      * @param FieldList $fieldList
      * @throws ConfigurationException
      */
@@ -85,6 +96,7 @@ class Manager
         CacheItemPoolInterface $cache,
         ConfigurationRepository $configurationRepository,
         EncoderFactory $encoderFactory,
+        EncryptorInterface $encryptor,
         FieldList $fieldList
     ) {
         $this->container = $container;
@@ -92,6 +104,7 @@ class Manager
         $this->cache = $cache;
         $this->configurationRepository = $configurationRepository;
         $this->encoderFactory = $encoderFactory;
+        $this->encryptor = $encryptor;
         $this->fieldList = $fieldList;
 
         $this->loadDefinitions();
@@ -262,15 +275,11 @@ class Manager
     public function getEncrypted(string $key): ?string
     {
         $value = $this->get($key);
-
         if ($value === null) {
             return null;
         }
-        $value = (string) $value;
 
-        // @todo decrypt
-
-        return $value;
+        return $this->encryptor->decrypt((string) $value);
     }
 
     /**
@@ -285,11 +294,8 @@ class Manager
             $this->set($key, null);
             return;
         }
-        $value = (string) $value;
 
-        // @todo encrypt
-
-        $this->set($key, $value);
+        $this->set($key, $this->encryptor->encrypt((string) $value));
     }
 
 
