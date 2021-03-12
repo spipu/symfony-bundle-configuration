@@ -62,6 +62,7 @@ final class SpipuConfigurationExtension extends Extension implements RolesHierar
             'code'      => $code,
             'options'   => null,
             'unit'      => null,
+            'help'      => null,
             'file_type' => [],
         ];
 

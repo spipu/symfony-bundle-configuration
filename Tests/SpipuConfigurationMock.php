@@ -26,7 +26,7 @@ class SpipuConfigurationMock extends TestCase
 
         $definitionMap = [];
         foreach ($definition as $key => $type) {
-            $definitionMap[$key] = new Definition($key, $type, true, '', null, null, null);
+            $definitionMap[$key] = new Definition($key, $type, true, '', null, null, null, null);
         }
 
         $service = $testCase->createMock(Manager::class);

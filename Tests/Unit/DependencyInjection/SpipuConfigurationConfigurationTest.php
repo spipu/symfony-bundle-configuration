@@ -57,6 +57,7 @@ class SpipuConfigurationConfigurationTest extends TestCase
         $expected['mock.config']['file_type'] = [];
         $expected['mock.config']['default'] = null;
         $expected['mock.config']['unit'] = null;
+        $expected['mock.config']['help'] = null;
 
         $configuration = new SpipuConfigurationConfiguration();
 
@@ -87,6 +88,17 @@ class SpipuConfigurationConfigurationTest extends TestCase
 
         $result = $processor->processConfiguration($configuration, $configs);
         $this->assertSame('test', $result['mock.config']['unit']);
+    }
+
+    public function testHelp()
+    {
+        $configuration = new SpipuConfigurationConfiguration();
+        $processor = new Processor();
+
+        $configs = [0 => ['mock.config' => ['type' => 'string', 'required' => false, 'help'  => 'test']]];
+
+        $result = $processor->processConfiguration($configuration, $configs);
+        $this->assertSame('test', $result['mock.config']['help']);
     }
 
     public function testFileType()

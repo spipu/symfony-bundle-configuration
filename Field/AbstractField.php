@@ -84,8 +84,17 @@ abstract class AbstractField implements FieldInterface
             'required' => $definition->isRequired(),
         ];
 
+        $helps = [];
         if ($definition->getUnit()) {
-            $options['help'] = 'Unit: '.$definition->getUnit();
+            $helps[] = 'Unit: '.$definition->getUnit();
+        }
+
+        if ($definition->getHelp()) {
+            $helps[] = $definition->getHelp();
+        }
+
+        if (count($helps) > 0) {
+            $options['help'] = implode(' | ', $helps);
         }
 
         return $options;

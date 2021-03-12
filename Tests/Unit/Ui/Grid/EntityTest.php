@@ -15,6 +15,7 @@ class EntityTest extends TestCase
             'default',
             'options',
             'unit',
+            'help',
             ['test', 'ext']
         );
 

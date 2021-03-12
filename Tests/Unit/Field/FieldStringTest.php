@@ -18,7 +18,7 @@ class FieldStringTest extends AbstractFieldTest
 
     protected function getDefinition(bool $required)
     {
-        return new Definition('mock.test', $this->getCode(), $required, null, null, 'test', null);
+        return new Definition('mock.test', $this->getCode(), $required, null, null, 'test', null, null);
     }
 
     protected function getGoodValue()

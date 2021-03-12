@@ -16,6 +16,7 @@ class DefinitionTest extends TestCase
             'default',
             'options',
             'unit',
+            'help',
             ['test', 'ext']
         );
 
@@ -28,6 +29,7 @@ class DefinitionTest extends TestCase
         $this->assertSame('default', $entity->getDefault());
         $this->assertSame('options', $entity->getOptions());
         $this->assertSame('unit', $entity->getUnit());
+        $this->assertSame('help', $entity->getHelp());
         $this->assertSame(['test', 'ext'], $entity->getFileTypes());
     }
 
@@ -41,6 +43,7 @@ class DefinitionTest extends TestCase
             'default',
             'options',
             'unit',
+            'help',
             ['test', 'ext']
         );
     }

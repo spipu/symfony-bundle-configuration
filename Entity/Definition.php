@@ -40,6 +40,11 @@ class Definition
     /**
      * @var string|null
      */
+    private $help;
+
+    /**
+     * @var string|null
+     */
     private $options;
 
     /**
@@ -55,6 +60,7 @@ class Definition
      * @param mixed $default
      * @param null|string $options
      * @param null|string $unit
+     * @param string|null $help
      * @param array|null $fileTypes
      * @throws ConfigurationException
      */
@@ -65,6 +71,7 @@ class Definition
         $default,
         ?string $options,
         ?string $unit,
+        ?string $help,
         ?array $fileTypes
     ) {
         $this->code = $code;
@@ -73,6 +80,7 @@ class Definition
         $this->default = $default;
         $this->options = $options;
         $this->unit = $unit;
+        $this->help = $help;
         $this->fileTypes = $fileTypes;
 
         $this->validateCode();
@@ -169,6 +177,14 @@ class Definition
     public function getUnit(): ?string
     {
         return $this->unit;
+    }
+
+    /**
+     * @return null|string
+     */
+    public function getHelp(): ?string
+    {
+        return $this->help;
     }
 
     /**

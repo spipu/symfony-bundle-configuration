@@ -29,6 +29,7 @@ class ManagerTest extends TestCase
                 'default' => 'default value',
                 'options' => null,
                 'unit' => null,
+                'help' => null,
                 'file_type' => [],
             ],
             'mock.test.integer' => [
@@ -38,6 +39,7 @@ class ManagerTest extends TestCase
                 'default' => '',
                 'options' => null,
                 'unit' => null,
+                'help' => null,
                 'file_type' => [],
             ],
             'mock.test.file' => [
@@ -47,6 +49,7 @@ class ManagerTest extends TestCase
                 'default' => '',
                 'options' => null,
                 'unit' => null,
+                'help' => null,
                 'file_type' => ['jpeg'],
             ]
         ];
@@ -112,6 +115,7 @@ class ManagerTest extends TestCase
             $this->assertSame($configuration['default'], $definition->getDefault());
             $this->assertSame($configuration['options'], $definition->getOptions());
             $this->assertSame($configuration['unit'], $definition->getUnit());
+            $this->assertSame($configuration['help'], $definition->getHelp());
             $this->assertSame($configuration['file_type'], $definition->getFileTypes());
 
             $field = $manager->getField($configuration['code']);

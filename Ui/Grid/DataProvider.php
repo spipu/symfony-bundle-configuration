@@ -63,6 +63,7 @@ class DataProvider extends AbstractDataProvider
                 $definition->getDefault(),
                 $definition->getOptions(),
                 $definition->getUnit(),
+                $definition->getHelp(),
                 $definition->getFileTypes()
             );
 

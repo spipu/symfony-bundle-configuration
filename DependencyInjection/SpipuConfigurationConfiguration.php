@@ -69,6 +69,9 @@ class SpipuConfigurationConfiguration implements ConfigurationInterface
                     ->scalarNode('unit')
                         ->defaultNull()
                     ->end()
+                    ->scalarNode('help')
+                        ->defaultNull()
+                    ->end()
                 ->end()
             ->end()
         ;

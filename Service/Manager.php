@@ -128,6 +128,7 @@ class Manager
                 $configuration['default'],
                 $configuration['options'],
                 $configuration['unit'],
+                $configuration['help'],
                 $configuration['file_type']
             );
 
