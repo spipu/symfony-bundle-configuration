@@ -14,7 +14,7 @@ use Spipu\CoreBundle\Service\EncryptorInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Psr\Cache\CacheItemPoolInterface;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
-use Symfony\Component\Security\Core\Encoder\PasswordEncoderInterface;
+use Symfony\Component\PasswordHasher\PasswordHasherInterface;
 
 /**
  * Class Manager
@@ -50,7 +50,7 @@ class Manager
     private $encoderFactory;
 
     /**
-     * @var PasswordEncoderInterface
+     * @var PasswordHasherInterface
      */
     private $encoder;
 
@@ -238,7 +238,7 @@ class Manager
     {
         $encoded = $this->get($key);
 
-        return $this->getEncoder()->isPasswordValid($encoded, $raw, null);
+        return $this->getEncoder()->verify($encoded, $raw);
     }
 
     /**
@@ -250,16 +250,16 @@ class Manager
     public function setPassword(string $key, ?string $value): void
     {
         if ($value !== null) {
-            $value = $this->getEncoder()->encodePassword($value, null);
+            $value = $this->getEncoder()->hash($value, null);
         }
 
         $this->set($key, $value);
     }
 
     /**
-     * @return PasswordEncoderInterface
+     * @return PasswordHasherInterface
      */
-    private function getEncoder(): PasswordEncoderInterface
+    private function getEncoder(): PasswordHasherInterface
     {
         if (!$this->encoder) {
             $this->encoder = $this->encoderFactory->create();

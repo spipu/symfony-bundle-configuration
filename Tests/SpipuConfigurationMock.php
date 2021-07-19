@@ -56,12 +56,10 @@ class SpipuConfigurationMock extends TestCase
 
         $service
             ->method('getDefinition')
-            ->will(
-                $testCase->returnCallback(
-                    function (string $key) use ($definitionMap) {
-                        return $definitionMap[$key];
-                    }
-                )
+            ->willReturnCallback(
+                function (string $key) use ($definitionMap) {
+                    return $definitionMap[$key];
+                }
             );
 
         $service
