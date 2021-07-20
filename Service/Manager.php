@@ -9,7 +9,7 @@ use Spipu\ConfigurationBundle\Entity\Configuration;
 use Spipu\ConfigurationBundle\Exception\ConfigurationException;
 use Spipu\ConfigurationBundle\Field\FieldInterface;
 use Spipu\ConfigurationBundle\Repository\ConfigurationRepository;
-use Spipu\CoreBundle\Service\EncoderFactory;
+use Spipu\CoreBundle\Service\HasherFactory;
 use Spipu\CoreBundle\Service\EncryptorInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Psr\Cache\CacheItemPoolInterface;
@@ -45,14 +45,14 @@ class Manager
     private $configurationRepository;
 
     /**
-     * @var EncoderFactory
+     * @var HasherFactory
      */
-    private $encoderFactory;
+    private $hasherFactory;
 
     /**
      * @var PasswordHasherInterface
      */
-    private $encoder;
+    private $hasher;
 
     /**
      * @var EncryptorInterface
@@ -85,7 +85,7 @@ class Manager
      * @param EntityManagerInterface $entityManager
      * @param CacheItemPoolInterface $cache
      * @param ConfigurationRepository $configurationRepository
-     * @param EncoderFactory $encoderFactory
+     * @param HasherFactory $hasherFactory
      * @param EncryptorInterface $encryptor
      * @param FieldList $fieldList
      * @throws ConfigurationException
@@ -95,7 +95,7 @@ class Manager
         EntityManagerInterface $entityManager,
         CacheItemPoolInterface $cache,
         ConfigurationRepository $configurationRepository,
-        EncoderFactory $encoderFactory,
+        HasherFactory $hasherFactory,
         EncryptorInterface $encryptor,
         FieldList $fieldList
     ) {
@@ -103,7 +103,7 @@ class Manager
         $this->entityManager = $entityManager;
         $this->cache = $cache;
         $this->configurationRepository = $configurationRepository;
-        $this->encoderFactory = $encoderFactory;
+        $this->hasherFactory = $hasherFactory;
         $this->encryptor = $encryptor;
         $this->fieldList = $fieldList;
 
@@ -113,10 +113,10 @@ class Manager
     /**
      * Load the definitions
      *
-     * @return bool
+     * @return void
      * @throws ConfigurationException
      */
-    private function loadDefinitions(): bool
+    private function loadDefinitions(): void
     {
         $this->definitions = [];
         $configurations = $this->container->getParameter('spipu_configuration');
@@ -134,8 +134,6 @@ class Manager
 
             $this->definitions[$definition->getCode()] = $definition;
         }
-
-        return true;
     }
 
     /**
@@ -238,7 +236,7 @@ class Manager
     {
         $encoded = $this->get($key);
 
-        return $this->getEncoder()->verify($encoded, $raw);
+        return $this->getHasher()->verify($encoded, $raw);
     }
 
     /**
@@ -250,7 +248,7 @@ class Manager
     public function setPassword(string $key, ?string $value): void
     {
         if ($value !== null) {
-            $value = $this->getEncoder()->hash($value, null);
+            $value = $this->getHasher()->hash($value);
         }
 
         $this->set($key, $value);
@@ -259,13 +257,13 @@ class Manager
     /**
      * @return PasswordHasherInterface
      */
-    private function getEncoder(): PasswordHasherInterface
+    private function getHasher(): PasswordHasherInterface
     {
-        if (!$this->encoder) {
-            $this->encoder = $this->encoderFactory->create();
+        if (!$this->hasher) {
+            $this->hasher = $this->hasherFactory->create();
         }
 
-        return $this->encoder;
+        return $this->hasher;
     }
 
     /**
@@ -296,9 +294,8 @@ class Manager
             return;
         }
 
-        $this->set($key, $this->encryptor->encrypt((string) $value));
+        $this->set($key, $this->encryptor->encrypt($value));
     }
-
 
     /**
      * @param string $key
@@ -371,19 +368,19 @@ class Manager
 
     /**
      * Load the values
-     * @return bool
+     * @return void
      */
-    private function loadValues(): bool
+    private function loadValues(): void
     {
         if (is_array($this->values)) {
-            return false;
+            return;
         }
 
         $cachedItem = $this->cache->getItem(static::CACHE_KEY);
 
         if ($cachedItem->isHit()) {
             $this->values = unserialize($cachedItem->get());
-            return false;
+            return;
         }
 
         $this->loadDefaultValues();
@@ -393,8 +390,6 @@ class Manager
         $cachedItem->set(serialize($this->values));
         $cachedItem->expiresAfter(3600 * 24);
         $this->cache->save($cachedItem);
-
-        return true;
     }
 
     /**
