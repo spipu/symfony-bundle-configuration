@@ -1,5 +1,5 @@
 <?php
-declare(strict_types = 1);
+declare(strict_types=1);
 
 namespace Spipu\ConfigurationBundle\Service;
 
@@ -22,7 +22,7 @@ use Symfony\Component\PasswordHasher\PasswordHasherInterface;
  */
 class Manager
 {
-    const CACHE_KEY = "spipu_configuration_cache";
+    public const CACHE_KEY = "spipu_configuration_cache";
 
     /**
      * @var ContainerInterface

@@ -1,5 +1,5 @@
 <?php
-declare(strict_types = 1);
+declare(strict_types=1);
 
 namespace Spipu\ConfigurationBundle\Command;
 
@@ -13,7 +13,7 @@ use Symfony\Component\Console\Output\OutputInterface;
 
 class ShowCommand extends Command
 {
-    const OPTION_KEY = 'key';
+    public const OPTION_KEY = 'key';
 
     /**
      * @var Manager
