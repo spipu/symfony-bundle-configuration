@@ -327,12 +327,12 @@ class Manager
         $fileTypes = $definition->getFileTypes();
         $guessExtension = $file->guessExtension();
         if (!empty($fileTypes) && ($guessExtension === null || !in_array(strtolower($guessExtension), $fileTypes))) {
-            throw new ConfigurationException('File extension not allowed: '.$guessExtension);
+            throw new ConfigurationException('File extension not allowed: ' . $guessExtension);
         }
 
         $path = $this->getFilePath();
         if (!is_dir($path)  || !is_writable($path)) {
-            throw new ConfigurationException('The file path does not exist or is not writable: '.$path);
+            throw new ConfigurationException('The file path does not exist or is not writable: ' . $path);
         }
 
         $fileName  = md5($definition->getCode()) . '.' . $file->guessExtension();
