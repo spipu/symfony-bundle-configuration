@@ -13,7 +13,9 @@ declare(strict_types=1);
 
 namespace Spipu\ConfigurationBundle\Command;
 
+use Exception;
 use Spipu\ConfigurationBundle\Entity\Definition;
+use Spipu\ConfigurationBundle\Exception\ConfigurationException;
 use Spipu\ConfigurationBundle\Service\Manager;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Helper\Table;
@@ -71,7 +73,7 @@ class ShowCommand extends Command
      * @param OutputInterface $output
      *
      * @return int
-     * @throws \Exception
+     * @throws Exception
      */
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
@@ -79,18 +81,19 @@ class ShowCommand extends Command
 
         if ($key) {
             $this->showOne($output, $key);
-            return 0;
+            return self::SUCCESS;
         }
 
         $this->showAll($output);
-        return 0;
+
+        return self::SUCCESS;
     }
 
     /**
      * @param OutputInterface $output
      * @param string $key
      * @return void
-     * @throws \Spipu\ConfigurationBundle\Exception\ConfigurationException
+     * @throws ConfigurationException
      */
     private function showOne(OutputInterface $output, string $key): void
     {
@@ -110,7 +113,7 @@ class ShowCommand extends Command
     /**
      * @param OutputInterface $output
      * @return void
-     * @throws \Spipu\ConfigurationBundle\Exception\ConfigurationException
+     * @throws ConfigurationException
      */
     private function showAll(OutputInterface $output): void
     {

@@ -13,6 +13,7 @@ declare(strict_types=1);
 
 namespace Spipu\ConfigurationBundle\DependencyInjection;
 
+use Exception;
 use Spipu\ConfigurationBundle\Service\RoleDefinition;
 use Spipu\CoreBundle\DependencyInjection\RolesHierarchyExtensionExtensionInterface;
 use Spipu\CoreBundle\Service\RoleDefinitionInterface;
@@ -39,7 +40,7 @@ final class SpipuConfigurationExtension extends Extension implements RolesHierar
      * @param array $configs
      * @param ContainerBuilder $container
      * @return void
-     * @throws \Exception
+     * @throws Exception
      * @SuppressWarnings(PMD.UnusedFormalParameter)
      */
     public function load(array $configs, ContainerBuilder $container): void

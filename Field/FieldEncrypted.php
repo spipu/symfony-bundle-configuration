@@ -45,13 +45,11 @@ class FieldEncrypted extends AbstractField implements FieldInterface
      */
     public function getFormField(Definition $definition): Field
     {
-        $field = new Field(
+        return new Field(
             'value',
             Type\PasswordType::class,
             10,
             $this->getFieldBuilderOptions($definition)
         );
-
-        return $field;
     }
 }

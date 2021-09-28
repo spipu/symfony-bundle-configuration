@@ -45,13 +45,11 @@ class FieldFile extends AbstractField implements FieldInterface
      */
     public function getFormField(Definition $definition): Field
     {
-        $field = new Field(
+        return new Field(
             'value',
             Type\FileType::class,
             10,
             $this->getFieldBuilderOptions($definition)
         );
-
-        return $field;
     }
 }

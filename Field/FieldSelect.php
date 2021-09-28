@@ -100,14 +100,12 @@ class FieldSelect extends AbstractField implements FieldInterface
         $options = $this->getFieldBuilderOptions($definition);
         $options['choices'] = $this->getOptions($definition);
 
-        $field = new Field(
+        return new Field(
             'value',
             Type\ChoiceType::class,
             10,
             $options
         );
-
-        return $field;
     }
 
     /**

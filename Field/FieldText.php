@@ -45,13 +45,11 @@ class FieldText extends AbstractField implements FieldInterface
      */
     public function getFormField(Definition $definition): Field
     {
-        $field = new Field(
+        return new Field(
             'value',
             Type\TextareaType::class,
             10,
             $this->getFieldBuilderOptions($definition) + ['attr' => ['rows' => 10]]
         );
-
-        return $field;
     }
 }

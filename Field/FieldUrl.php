@@ -45,13 +45,11 @@ class FieldUrl extends AbstractField implements FieldInterface
      */
     public function getFormField(Definition $definition): Field
     {
-        $field = new Field(
+        return new Field(
             'value',
             Type\UrlType::class,
             10,
             $this->getFieldBuilderOptions($definition)
         );
-
-        return $field;
     }
 }

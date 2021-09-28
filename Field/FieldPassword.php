@@ -36,9 +36,7 @@ class FieldPassword extends AbstractField implements FieldInterface
      */
     public function validateValue(Definition $definition, $value)
     {
-        $value = $this->validateValueType($definition, $value, null);
-
-        return $value;
+        return $this->validateValueType($definition, $value, null);
     }
 
     /**
@@ -47,13 +45,11 @@ class FieldPassword extends AbstractField implements FieldInterface
      */
     public function getFormField(Definition $definition): Field
     {
-        $field = new Field(
+        return new Field(
             'value',
             Type\PasswordType::class,
             10,
             $this->getFieldBuilderOptions($definition)
         );
-
-        return $field;
     }
 }

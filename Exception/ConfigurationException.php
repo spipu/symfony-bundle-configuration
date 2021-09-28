@@ -13,7 +13,9 @@ declare(strict_types=1);
 
 namespace Spipu\ConfigurationBundle\Exception;
 
-class ConfigurationException extends \Exception
+use Exception;
+
+class ConfigurationException extends Exception
 {
 
 }
