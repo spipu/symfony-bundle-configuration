@@ -366,6 +366,14 @@ class Manager
     }
 
     /**
+     * @return void
+     */
+    public function clearCache(): void
+    {
+        $this->cleanValues();
+    }
+
+    /**
      * Clean the values to force reload
      * @return void
      */
