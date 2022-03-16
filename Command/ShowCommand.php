@@ -63,7 +63,6 @@ class ShowCommand extends Command
                 InputOption::VALUE_OPTIONAL,
                 'Key of the configuration to see (if empty, see all)'
             );
-        ;
     }
 
     /**
