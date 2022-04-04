@@ -26,6 +26,7 @@ use Symfony\Component\Console\Output\OutputInterface;
 class ShowCommand extends Command
 {
     public const OPTION_KEY = 'key';
+    public const OPTION_DIRECT = 'direct';
 
     /**
      * @var Manager
@@ -62,6 +63,12 @@ class ShowCommand extends Command
                 'k',
                 InputOption::VALUE_OPTIONAL,
                 'Key of the configuration to see (if empty, see all)'
+            )
+            ->addOption(
+                static::OPTION_DIRECT,
+                'd',
+                InputOption::VALUE_NONE,
+                'Display directly and only the value as output. To use only with a key'
             );
     }
 
@@ -77,8 +84,13 @@ class ShowCommand extends Command
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $key = $input->getOption(static::OPTION_KEY);
+        $direct = $input->getOption(static::OPTION_DIRECT);
 
         if ($key) {
+            if ($direct) {
+                $this->showOneDirect($output, $key);
+                return self::SUCCESS;
+            }
             $this->showOne($output, $key);
             return self::SUCCESS;
         }
@@ -86,6 +98,25 @@ class ShowCommand extends Command
         $this->showAll($output);
 
         return self::SUCCESS;
+    }
+
+    /**
+     * @param OutputInterface $output
+     * @param string $key
+     * @return void
+     * @throws ConfigurationException
+     */
+    protected function showOneDirect(OutputInterface $output, string $key): void
+    {
+        $value = $this->manager->get($key);
+        if ($value === null) {
+            $value = '';
+        }
+        if (is_bool($value)) {
+            $value = (int) $value;
+        }
+
+        $output->writeln((string) $value);
     }
 
     /**
