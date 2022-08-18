@@ -52,7 +52,7 @@ class FieldListTest extends TestCase
         $manager = SpipuConfigurationMock::getManager($this);
 
         foreach ($list as $code => $field) {
-            $definition = $manager->getDefinition('mock.'.$code);
+            $definition = $manager->getDefinition('mock.' . $code);
 
             $this->assertSame($field, $fieldList->getField($definition));
         }

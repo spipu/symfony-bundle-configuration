@@ -1,5 +1,15 @@
 <?php
-declare(strict_types = 1);
+
+/**
+ * This file is part of a Spipu Bundle
+ *
+ * (c) Laurent Minguet
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
+declare(strict_types=1);
 
 namespace Spipu\ConfigurationBundle\Field;
 
@@ -21,7 +31,7 @@ class FieldColor extends AbstractField implements FieldInterface
     /**
      * @param Definition $definition
      * @param mixed $value
-     * @return mixed
+     * @return string|null
      * @throws ConfigurationException
      */
     public function validateValue(Definition $definition, $value)
@@ -31,9 +41,8 @@ class FieldColor extends AbstractField implements FieldInterface
         if ($value !== null && !preg_match('/^#[0-9a-fA-F]{6}$/', $value)) {
             throw new ConfigurationException(
                 sprintf(
-                    'Configuration "%s" must be a valid hexa rgb color',
-                    $definition->getCode(),
-                    $definition->getType()
+                    'Configuration "%s" must be a valid hexadecimal rgb color',
+                    $definition->getCode()
                 )
             );
         }
@@ -47,13 +56,11 @@ class FieldColor extends AbstractField implements FieldInterface
      */
     public function getFormField(Definition $definition): Field
     {
-        $field = new Field(
+        return new Field(
             'value',
             Type\ColorType::class,
             10,
             $this->getFieldBuilderOptions($definition)
         );
-
-        return $field;
     }
 }

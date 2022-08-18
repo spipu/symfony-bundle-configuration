@@ -1,9 +1,21 @@
 <?php
-declare(strict_types = 1);
+
+/**
+ * This file is part of a Spipu Bundle
+ *
+ * (c) Laurent Minguet
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
+declare(strict_types=1);
 
 namespace Spipu\ConfigurationBundle\Command;
 
+use Exception;
 use Spipu\ConfigurationBundle\Entity\Definition;
+use Spipu\ConfigurationBundle\Exception\ConfigurationException;
 use Spipu\ConfigurationBundle\Service\Manager;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Helper\Table;
@@ -13,7 +25,8 @@ use Symfony\Component\Console\Output\OutputInterface;
 
 class ShowCommand extends Command
 {
-    const OPTION_KEY = 'key';
+    public const OPTION_KEY = 'key';
+    public const OPTION_DIRECT = 'direct';
 
     /**
      * @var Manager
@@ -50,8 +63,13 @@ class ShowCommand extends Command
                 'k',
                 InputOption::VALUE_OPTIONAL,
                 'Key of the configuration to see (if empty, see all)'
+            )
+            ->addOption(
+                static::OPTION_DIRECT,
+                'd',
+                InputOption::VALUE_NONE,
+                'Display directly and only the value as output. To use only with a key'
             );
-        ;
     }
 
     /**
@@ -61,26 +79,51 @@ class ShowCommand extends Command
      * @param OutputInterface $output
      *
      * @return int
-     * @throws \Exception
+     * @throws Exception
      */
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $key = $input->getOption(static::OPTION_KEY);
+        $direct = $input->getOption(static::OPTION_DIRECT);
 
         if ($key) {
+            if ($direct) {
+                $this->showOneDirect($output, $key);
+                return self::SUCCESS;
+            }
             $this->showOne($output, $key);
-            return 0;
+            return self::SUCCESS;
         }
 
         $this->showAll($output);
-        return 0;
+
+        return self::SUCCESS;
     }
 
     /**
      * @param OutputInterface $output
      * @param string $key
      * @return void
-     * @throws \Spipu\ConfigurationBundle\Exception\ConfigurationException
+     * @throws ConfigurationException
+     */
+    protected function showOneDirect(OutputInterface $output, string $key): void
+    {
+        $value = $this->manager->get($key);
+        if ($value === null) {
+            $value = '';
+        }
+        if (is_bool($value)) {
+            $value = (int) $value;
+        }
+
+        $output->writeln((string) $value);
+    }
+
+    /**
+     * @param OutputInterface $output
+     * @param string $key
+     * @return void
+     * @throws ConfigurationException
      */
     private function showOne(OutputInterface $output, string $key): void
     {
@@ -100,7 +143,7 @@ class ShowCommand extends Command
     /**
      * @param OutputInterface $output
      * @return void
-     * @throws \Spipu\ConfigurationBundle\Exception\ConfigurationException
+     * @throws ConfigurationException
      */
     private function showAll(OutputInterface $output): void
     {

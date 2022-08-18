@@ -23,7 +23,6 @@ class ShowCommandTest extends TestCase
         $this->assertSame('spipu:configuration:show', $command->getName());
 
         $command->run($inputMock, $outputMock);
-
         $result = SymfonyMock::getConsoleOutputResult();
         $this->assertSame('Show All Configurations', $result[0]);
     }

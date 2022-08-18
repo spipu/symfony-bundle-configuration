@@ -1,11 +1,20 @@
 <?php
-declare(strict_types = 1);
+
+/**
+ * This file is part of a Spipu Bundle
+ *
+ * (c) Laurent Minguet
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
+declare(strict_types=1);
 
 namespace Spipu\ConfigurationBundle\Ui;
 
 use Spipu\ConfigurationBundle\Ui\Grid\DataProvider;
 use Spipu\UiBundle\Entity\Grid;
-use Spipu\UiBundle\Exception\GridException;
 use Spipu\UiBundle\Form\Options\YesNo as OptionsYesNo;
 use Spipu\UiBundle\Service\Ui\Definition\GridDefinitionInterface;
 
@@ -33,7 +42,6 @@ class ConfigurationGrid implements GridDefinitionInterface
 
     /**
      * @return Grid\Grid
-     * @throws GridException
      */
     public function getDefinition(): Grid\Grid
     {
@@ -46,7 +54,6 @@ class ConfigurationGrid implements GridDefinitionInterface
 
     /**
      * @return void
-     * @throws GridException
      */
     private function prepareGrid(): void
     {

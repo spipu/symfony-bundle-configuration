@@ -1,4 +1,14 @@
 <?php
+
+/**
+ * This file is part of a Spipu Bundle
+ *
+ * (c) Laurent Minguet
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
 namespace Spipu\ConfigurationBundle\Tests;
 
 use PHPUnit\Framework\MockObject\MockObject;
@@ -56,12 +66,10 @@ class SpipuConfigurationMock extends TestCase
 
         $service
             ->method('getDefinition')
-            ->will(
-                $testCase->returnCallback(
-                    function (string $key) use ($definitionMap) {
-                        return $definitionMap[$key];
-                    }
-                )
+            ->willReturnCallback(
+                function (string $key) use ($definitionMap) {
+                    return $definitionMap[$key];
+                }
             );
 
         $service

@@ -1,5 +1,15 @@
 <?php
-declare(strict_types = 1);
+
+/**
+ * This file is part of a Spipu Bundle
+ *
+ * (c) Laurent Minguet
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
+declare(strict_types=1);
 
 namespace Spipu\ConfigurationBundle\Field;
 
@@ -90,14 +100,12 @@ class FieldSelect extends AbstractField implements FieldInterface
         $options = $this->getFieldBuilderOptions($definition);
         $options['choices'] = $this->getOptions($definition);
 
-        $field = new Field(
+        return new Field(
             'value',
             Type\ChoiceType::class,
             10,
             $options
         );
-
-        return $field;
     }
 
     /**

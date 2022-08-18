@@ -1,5 +1,15 @@
 <?php
-declare(strict_types = 1);
+
+/**
+ * This file is part of a Spipu Bundle
+ *
+ * (c) Laurent Minguet
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
+declare(strict_types=1);
 
 namespace Spipu\ConfigurationBundle\Entity;
 
@@ -10,7 +20,7 @@ class Definition
     /**
      * Category separator user in the code.
      */
-    const CATEGORY_SEPARATOR = '.';
+    public const CATEGORY_SEPARATOR = '.';
 
     /**
      * @var string

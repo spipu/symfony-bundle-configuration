@@ -1,8 +1,19 @@
 <?php
-declare(strict_types = 1);
+
+/**
+ * This file is part of a Spipu Bundle
+ *
+ * (c) Laurent Minguet
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
+declare(strict_types=1);
 
 namespace Spipu\ConfigurationBundle\Ui\Grid;
 
+use Exception;
 use Spipu\ConfigurationBundle\Service\Manager;
 use Spipu\UiBundle\Entity\EntityInterface;
 use Spipu\UiBundle\Service\Ui\Grid\DataProvider\AbstractDataProvider;
@@ -42,13 +53,13 @@ class DataProvider extends AbstractDataProvider
     }
 
     /**
-     * @return bool
-     * @throws \Exception
+     * @return void
+     * @throws Exception
      */
-    private function loadItems(): bool
+    private function loadItems(): void
     {
         if (is_array($this->items)) {
-            return false;
+            return;
         }
 
         $this->validate();
@@ -73,8 +84,6 @@ class DataProvider extends AbstractDataProvider
                 $this->items[] = $item;
             }
         }
-
-        return true;
     }
 
     /**
@@ -95,7 +104,7 @@ class DataProvider extends AbstractDataProvider
 
     /**
      * @return int
-     * @throws \Exception
+     * @throws Exception
      */
     public function getNbTotalRows(): int
     {
@@ -106,7 +115,7 @@ class DataProvider extends AbstractDataProvider
 
     /**
      * @return EntityInterface[]
-     * @throws \Exception
+     * @throws Exception
      */
     public function getPageRows(): array
     {

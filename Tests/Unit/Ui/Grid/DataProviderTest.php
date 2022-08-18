@@ -55,7 +55,8 @@ class DataProviderTest extends TestCase
 
         $grid = ConfigurationGridTest::getGrid();
         $request = SpipuUiMock::getGridRequest($this, $grid->getDefinition(), []);
-        $request->prepare('mock_route', []);
+        $request->setRoute('mock_route', []);
+        $request->prepare();
 
         $dataProvider = new DataProvider($manager);
         $dataProvider->setGridDefinition($grid->getDefinition());
@@ -77,7 +78,8 @@ class DataProviderTest extends TestCase
         $grid = ConfigurationGridTest::getGrid();
 
         $request = SpipuUiMock::getGridRequest($this, $grid->getDefinition(), $filters);
-        $request->prepare('mock_route', []);
+        $request->setRoute('mock_route', []);
+        $request->prepare();
 
         $manager = SpipuConfigurationMock::getManager($this);
 

@@ -1,8 +1,19 @@
 <?php
-declare(strict_types = 1);
+
+/**
+ * This file is part of a Spipu Bundle
+ *
+ * (c) Laurent Minguet
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
+declare(strict_types=1);
 
 namespace Spipu\ConfigurationBundle\DependencyInjection;
 
+use Exception;
 use Spipu\ConfigurationBundle\Service\RoleDefinition;
 use Spipu\CoreBundle\DependencyInjection\RolesHierarchyExtensionExtensionInterface;
 use Spipu\CoreBundle\Service\RoleDefinitionInterface;
@@ -29,7 +40,7 @@ final class SpipuConfigurationExtension extends Extension implements RolesHierar
      * @param array $configs
      * @param ContainerBuilder $container
      * @return void
-     * @throws \Exception
+     * @throws Exception
      * @SuppressWarnings(PMD.UnusedFormalParameter)
      */
     public function load(array $configs, ContainerBuilder $container): void

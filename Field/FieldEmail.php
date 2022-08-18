@@ -1,5 +1,15 @@
 <?php
-declare(strict_types = 1);
+
+/**
+ * This file is part of a Spipu Bundle
+ *
+ * (c) Laurent Minguet
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
+declare(strict_types=1);
 
 namespace Spipu\ConfigurationBundle\Field;
 
@@ -10,7 +20,7 @@ use Symfony\Component\Form\Extension\Core\Type;
 
 class FieldEmail extends AbstractField implements FieldInterface
 {
-    const MAIL_SEPARATOR = ',';
+    public const MAIL_SEPARATOR = ',';
 
     /**
      * @return string
@@ -55,13 +65,11 @@ class FieldEmail extends AbstractField implements FieldInterface
      */
     public function getFormField(Definition $definition): Field
     {
-        $field = new Field(
+        return new Field(
             'value',
             Type\EmailType::class,
             10,
             $this->getFieldBuilderOptions($definition)
         );
-
-        return $field;
     }
 }

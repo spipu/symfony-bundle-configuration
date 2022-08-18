@@ -15,6 +15,8 @@ services:
     Spipu\ConfigurationBundle\Service\Manager:
         public: true
         autowire: true
+        arguments:
+            $container: '@service_container'
 
     # Role Definition
     Spipu\ConfigurationBundle\Service\RoleDefinition:
@@ -34,6 +36,16 @@ services:
         resource: '../../Field'
         tags: ['spipu.configuration.field']
         autowire: true
+
+    Spipu\ConfigurationBundle\Field\FieldBoolean:
+        tags: ['spipu.configuration.field']
+        arguments:
+            $container: '@service_container'
+
+    Spipu\ConfigurationBundle\Field\FieldSelect:
+        tags: ['spipu.configuration.field']
+        arguments:
+            $container: '@service_container'
 
     Spipu\ConfigurationBundle\Service\FieldList:
         arguments:
