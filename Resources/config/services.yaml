@@ -11,8 +11,22 @@ services:
         autowire: true
         autoconfigure: true
 
-    # Manager
+    # Configuration Manager
     Spipu\ConfigurationBundle\Service\ConfigurationManager:
+        public: true
+        autowire: true
+        arguments:
+            $container: '@service_container'
+
+    # Configuration Manager Deprecated
+    Spipu\ConfigurationBundle\Service\Manager:
+        public: true
+        autowire: true
+        arguments:
+            $container: '@service_container'
+
+    # Configuration Definitions
+    Spipu\ConfigurationBundle\Service\Definitions:
         public: true
         autowire: true
         arguments:

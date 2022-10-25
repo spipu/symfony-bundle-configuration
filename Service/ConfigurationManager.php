@@ -13,46 +13,21 @@ declare(strict_types=1);
 
 namespace Spipu\ConfigurationBundle\Service;
 
-use Doctrine\ORM\EntityManagerInterface;
 use Spipu\ConfigurationBundle\Entity\Definition;
-use Spipu\ConfigurationBundle\Entity\Configuration;
 use Spipu\ConfigurationBundle\Exception\ConfigurationException;
 use Spipu\ConfigurationBundle\Field\FieldInterface;
-use Spipu\ConfigurationBundle\Repository\ConfigurationRepository;
 use Spipu\CoreBundle\Service\HasherFactory;
 use Spipu\CoreBundle\Service\EncryptorInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
-use Psr\Cache\CacheItemPoolInterface;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\PasswordHasher\PasswordHasherInterface;
 
-/**
- * Class Manager
- * @SuppressWarnings(PMD.CouplingBetweenObjects)
- */
 class ConfigurationManager
 {
-    public const CACHE_KEY = "spipu_configuration_cache";
-
     /**
      * @var ContainerInterface
      */
     private $container;
-
-    /**
-     * @var EntityManagerInterface
-     */
-    private $entityManager;
-
-    /**
-     * @var CacheItemPoolInterface
-     */
-    private $cache;
-
-    /**
-     * @var ConfigurationRepository
-     */
-    private $configurationRepository;
 
     /**
      * @var HasherFactory
@@ -75,75 +50,43 @@ class ConfigurationManager
     private $fieldList;
 
     /**
-     * @var Definition[]
-     */
-    private $definitions;
-
-    /**
-     * @var mixed
-     */
-    private $values;
-
-    /**
      * @var string
      */
     private $filePath;
 
     /**
+     * @var Definitions
+     */
+    private $definitions;
+
+    /**
+     * @var Storage
+     */
+    private $storage;
+
+    /**
      * Configuration constructor.
      * @param ContainerInterface $container
-     * @param EntityManagerInterface $entityManager
-     * @param CacheItemPoolInterface $cache
-     * @param ConfigurationRepository $configurationRepository
      * @param HasherFactory $hasherFactory
      * @param EncryptorInterface $encryptor
      * @param FieldList $fieldList
-     * @throws ConfigurationException
+     * @param Definitions $definitions
+     * @param Storage $storage
      */
     public function __construct(
         ContainerInterface $container,
-        EntityManagerInterface $entityManager,
-        CacheItemPoolInterface $cache,
-        ConfigurationRepository $configurationRepository,
         HasherFactory $hasherFactory,
         EncryptorInterface $encryptor,
-        FieldList $fieldList
+        FieldList $fieldList,
+        Definitions $definitions,
+        Storage $storage
     ) {
         $this->container = $container;
-        $this->entityManager = $entityManager;
-        $this->cache = $cache;
-        $this->configurationRepository = $configurationRepository;
         $this->hasherFactory = $hasherFactory;
         $this->encryptor = $encryptor;
         $this->fieldList = $fieldList;
-
-        $this->loadDefinitions();
-    }
-
-    /**
-     * Load the definitions
-     *
-     * @return void
-     * @throws ConfigurationException
-     */
-    private function loadDefinitions(): void
-    {
-        $this->definitions = [];
-        $configurations = $this->container->getParameter('spipu_configuration');
-        foreach ($configurations as $configuration) {
-            $definition = new Definition(
-                $configuration['code'],
-                $configuration['type'],
-                $configuration['required'],
-                $configuration['default'],
-                $configuration['options'],
-                $configuration['unit'],
-                $configuration['help'],
-                $configuration['file_type']
-            );
-
-            $this->definitions[$definition->getCode()] = $definition;
-        }
+        $this->definitions = $definitions;
+        $this->storage = $storage;
     }
 
     /**
@@ -152,7 +95,7 @@ class ConfigurationManager
      */
     public function getDefinitions(): array
     {
-        return $this->definitions;
+        return $this->definitions->getAll();
     }
 
     /**
@@ -163,11 +106,7 @@ class ConfigurationManager
      */
     public function getDefinition(string $key): Definition
     {
-        if (!array_key_exists($key, $this->definitions)) {
-            throw new ConfigurationException(sprintf('Unknown configuration key [%s]', $key));
-        }
-
-        return $this->definitions[$key];
+        return $this->definitions->get($key);
     }
 
     /**
@@ -177,18 +116,16 @@ class ConfigurationManager
      */
     public function getField(string $key): FieldInterface
     {
-        return $this->fieldList->getField($this->getDefinition($key));
+        $definition = $this->definitions->get($key);
+        return $this->fieldList->getField($definition);
     }
 
     /**
-     * Get all the configuration values
      * @return array
      */
     public function getAll(): array
     {
-        $this->loadValues();
-
-        return $this->values;
+        return $this->storage->getAll();
     }
 
     /**
@@ -199,13 +136,7 @@ class ConfigurationManager
      */
     public function get(string $key)
     {
-        $this->loadValues();
-
-        if (!array_key_exists($key, $this->values)) {
-            throw new ConfigurationException(sprintf('Unknown configuration key [%s]', $key));
-        }
-
-        return $this->values[$key];
+        return $this->storage->get($key);
     }
 
     /**
@@ -216,24 +147,7 @@ class ConfigurationManager
      */
     public function set(string $key, $value): void
     {
-        $definition = $this->getDefinition($key);
-
-        $value = $this->fieldList->validateValue($definition, $value);
-        if ($value !== null) {
-            $value = (string) $value;
-        }
-
-        $config = $this->configurationRepository->findOneBy(['code' => $key]);
-        if (!$config) {
-            $config = new Configuration();
-            $config->setCode($key);
-        }
-        $config->setValue($value);
-
-        $this->entityManager->persist($config);
-        $this->entityManager->flush();
-
-        $this->cleanValues();
+        $this->storage->set($key, $value);
     }
 
     /**
@@ -370,86 +284,6 @@ class ConfigurationManager
      */
     public function clearCache(): void
     {
-        $this->cleanValues();
-    }
-
-    /**
-     * Clean the values to force reload
-     * @return void
-     */
-    private function cleanValues(): void
-    {
-        $this->values = null;
-
-        $this->cache->deleteItem(static::CACHE_KEY);
-    }
-
-    /**
-     * Load the values
-     * @return void
-     */
-    private function loadValues(): void
-    {
-        if (is_array($this->values)) {
-            return;
-        }
-
-        $cachedItem = $this->cache->getItem(static::CACHE_KEY);
-
-        if ($cachedItem->isHit()) {
-            $this->values = unserialize($cachedItem->get());
-            return;
-        }
-
-        $this->loadDefaultValues();
-        $this->loadDatabaseValues();
-        $this->prepareValues();
-
-        $cachedItem->set(serialize($this->values));
-        $cachedItem->expiresAfter(3600 * 24);
-        $this->cache->save($cachedItem);
-    }
-
-    /**
-     * Load the default values
-     * @return void
-     */
-    private function loadDefaultValues(): void
-    {
-        $this->values = [];
-        foreach ($this->getDefinitions() as $definition) {
-            $this->values[$definition->getCode()] = $definition->getDefault();
-        }
-    }
-
-    /**
-     * Load the database values
-     * @return void
-     */
-    private function loadDatabaseValues(): void
-    {
-        $rows = $this->configurationRepository->findAll();
-
-        foreach ($rows as $row) {
-            if (array_key_exists($row->getCode(), $this->values)) {
-                $this->values[$row->getCode()] = $row->getValue();
-            }
-        }
-    }
-
-    /**
-     * Prepare the values
-     * @return void
-     */
-    private function prepareValues(): void
-    {
-        $definitions = $this->getDefinitions();
-
-        foreach ($definitions as $definition) {
-            $this->values[$definition->getCode()] = $this->fieldList->prepareValue(
-                $definition,
-                $this->values[$definition->getCode()]
-            );
-        }
+        $this->storage->cleanValues();
     }
 }

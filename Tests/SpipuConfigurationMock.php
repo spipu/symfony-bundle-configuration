@@ -14,7 +14,7 @@ namespace Spipu\ConfigurationBundle\Tests;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Spipu\ConfigurationBundle\Entity\Definition;
-use Spipu\ConfigurationBundle\Service\Manager;
+use Spipu\ConfigurationBundle\Service\ConfigurationManager;
 
 class SpipuConfigurationMock extends TestCase
 {
@@ -22,7 +22,7 @@ class SpipuConfigurationMock extends TestCase
      * @param TestCase $testCase
      * @param array|null $definition
      * @param array $values
-     * @return MockObject|Manager
+     * @return MockObject|ConfigurationManager
      */
     public static function getManager(TestCase $testCase, array $definition = null, array $values = [])
     {
@@ -39,7 +39,7 @@ class SpipuConfigurationMock extends TestCase
             $definitionMap[$key] = new Definition($key, $type, true, '', null, null, null, null);
         }
 
-        $service = $testCase->createMock(Manager::class);
+        $service = $testCase->createMock(ConfigurationManager::class);
 
         $service
             ->method('getFileUrl')
@@ -81,7 +81,7 @@ class SpipuConfigurationMock extends TestCase
                 }
             );
 
-        /** @var Manager $service */
+        /** @var ConfigurationManager $service */
         return $service;
     }
 }

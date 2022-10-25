@@ -6,17 +6,18 @@ use Spipu\ConfigurationBundle\Entity\Definition;
 use Spipu\ConfigurationBundle\Exception\ConfigurationException;
 use Spipu\ConfigurationBundle\Field;
 use Spipu\ConfigurationBundle\Repository\ConfigurationRepository;
+use Spipu\ConfigurationBundle\Service\ConfigurationManager;
+use Spipu\ConfigurationBundle\Service\Definitions;
 use Spipu\ConfigurationBundle\Service\FieldList;
-use Spipu\ConfigurationBundle\Service\Manager;
 use PHPUnit\Framework\TestCase;
+use Spipu\ConfigurationBundle\Service\Storage;
 use Spipu\CoreBundle\Service\HasherFactory;
 use Spipu\CoreBundle\Service\Encryptor;
 use Spipu\CoreBundle\Tests\SymfonyMock;
 
-class ManagerTest extends TestCase
+class ConfigurationManagerTest extends TestCase
 {
     /**
-     * @param array $fileType
      * @return array
      */
     public function getConfigurations()
@@ -72,8 +73,10 @@ class ManagerTest extends TestCase
         $hasherFactory = new HasherFactory();
         $encryptor = new Encryptor('my_secret_phrase');
         $fieldList = new FieldList([new Field\FieldString(), new Field\FieldInteger(), new Field\FieldFile()]);
+        $definitions = new Definitions($container);
+        $storage = new Storage($definitions, $repository, $fieldList, $entityManager, $cachePool);
 
-        $manager = new Manager($container, $entityManager, $cachePool, $repository, $hasherFactory, $encryptor, $fieldList);
+        $manager = new ConfigurationManager($container, $hasherFactory, $encryptor, $fieldList, $definitions, $storage);
 
         $this->assertSame(
             $parameters['spipu.configuration.file.url'],
@@ -97,8 +100,10 @@ class ManagerTest extends TestCase
         $hasherFactory = new HasherFactory();
         $encryptor = new Encryptor('my_secret_phrase');
         $fieldList = new FieldList([new Field\FieldString(), new Field\FieldInteger(), new Field\FieldFile()]);
+        $definitions = new Definitions($container);
+        $storage = new Storage($definitions, $repository, $fieldList, $entityManager, $cachePool);
 
-        $manager = new Manager($container, $entityManager, $cachePool, $repository, $hasherFactory, $encryptor, $fieldList);
+        $manager = new ConfigurationManager($container, $hasherFactory, $encryptor, $fieldList, $definitions, $storage);
 
         $definitions = $manager->getDefinitions();
         self::assertSame(array_keys($configurations), array_keys($definitions));
@@ -149,7 +154,10 @@ class ManagerTest extends TestCase
                 ]
             );
 
-        $manager = new Manager($container, $entityManager, $cachePool, $repository, $hasherFactory, $encryptor, $fieldList);
+        $definitions = new Definitions($container);
+        $storage = new Storage($definitions, $repository, $fieldList, $entityManager, $cachePool);
+
+        $manager = new ConfigurationManager($container, $hasherFactory, $encryptor, $fieldList, $definitions, $storage);
 
         $expected = [
             'mock.test.string'  => 'default value',
@@ -164,12 +172,12 @@ class ManagerTest extends TestCase
         $this->assertSame($expected, $manager->getAll());
 
         // Saved in cache pool
-        $cacheItem = $cachePool->getItem($manager::CACHE_KEY);
+        $cacheItem = $cachePool->getItem(Storage::CACHE_KEY);
         $this->assertSame(true, $cacheItem->isHit());
         $this->assertSame($expected, unserialize($cacheItem->get()));
         
         // Third Time : Cache Pool
-        $manager = new Manager($container, $entityManager, $cachePool, $repository, $hasherFactory, $encryptor, $fieldList);
+        $manager = new ConfigurationManager($container, $hasherFactory, $encryptor, $fieldList, $definitions, $storage);
         $this->assertSame($expected, $manager->getAll());
 
         foreach ($expected as $key => $value) {
@@ -232,7 +240,9 @@ class ManagerTest extends TestCase
                 ]
             );
 
-        $manager = new Manager($container, $entityManager, $cachePool, $repository, $hasherFactory, $encryptor, $fieldList);
+        $definitions = new Definitions($container);
+        $storage = new Storage($definitions, $repository, $fieldList, $entityManager, $cachePool);
+        $manager = new ConfigurationManager($container, $hasherFactory, $encryptor, $fieldList, $definitions, $storage);
 
         $this->assertSame('default value', $manager->get('mock.test.string'));
         $this->assertSame(42, $manager->get('mock.test.integer'));
@@ -262,7 +272,9 @@ class ManagerTest extends TestCase
         $entityManager = SymfonyMock::getEntityManager($this);
         $repository = $this->createMock(ConfigurationRepository::class);
 
-        $manager = new Manager($container, $entityManager, $cachePool, $repository, $hasherFactory, $encryptor, $fieldList);
+        $definitions = new Definitions($container);
+        $storage = new Storage($definitions, $repository, $fieldList, $entityManager, $cachePool);
+        $manager = new ConfigurationManager($container, $hasherFactory, $encryptor, $fieldList, $definitions, $storage);
 
         $file = SymfonyMock::getUploadedFile($this);
 
@@ -287,7 +299,9 @@ class ManagerTest extends TestCase
         $entityManager = SymfonyMock::getEntityManager($this);
         $repository = $this->createMock(ConfigurationRepository::class);
 
-        $manager = new Manager($container, $entityManager, $cachePool, $repository, $hasherFactory, $encryptor, $fieldList);
+        $definitions = new Definitions($container);
+        $storage = new Storage($definitions, $repository, $fieldList, $entityManager, $cachePool);
+        $manager = new ConfigurationManager($container, $hasherFactory, $encryptor, $fieldList, $definitions, $storage);
 
         $file = SymfonyMock::getUploadedFile($this);
 
@@ -312,7 +326,9 @@ class ManagerTest extends TestCase
         $entityManager = SymfonyMock::getEntityManager($this);
         $repository = $this->createMock(ConfigurationRepository::class);
 
-        $manager = new Manager($container, $entityManager, $cachePool, $repository, $hasherFactory, $encryptor, $fieldList);
+        $definitions = new Definitions($container);
+        $storage = new Storage($definitions, $repository, $fieldList, $entityManager, $cachePool);
+        $manager = new ConfigurationManager($container, $hasherFactory, $encryptor, $fieldList, $definitions, $storage);
 
         $file = SymfonyMock::getUploadedFile($this, '/tmp/f.pdf', 'document.pdf', 'pdf', 'application/pdf');
 
@@ -339,7 +355,9 @@ class ManagerTest extends TestCase
         $entityManager = SymfonyMock::getEntityManager($this);
         $repository = $this->createMock(ConfigurationRepository::class);
 
-        $manager = new Manager($container, $entityManager, $cachePool, $repository, $hasherFactory, $encryptor, $fieldList);
+        $definitions = new Definitions($container);
+        $storage = new Storage($definitions, $repository, $fieldList, $entityManager, $cachePool);
+        $manager = new ConfigurationManager($container, $hasherFactory, $encryptor, $fieldList, $definitions, $storage);
 
         $file = SymfonyMock::getUploadedFile($this);
 
@@ -396,8 +414,9 @@ class ManagerTest extends TestCase
             ->method('findOneBy')
             ->willReturn(null);
 
-        $manager = new Manager($container, $entityManager, $cachePool, $repository, $hasherFactory, $encryptor, $fieldList);
-
+        $definitions = new Definitions($container);
+        $storage = new Storage($definitions, $repository, $fieldList, $entityManager, $cachePool);
+        $manager = new ConfigurationManager($container, $hasherFactory, $encryptor, $fieldList, $definitions, $storage);
 
         $this->assertSame('', $manager->get('mock.test.file'));
 

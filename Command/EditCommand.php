@@ -14,11 +14,9 @@ declare(strict_types=1);
 namespace Spipu\ConfigurationBundle\Command;
 
 use Exception;
-use Spipu\ConfigurationBundle\Entity\Definition;
 use Spipu\ConfigurationBundle\Exception\ConfigurationException;
-use Spipu\ConfigurationBundle\Service\Manager;
+use Spipu\ConfigurationBundle\Service\ConfigurationManager as Manager;
 use Symfony\Component\Console\Command\Command;
-use Symfony\Component\Console\Helper\Table;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -83,8 +81,8 @@ class EditCommand extends Command
      */
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
-        $key = $input->getOption(static::OPTION_KEY);
-        $value = $input->getOption(static::OPTION_VALUE);
+        $key = (string) $input->getOption(static::OPTION_KEY);
+        $value = (string) $input->getOption(static::OPTION_VALUE);
 
         $definition = $this->manager->getDefinition($key);
         if ($definition->getType() === 'file') {

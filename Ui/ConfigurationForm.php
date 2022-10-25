@@ -15,7 +15,7 @@ namespace Spipu\ConfigurationBundle\Ui;
 
 use Spipu\ConfigurationBundle\Entity\Definition;
 use Spipu\ConfigurationBundle\Exception\ConfigurationException;
-use Spipu\ConfigurationBundle\Service\Manager as ConfigurationManager;
+use Spipu\ConfigurationBundle\Service\ConfigurationManager;
 use Spipu\UiBundle\Entity\EntityInterface;
 use Spipu\UiBundle\Entity\Form\FieldSet;
 use Spipu\UiBundle\Entity\Form\Form;

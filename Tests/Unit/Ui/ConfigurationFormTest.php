@@ -2,7 +2,6 @@
 namespace Spipu\ConfigurationBundle\Tests\Unit\Ui;
 
 use PHPUnit\Framework\TestCase;
-use Spipu\ConfigurationBundle\Service\Manager;
 use Spipu\ConfigurationBundle\Tests\SpipuConfigurationMock;
 use Spipu\ConfigurationBundle\Ui\ConfigurationForm;
 use Spipu\UiBundle\Entity\Form;
@@ -30,8 +29,6 @@ class ConfigurationFormTest extends TestCase
             $manager->expects($this->once())->method('set')->with($code, 'new value');
         }
 
-
-        /** @var Manager $manager */
         $form = new ConfigurationForm($manager);
         $form->setConfigurationCode($code);
 

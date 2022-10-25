@@ -14,7 +14,7 @@ declare(strict_types=1);
 namespace Spipu\ConfigurationBundle\Ui\Grid;
 
 use Exception;
-use Spipu\ConfigurationBundle\Service\Manager;
+use Spipu\ConfigurationBundle\Service\ConfigurationManager as Manager;
 use Spipu\UiBundle\Entity\EntityInterface;
 use Spipu\UiBundle\Service\Ui\Grid\DataProvider\AbstractDataProvider;
 

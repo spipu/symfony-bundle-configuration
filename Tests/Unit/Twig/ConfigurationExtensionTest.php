@@ -1,7 +1,6 @@
 <?php
 namespace Spipu\ConfigurationBundle\Tests\Unit\Twig;
 
-use Spipu\ConfigurationBundle\Service\Manager;
 use Spipu\ConfigurationBundle\Tests\SpipuConfigurationMock;
 use Spipu\ConfigurationBundle\Twig\ConfigurationExtension;
 use PHPUnit\Framework\TestCase;
@@ -13,7 +12,6 @@ class ConfigurationExtensionTest extends TestCase
     {
         $manager = SpipuConfigurationMock::getManager($this);
 
-        /** @var Manager $manager */
         $extension = new ConfigurationExtension($manager);
 
         return $extension;
