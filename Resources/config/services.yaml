@@ -11,8 +11,8 @@ services:
         autowire: true
         autoconfigure: true
 
-    # API Services
-    Spipu\ConfigurationBundle\Service\Manager:
+    # Manager
+    Spipu\ConfigurationBundle\Service\ConfigurationManager:
         public: true
         autowire: true
         arguments:
