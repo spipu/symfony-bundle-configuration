@@ -15,6 +15,7 @@ use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Spipu\ConfigurationBundle\Entity\Definition;
 use Spipu\ConfigurationBundle\Service\ConfigurationManager;
+use Spipu\ConfigurationBundle\Service\ScopeListInterface;
 
 class SpipuConfigurationMock extends TestCase
 {
@@ -36,7 +37,7 @@ class SpipuConfigurationMock extends TestCase
 
         $definitionMap = [];
         foreach ($definition as $key => $type) {
-            $definitionMap[$key] = new Definition($key, $type, true, '', null, null, null, null);
+            $definitionMap[$key] = new Definition($key, $type, true, false, '', null, null, null, null);
         }
 
         $service = $testCase->createMock(ConfigurationManager::class);
@@ -83,5 +84,41 @@ class SpipuConfigurationMock extends TestCase
 
         /** @var ConfigurationManager $service */
         return $service;
+    }
+
+    /**
+     * @param array $scopes
+     * @return ConfigurationScopeListMock
+     */
+    public static function getScopeListMock(array $scopes = []): ConfigurationScopeListMock
+    {
+        $scopeList = new ConfigurationScopeListMock();
+        $scopeList->set($scopes);
+
+        return $scopeList;
+    }
+}
+
+class ConfigurationScopeListMock implements ScopeListInterface
+{
+    /**
+     * @var array
+     */
+    private $scopes;
+
+    /**
+     * @param array $scopes
+     */
+    public function set(array $scopes): void
+    {
+        $this->scopes = $scopes;
+    }
+
+    /**
+     * @return array
+     */
+    public function getAll(): array
+    {
+        return $this->scopes;
     }
 }

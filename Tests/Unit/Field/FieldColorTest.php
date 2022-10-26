@@ -16,9 +16,9 @@ class FieldColorTest extends AbstractFieldTest
         return new FieldColor();
     }
 
-    protected function getDefinition(bool $required)
+    protected function getDefinition(bool $required, bool $perScope = false)
     {
-        return new Definition('mock.test', $this->getCode(), $required, null, null, null, null, null);
+        return new Definition('mock.test', $this->getCode(), $required, $perScope, null, null, null, null, null);
     }
 
     protected function getGoodValue()

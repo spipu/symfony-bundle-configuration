@@ -71,6 +71,7 @@ class DataProvider extends AbstractDataProvider
                 $definition->getCode(),
                 $definition->getType(),
                 $definition->isRequired(),
+                $definition->isPerScope(),
                 $definition->getDefault(),
                 $definition->getOptions(),
                 $definition->getUnit(),

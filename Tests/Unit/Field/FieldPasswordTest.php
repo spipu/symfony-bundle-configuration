@@ -16,9 +16,9 @@ class FieldPasswordTest extends AbstractFieldTest
         return new FieldPassword();
     }
 
-    protected function getDefinition(bool $required)
+    protected function getDefinition(bool $required, bool $perScope = false)
     {
-        return new Definition('mock.test', $this->getCode(), $required, null, null, 'test', null, null);
+        return new Definition('mock.test', $this->getCode(), $required, $perScope, null, null, 'test', null, null);
     }
 
     protected function getGoodValue()

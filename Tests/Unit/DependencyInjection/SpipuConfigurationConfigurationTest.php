@@ -55,6 +55,7 @@ class SpipuConfigurationConfigurationTest extends TestCase
         $configs = [0 => $expected];
 
         $expected['mock.config']['file_type'] = [];
+        $expected['mock.config']['per_scope'] = false;
         $expected['mock.config']['default'] = null;
         $expected['mock.config']['unit'] = null;
         $expected['mock.config']['help'] = null;

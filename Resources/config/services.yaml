@@ -79,3 +79,13 @@ services:
         tags:
             - "twig.extension"
         autowire: true
+
+    # Scope management
+    spipu.configuration.service.scope_list:
+        class: Spipu\ConfigurationBundle\Service\ScopeList
+        autowire: true
+
+    Spipu\ConfigurationBundle\Service\ScopeService:
+        autowire: true
+        arguments:
+            $scopeList: '@spipu.configuration.service.scope_list'

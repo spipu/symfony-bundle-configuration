@@ -12,6 +12,7 @@ class EntityTest extends TestCase
             'code.mock.test',
             'type',
             true,
+            false,
             'default',
             'options',
             'unit',

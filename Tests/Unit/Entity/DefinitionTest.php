@@ -13,6 +13,7 @@ class DefinitionTest extends TestCase
             'code.mock.test',
             'type',
             true,
+            false,
             'default',
             'options',
             'unit',
@@ -26,6 +27,7 @@ class DefinitionTest extends TestCase
         $this->assertSame('code', $entity->getMainCategory());
         $this->assertSame('mock.test', $entity->getSubCategories());
         $this->assertTrue($entity->isRequired());
+        $this->assertFalse($entity->isPerScope());
         $this->assertSame('default', $entity->getDefault());
         $this->assertSame('options', $entity->getOptions());
         $this->assertSame('unit', $entity->getUnit());
@@ -40,6 +42,7 @@ class DefinitionTest extends TestCase
             'wrong',
             'type',
             true,
+            false,
             'default',
             'options',
             'unit',
