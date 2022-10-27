@@ -16,9 +16,9 @@ class FieldEncryptedTest extends AbstractFieldTest
         return new FieldEncrypted();
     }
 
-    protected function getDefinition(bool $required, bool $perScope = false)
+    protected function getDefinition(bool $required, bool $scoped = false)
     {
-        return new Definition('mock.test', $this->getCode(), $required, $perScope, null, null, 'test', null, null);
+        return new Definition('mock.test', $this->getCode(), $required, $scoped, null, null, 'test', null, null);
     }
 
     protected function getGoodValue()

@@ -40,7 +40,7 @@ class Definition
     /**
      * @var bool
      */
-    private $perScope;
+    private $scoped;
 
     /**
      * @var mixed
@@ -72,7 +72,7 @@ class Definition
      * @param string $code
      * @param string $type
      * @param bool $required
-     * @param bool $perScope
+     * @param bool $scoped
      * @param mixed $default
      * @param null|string $options
      * @param null|string $unit
@@ -84,7 +84,7 @@ class Definition
         string $code,
         string $type,
         bool $required,
-        bool $perScope,
+        bool $scoped,
         $default,
         ?string $options,
         ?string $unit,
@@ -94,7 +94,7 @@ class Definition
         $this->code = $code;
         $this->type = $type;
         $this->required = $required;
-        $this->perScope = $perScope;
+        $this->scoped = $scoped;
         $this->default = $default;
         $this->options = $options;
         $this->unit = $unit;
@@ -176,9 +176,9 @@ class Definition
     /**
      * @return bool
      */
-    public function isPerScope(): bool
+    public function isScoped(): bool
     {
-        return $this->perScope;
+        return $this->scoped;
     }
 
     /**

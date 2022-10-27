@@ -32,9 +32,9 @@ class FieldSelectTest extends AbstractFieldTest
         return new FieldSelect($container);
     }
 
-    protected function getDefinition(bool $required, bool $perScope = false)
+    protected function getDefinition(bool $required, bool $scoped = false)
     {
-        return new Definition('mock.test', $this->getCode(), $required, $perScope, null, 'good_options', null, null, null);
+        return new Definition('mock.test', $this->getCode(), $required, $scoped, null, 'good_options', null, null, null);
     }
 
     protected function getGoodValue()

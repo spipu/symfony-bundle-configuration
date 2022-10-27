@@ -73,7 +73,7 @@ class SpipuConfigurationConfiguration implements ConfigurationInterface
                         ->isRequired()
                         ->defaultFalse()
                     ->end()
-                    ->booleanNode('per_scope')
+                    ->booleanNode('scoped')
                         ->defaultFalse()
                     ->end()
                     ->scalarNode('default')

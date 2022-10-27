@@ -14,6 +14,7 @@ spipu:
             value:          "Valeur"
             type:           "Type"
             required:       "Requis"
+            scoped:         "Etendue"
 
         role:
             admin:          "Gérer la Configuration"

@@ -27,7 +27,7 @@ class DefinitionTest extends TestCase
         $this->assertSame('code', $entity->getMainCategory());
         $this->assertSame('mock.test', $entity->getSubCategories());
         $this->assertTrue($entity->isRequired());
-        $this->assertFalse($entity->isPerScope());
+        $this->assertFalse($entity->isScoped());
         $this->assertSame('default', $entity->getDefault());
         $this->assertSame('options', $entity->getOptions());
         $this->assertSame('unit', $entity->getUnit());

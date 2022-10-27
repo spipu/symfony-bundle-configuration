@@ -68,7 +68,7 @@ class ConfigurationGrid implements GridDefinitionInterface
                         (new Grid\ColumnType(Grid\ColumnType::TYPE_TEXT))
                             ->setTemplateField('@SpipuConfiguration/grid/field/code.html.twig')
                     )
-                    ->setFilter((new Grid\ColumnFilter(true)))
+                    ->setFilter((new Grid\ColumnFilter(true, true)))
                     ->setOptions(['td-css-class' => 'pl-4 text-left'])
             )
             ->addColumn(
@@ -86,6 +86,12 @@ class ConfigurationGrid implements GridDefinitionInterface
             ->addColumn(
                 (new Grid\Column('required', 'spipu.configuration.field.required', 'required', 40))
                     ->setType((new Grid\ColumnType(Grid\ColumnType::TYPE_SELECT))->setOptions($this->optionsYesNo))
+                    ->setFilter((new Grid\ColumnFilter(true)))
+            )
+            ->addColumn(
+                (new Grid\Column('scoped', 'spipu.configuration.field.scoped', 'scoped', 50))
+                    ->setType((new Grid\ColumnType(Grid\ColumnType::TYPE_SELECT))->setOptions($this->optionsYesNo))
+                    ->setFilter((new Grid\ColumnFilter(true)))
             )
             ->addRowAction(
                 (new Grid\Action('edit', 'spipu.ui.action.edit', 10, 'spipu_configuration_admin_edit'))

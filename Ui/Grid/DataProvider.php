@@ -16,6 +16,7 @@ namespace Spipu\ConfigurationBundle\Ui\Grid;
 use Exception;
 use Spipu\ConfigurationBundle\Service\ConfigurationManager as Manager;
 use Spipu\UiBundle\Entity\EntityInterface;
+use Spipu\UiBundle\Exception\GridException;
 use Spipu\UiBundle\Service\Ui\Grid\DataProvider\AbstractDataProvider;
 
 class DataProvider extends AbstractDataProvider
@@ -71,7 +72,7 @@ class DataProvider extends AbstractDataProvider
                 $definition->getCode(),
                 $definition->getType(),
                 $definition->isRequired(),
-                $definition->isPerScope(),
+                $definition->isScoped(),
                 $definition->getDefault(),
                 $definition->getOptions(),
                 $definition->getUnit(),
@@ -90,17 +91,50 @@ class DataProvider extends AbstractDataProvider
     /**
      * @param Entity $item
      * @return bool
+     * @throws GridException
      */
     private function filterItem(Entity $item): bool
     {
         foreach ($this->getFilters() as $filterField => $filterValue) {
-            $filterValue = (string) $filterValue;
-            $itemValue = (string) $item->{'get' . ucfirst($filterField)}();
+            $filterValue = mb_strtolower((string) $filterValue);
+            $itemValue = $this->getItemValue($item, (string) $filterField);
+
             if (strpos($itemValue, $filterValue) === false) {
                 return false;
             }
         }
+
+        if ($this->request->getQuickSearchField() && $this->request->getQuickSearchValue()) {
+            $filterValue = mb_strtolower($this->request->getQuickSearchValue());
+            $itemValue = $this->getItemValue($item, $this->request->getQuickSearchField());
+
+            if (strpos($itemValue, $filterValue) !== 0) {
+                return false;
+            }
+        }
+
         return true;
+    }
+
+    /**
+     * @param Entity $item
+     * @param string $fieldName
+     * @return string
+     */
+    private function getGetterName(Entity $item, string $fieldName): string
+    {
+        $methods = [
+            'get' . ucfirst($fieldName),
+            'is' . ucfirst($fieldName),
+        ];
+
+        foreach ($methods as $method) {
+            if (method_exists($item, $method)) {
+                return $method;
+            }
+        }
+
+        return $fieldName;
     }
 
     /**
@@ -123,5 +157,25 @@ class DataProvider extends AbstractDataProvider
         $this->loadItems();
 
         return $this->items;
+    }
+
+    /**
+     * @param Entity $item
+     * @param string $filterField
+     * @return string
+     */
+    private function getItemValue(Entity $item, string $filterField): string
+    {
+        $method = $this->getGetterName($item, $filterField);
+        $itemValue = $item->{$method}();
+
+        if ($itemValue === true) {
+            $itemValue = '1';
+        }
+
+        if ($itemValue === false) {
+            $itemValue = '0';
+        }
+        return mb_strtolower((string) $itemValue);
     }
 }
