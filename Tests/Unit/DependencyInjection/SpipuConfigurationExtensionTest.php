@@ -176,4 +176,24 @@ class SpipuConfigurationExtensionTest extends TestCase
         $this->expectException(InvalidConfigurationException::class);
         $extension->load([0 => $config], $builder);
     }
+
+    public function testConfigErrorDefaultValueWithEncrypted()
+    {
+        $builder = SymfonyMock::getContainerBuilder($this);
+
+        $extension = new SpipuConfigurationExtension();
+
+        $config = [
+            'test.string'   => [
+                'type'     => 'encrypted',
+                'required' => true,
+                'default'  => 'foo',
+            ],
+        ];
+
+        $this->assertFalse($builder->hasParameter('spipu_configuration'));
+
+        $this->expectException(InvalidConfigurationException::class);
+        $extension->load([0 => $config], $builder);
+    }
 }

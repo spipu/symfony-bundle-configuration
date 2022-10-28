@@ -18,7 +18,7 @@ class FieldStringTest extends AbstractFieldTest
 
     protected function getDefinition(bool $required, bool $scoped = false)
     {
-        return new Definition('mock.test', $this->getCode(), $required, $scoped, null, null, 'test', null, null);
+        return new Definition('mock.test', $this->getCode(), $required, $scoped, null, null, 'test', 'help', null);
     }
 
     protected function getGoodValue()
@@ -47,6 +47,6 @@ class FieldStringTest extends AbstractFieldTest
         $definition = $this->getDefinition(true);
 
         $formField = $field->getFormField($definition);
-        $this->assertSame('Unit: test', $formField->getOptions()['help']);
+        $this->assertSame('Unit: test | help', $formField->getOptions()['help']);
     }
 }
