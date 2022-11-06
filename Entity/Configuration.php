@@ -45,6 +45,12 @@ class Configuration implements EntityInterface, TimestampableInterface
     private $code;
 
     /**
+     * @var string
+     * @ORM\Column(type="string", length=128, nullable=true)
+     */
+    private $scope;
+
+    /**
      * @var string|null
      * @ORM\Column(type="string", length=255, nullable=true)
      */
@@ -73,6 +79,25 @@ class Configuration implements EntityInterface, TimestampableInterface
     public function setCode(string $code): self
     {
         $this->code = $code;
+
+        return $this;
+    }
+
+    /**
+     * @return null|string
+     */
+    public function getScope(): ?string
+    {
+        return $this->scope;
+    }
+
+    /**
+     * @param string|null $scope
+     * @return Configuration
+     */
+    public function setScope(?string $scope): self
+    {
+        $this->scope = $scope;
 
         return $this;
     }

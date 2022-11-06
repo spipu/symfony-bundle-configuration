@@ -13,8 +13,11 @@ declare(strict_types=1);
 
 namespace Spipu\ConfigurationBundle\Controller;
 
+use Spipu\ConfigurationBundle\Exception\ConfigurationScopeException;
+use Spipu\ConfigurationBundle\Service\ScopeService;
 use Spipu\ConfigurationBundle\Ui\ConfigurationForm;
 use Spipu\ConfigurationBundle\Ui\ConfigurationGrid;
+use Spipu\UiBundle\Exception\GridException;
 use Spipu\UiBundle\Exception\UiException;
 use Spipu\UiBundle\Service\Ui\FormFactory;
 use Spipu\UiBundle\Service\Ui\GridFactory;
@@ -30,28 +33,49 @@ class ConfigurationController extends AbstractController
 {
     /**
      * @Route(
-     *     "/",
+     *     "/list/{scopeCode}",
      *     name="spipu_configuration_admin_list",
      *     methods="GET"
      * )
      * @Security("is_granted('ROLE_ADMIN_MANAGE_CONFIGURATION_SHOW')")
      * @param GridFactory $gridFactory
      * @param ConfigurationGrid $configurationGrid
+     * @param ScopeService $scopeService
+     * @param string $scopeCode
      * @return Response
+     * @throws GridException
      * @throws UiException
      */
-    public function index(GridFactory $gridFactory, ConfigurationGrid $configurationGrid): Response
-    {
+    public function index(
+        GridFactory $gridFactory,
+        ConfigurationGrid $configurationGrid,
+        ScopeService $scopeService,
+        string $scopeCode = ''
+    ): Response {
+        try {
+            $scopeService->getScope($scopeCode);
+        } catch (ConfigurationScopeException $e) {
+            throw $this->createNotFoundException($e->getMessage(), $e);
+        }
+
         $manager = $gridFactory->create($configurationGrid);
         $manager->setRoute('spipu_configuration_admin_list');
         $manager->validate();
 
-        return $this->render('@SpipuConfiguration/index.html.twig', ['manager' => $manager]);
+        return $this->render(
+            '@SpipuConfiguration/index.html.twig',
+            [
+                'manager'      => $manager,
+                'hasScopes'    => $scopeService->hasScopes(),
+                'scopes'       => $scopeService->getScopes(),
+                'currentScope' => $scopeCode,
+            ]
+        );
     }
 
     /**
      * @Route(
-     *     "/{code}",
+     *     "/show/{code}",
      *     name="spipu_configuration_admin_edit",
      *     methods="GET|POST"
      * )

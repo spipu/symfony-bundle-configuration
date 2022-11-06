@@ -68,8 +68,16 @@ class Scope
             throw new ConfigurationScopeException('Invalid scope code - char not allowed');
         }
 
+        if (preg_match('/[.*\/\\\\]/', $code)) {
+            throw new ConfigurationScopeException('Invalid scope code - char not allowed');
+        }
+
         if ($code === '') {
             throw new ConfigurationScopeException('Invalid scope code - empty');
+        }
+
+        if (mb_strlen($code) > 128) {
+            throw new ConfigurationScopeException('Invalid scope code - too long');
         }
     }
 

@@ -20,3 +20,7 @@ spipu:
             admin:          "Manage Configuration"
             admin_show:     "Manage Configuration - Show"
             admin_edit:     "Manage Configuration - Edit"
+
+        scope:
+            label:  "Scope"
+            global: "Global"

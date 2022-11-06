@@ -115,14 +115,16 @@ class Storage
             $value = (string) $value;
         }
 
-        $config = $this->configurationRepository->findOneBy(['code' => $key]);
+        $config = $this->configurationRepository->findOneBy(['code' => $key, 'scope' => null]);
         if (!$config) {
             $config = new Configuration();
             $config->setCode($key);
+            $config->setScope(null);
+
+            $this->entityManager->persist($config);
         }
         $config->setValue($value);
 
-        $this->entityManager->persist($config);
         $this->entityManager->flush();
 
         $this->cleanValues();

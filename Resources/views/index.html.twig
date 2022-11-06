@@ -7,4 +7,36 @@
 
 {% block main_title %}{{ 'spipu.configuration.page.admin.list'|trans() }}{% endblock %}
 
-{% block body %}{{ renderManager(manager) }}{% endblock %}
+{% block javascripts %}
+    {{ parent() }}
+    {% if hasScopes %}
+        <script>
+            window.onload = function () {
+                let scopeSelect = $('#scopeCode');
+
+                scopeSelect.on('change', function () {
+                    window.location = '{{ path('spipu_configuration_admin_list') }}/' + scopeSelect.val();
+                });
+            };
+        </script>
+    {% endif %}
+{% endblock %}
+
+{% block body %}
+    {% if hasScopes %}
+        <div class="row">
+            <div class="col-12">
+                <div class="form-inline">
+                    <label for="scopeCode" class="mr-2">{{ 'spipu.configuration.scope.label'|trans }}</label>
+                    <select class="form-control" id="scopeCode">
+                        <option value="">{{ 'spipu.configuration.scope.global'|trans }}</option>
+                        {% for scope in scopes %}
+                            <option value="{{ scope.code }}" {% if scope.code == currentScope %}selected="selected"{% endif %}>{{ scope.name }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+            </div>
+        </div>
+    {% endif %}
+    {{ renderManager(manager) }}
+{% endblock %}

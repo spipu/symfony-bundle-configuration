@@ -94,7 +94,7 @@ class ScopeService
     {
         $this->loadScopes();
 
-        if ($code === null) {
+        if ($code === null || $code === '') {
             return null;
         }
 

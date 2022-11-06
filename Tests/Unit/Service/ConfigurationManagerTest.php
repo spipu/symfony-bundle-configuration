@@ -204,13 +204,14 @@ class ConfigurationManagerTest extends TestCase
         $entity = new Configuration();
         $entity
             ->setCode('mock.test.integer')
+            ->setScope(null)
             ->setValue('42');
 
         $list = [$entity->getCode() => $entity];
 
         $entityManager = SymfonyMock::getEntityManager($this);
         $entityManager
-            ->expects($this->exactly(2))
+            ->expects($this->exactly(1))
             ->method('persist')
             ->willReturnCallback(
                 function ($object) use (&$list) {
@@ -238,8 +239,8 @@ class ConfigurationManagerTest extends TestCase
             ->method('findOneBy')
             ->willReturnMap(
                 [
-                    [['code' => 'mock.test.integer'], null, $entity],
-                    [['code' => 'mock.test.text'],    null, null],
+                    [['code' => 'mock.test.integer', 'scope' => null], null, $entity],
+                    [['code' => 'mock.test.text',    'scope' => null], null, null],
                 ]
             );
 
@@ -254,8 +255,9 @@ class ConfigurationManagerTest extends TestCase
         $manager->set('mock.test.integer', 43);
 
         $this->assertSame('new value', $manager->get('mock.test.string'));
-        $this->assertSame('43', $entity->getValue());
         $this->assertSame(43, $manager->get('mock.test.integer'));
+
+        $this->assertSame('43', $entity->getValue());
     }
 
     public function testSetFileNotAllowed()
