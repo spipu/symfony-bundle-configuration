@@ -92,6 +92,27 @@ class ScopeTest extends TestCase
         new Scope('to.ta', 'Name');
     }
 
+    public function testKoCodeGlobalNotAllowed()
+    {
+        $this->expectException(ConfigurationScopeException::class);
+        $this->expectExceptionMessage('Invalid scope code - value not allowed');
+        new Scope('global', 'Name');
+    }
+
+    public function testKoCodeDefaultNotAllowed()
+    {
+        $this->expectException(ConfigurationScopeException::class);
+        $this->expectExceptionMessage('Invalid scope code - value not allowed');
+        new Scope('default', 'Name');
+    }
+
+    public function testKoCodeScopedNotAllowed()
+    {
+        $this->expectException(ConfigurationScopeException::class);
+        $this->expectExceptionMessage('Invalid scope code - value not allowed');
+        new Scope('scoped', 'Name');
+    }
+
     public function testOkChar1()
     {
         $entity = new Scope('to-ta', 'Name');

@@ -76,6 +76,10 @@ class Scope
             throw new ConfigurationScopeException('Invalid scope code - empty');
         }
 
+        if (in_array($code, ['global', 'default', 'scoped'])) {
+            throw new ConfigurationScopeException('Invalid scope code - value not allowed');
+        }
+
         if (mb_strlen($code) > 128) {
             throw new ConfigurationScopeException('Invalid scope code - too long');
         }

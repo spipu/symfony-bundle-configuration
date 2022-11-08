@@ -29,7 +29,9 @@ class ConfigurationFormTest extends TestCase
             $manager->expects($this->once())->method('set')->with($code, 'new value');
         }
 
-        $form = new ConfigurationForm($manager);
+        $scopeService = SpipuConfigurationMock::getScopeServiceMock();
+
+        $form = new ConfigurationForm($manager, $scopeService);
         $form->setConfigurationCode($code);
 
         return $form;

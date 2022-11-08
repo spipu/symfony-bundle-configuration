@@ -14,18 +14,16 @@ declare(strict_types=1);
 namespace Spipu\ConfigurationBundle\Command;
 
 use Exception;
-use Spipu\ConfigurationBundle\Exception\ConfigurationException;
 use Spipu\ConfigurationBundle\Service\ConfigurationManager as Manager;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 
-class EditCommand extends Command
+class DeleteCommand extends Command
 {
     public const OPTION_KEY = 'key';
     public const OPTION_SCOPE = 'scope';
-    public const OPTION_VALUE = 'value';
 
     /**
      * @var Manager
@@ -54,26 +52,20 @@ class EditCommand extends Command
     protected function configure(): void
     {
         $this
-            ->setName('spipu:configuration:edit')
-            ->setDescription('Edit a Spipu Configuration.')
-            ->setHelp('This command allows you to edit a spipu configuration')
+            ->setName('spipu:configuration:delete')
+            ->setDescription('Delete a Spipu Configuration.')
+            ->setHelp('This command allows you to delete a spipu configuration, in order to use the default value')
             ->addOption(
                 static::OPTION_KEY,
                 null,
                 InputOption::VALUE_REQUIRED,
-                'Key of the configuration to edit'
+                'Key of the configuration to delete'
             )
             ->addOption(
                 static::OPTION_SCOPE,
                 null,
                 InputOption::VALUE_OPTIONAL,
-                'Scope of the configuration to edit. Global scope if empty'
-            )
-            ->addOption(
-                static::OPTION_VALUE,
-                null,
-                InputOption::VALUE_REQUIRED,
-                'Value of the configuration to edit'
+                'Scope of the configuration to delete. Global scope if empty'
             );
     }
 
@@ -89,23 +81,17 @@ class EditCommand extends Command
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $key = (string) $input->getOption(static::OPTION_KEY);
-        $value = (string) $input->getOption(static::OPTION_VALUE);
         $scope = $input->getOption(static::OPTION_SCOPE);
         if ($scope === null || $scope === 'global') {
             $scope = '';
         }
 
-        $output->writeln('Edit Configuration');
+        $output->writeln('Delete Configuration');
         $output->writeln('  - Key:   ' . $key);
         $output->writeln('  - Scope: ' . ($scope === '' ? 'global' : $scope));
         $output->writeln('');
 
-        $definition = $this->manager->getDefinition($key);
-        if ($definition->getType() === 'file') {
-            throw new ConfigurationException('Unable to set a file in CLI');
-        }
-
-        $this->manager->set($key, $value, $scope);
+        $this->manager->delete($key, $scope);
         $output->writeln(' => done');
 
         return self::SUCCESS;

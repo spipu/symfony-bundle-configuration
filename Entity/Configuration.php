@@ -23,7 +23,7 @@ use Spipu\UiBundle\Entity\TimestampableTrait;
  * @ORM\HasLifecycleCallbacks()
  * @ORM\Table(
  *     name="spipu_configuration",
- *     uniqueConstraints={@ORM\UniqueConstraint(name="UNIQ_CODE", columns={"code"})}
+ *     uniqueConstraints={@ORM\UniqueConstraint(name="UNIQ_CODE_SCOPE", columns={"code", "scope"})}
  * )
  */
 class Configuration implements EntityInterface, TimestampableInterface

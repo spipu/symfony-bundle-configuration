@@ -16,6 +16,7 @@ namespace Spipu\ConfigurationBundle\Ui;
 use Spipu\ConfigurationBundle\Entity\Definition;
 use Spipu\ConfigurationBundle\Exception\ConfigurationException;
 use Spipu\ConfigurationBundle\Service\ConfigurationManager;
+use Spipu\ConfigurationBundle\Service\ScopeService;
 use Spipu\UiBundle\Entity\EntityInterface;
 use Spipu\UiBundle\Entity\Form\FieldSet;
 use Spipu\UiBundle\Entity\Form\Form;
@@ -41,14 +42,22 @@ class ConfigurationForm implements EntityDefinitionInterface
      * @var string
      */
     private $configurationCode;
+    /**
+     * @var ScopeService
+     */
+    private $scopeService;
 
     /**
      * ConfigurationForm constructor.
      * @param ConfigurationManager $configurationManager
+     * @param ScopeService $scopeService
      */
-    public function __construct(ConfigurationManager $configurationManager)
-    {
+    public function __construct(
+        ConfigurationManager $configurationManager,
+        ScopeService $scopeService
+    ) {
         $this->configurationManager = $configurationManager;
+        $this->scopeService = $scopeService;
     }
 
     /**

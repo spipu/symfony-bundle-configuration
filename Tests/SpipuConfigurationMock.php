@@ -14,8 +14,10 @@ namespace Spipu\ConfigurationBundle\Tests;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Spipu\ConfigurationBundle\Entity\Definition;
+use Spipu\ConfigurationBundle\Entity\Scope;
 use Spipu\ConfigurationBundle\Service\ConfigurationManager;
 use Spipu\ConfigurationBundle\Service\ScopeListInterface;
+use Spipu\ConfigurationBundle\Service\ScopeService;
 
 class SpipuConfigurationMock extends TestCase
 {
@@ -53,7 +55,7 @@ class SpipuConfigurationMock extends TestCase
         } else {
             $map = [];
             foreach ($values as $key => $value) {
-                $map[] = [$key, $value];
+                $map[] = [$key, null, $value];
             }
 
             $service
@@ -96,6 +98,20 @@ class SpipuConfigurationMock extends TestCase
         $scopeList->set($scopes);
 
         return $scopeList;
+    }
+
+    /**
+     * @param array|null $scopes
+     * @return ScopeService
+     */
+    public static function getScopeServiceMock(?array $scopes = null): ScopeService
+    {
+        if ($scopes === null) {
+            $scopes = [
+                new Scope('test', 'Test')
+            ];
+        }
+        return new ScopeService(SpipuConfigurationMock::getScopeListMock($scopes));
     }
 }
 
