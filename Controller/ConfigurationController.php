@@ -32,6 +32,20 @@ use Symfony\Component\Routing\Annotation\Route;
 class ConfigurationController extends AbstractController
 {
     /**
+     * @var ScopeService
+     */
+    private $scopeService;
+
+    /**
+     * @param ScopeService $scopeService
+     */
+    public function __construct(
+        ScopeService $scopeService
+    ) {
+        $this->scopeService = $scopeService;
+    }
+
+    /**
      * @Route(
      *     "/list/{scopeCode}",
      *     name="spipu_configuration_admin_list",
@@ -40,7 +54,6 @@ class ConfigurationController extends AbstractController
      * @Security("is_granted('ROLE_ADMIN_MANAGE_CONFIGURATION_SHOW')")
      * @param GridFactory $gridFactory
      * @param ConfigurationGrid $configurationGrid
-     * @param ScopeService $scopeService
      * @param string $scopeCode
      * @return Response
      * @throws GridException
@@ -49,14 +62,19 @@ class ConfigurationController extends AbstractController
     public function index(
         GridFactory $gridFactory,
         ConfigurationGrid $configurationGrid,
-        ScopeService $scopeService,
         string $scopeCode = ''
     ): Response {
         try {
-            $scopeService->getScope($scopeCode);
+            $scope = $this->scopeService->getScope($scopeCode);
         } catch (ConfigurationScopeException $e) {
             throw $this->createNotFoundException($e->getMessage(), $e);
         }
+
+        $scopeCode = null;
+        if ($scope) {
+            $scopeCode = $scope->getCode();
+        }
+        $configurationGrid->setCurrentScope($scopeCode);
 
         $manager = $gridFactory->create($configurationGrid);
         $manager->setRoute('spipu_configuration_admin_list');
@@ -66,8 +84,8 @@ class ConfigurationController extends AbstractController
             '@SpipuConfiguration/index.html.twig',
             [
                 'manager'      => $manager,
-                'hasScopes'    => $scopeService->hasScopes(),
-                'scopes'       => $scopeService->getScopes(),
+                'hasScopes'    => $this->scopeService->hasScopes(),
+                'scopes'       => $this->scopeService->getScopes(),
                 'currentScope' => $scopeCode,
             ]
         );
@@ -75,7 +93,7 @@ class ConfigurationController extends AbstractController
 
     /**
      * @Route(
-     *     "/show/{code}",
+     *     "/show/{code}/{scopeCode}",
      *     name="spipu_configuration_admin_edit",
      *     methods="GET|POST"
      * )
@@ -83,21 +101,45 @@ class ConfigurationController extends AbstractController
      * @param FormFactory $formFactory
      * @param ConfigurationForm $configurationForm
      * @param string $code
+     * @param string|null $scopeCode
      * @return Response
      * @throws UiException
      */
-    public function edit(FormFactory $formFactory, ConfigurationForm $configurationForm, string $code): Response
-    {
+    public function edit(
+        FormFactory $formFactory,
+        ConfigurationForm $configurationForm,
+        string $code,
+        ?string $scopeCode = null
+    ): Response {
         $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
+
+        try {
+            $scope = $this->scopeService->getScope($scopeCode);
+        } catch (ConfigurationScopeException $e) {
+            throw $this->createNotFoundException($e->getMessage(), $e);
+        }
+
+        $scopeCode = null;
+        if ($scope) {
+            $scopeCode = $scope->getCode();
+        }
 
         $configurationForm->setConfigurationCode($code);
 
         $manager = $formFactory->create($configurationForm);
         $manager->setSubmitButton('spipu.ui.action.update');
         if ($manager->validate()) {
-            return $this->redirectToRoute('spipu_configuration_admin_list');
+            return $this->redirectToRoute('spipu_configuration_admin_list', ['scopeCode' => $scopeCode]);
         }
 
-        return $this->render('@SpipuConfiguration/show.html.twig', ['manager' => $manager]);
+        return $this->render(
+            '@SpipuConfiguration/show.html.twig',
+            [
+                'manager'      => $manager,
+                'hasScopes'    => $this->scopeService->hasScopes(),
+                'scopes'       => $this->scopeService->getScopes(),
+                'currentScope' => $scopeCode,
+            ]
+        );
     }
 }

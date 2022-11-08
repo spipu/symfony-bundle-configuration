@@ -41,6 +41,11 @@ class ConfigurationGrid implements GridDefinitionInterface
     private $definition;
 
     /**
+     * @var string|null
+     */
+    private $currentScope;
+
+    /**
      * @return Grid\Grid
      */
     public function getDefinition(): Grid\Grid
@@ -94,11 +99,35 @@ class ConfigurationGrid implements GridDefinitionInterface
                     ->setFilter((new Grid\ColumnFilter(true)))
             )
             ->addRowAction(
-                (new Grid\Action('edit', 'spipu.ui.action.edit', 10, 'spipu_configuration_admin_edit'))
+                (new Grid\Action(
+                    'edit',
+                    'spipu.ui.action.edit',
+                    10,
+                    'spipu_configuration_admin_edit',
+                    ['scopeCode' => $this->currentScope]
+                ))
                     ->setCssClass('success')
                     ->setIcon('edit')
                     ->setNeededRole('ROLE_ADMIN_MANAGE_CONFIGURATION_EDIT')
             )
         ;
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getCurrentScope(): ?string
+    {
+        return $this->currentScope;
+    }
+
+    /**
+     * @param string|null $currentScope
+     * @return ConfigurationGrid
+     */
+    public function setCurrentScope(?string $currentScope): ConfigurationGrid
+    {
+        $this->currentScope = $currentScope;
+        return $this;
     }
 }
