@@ -34,7 +34,7 @@ class Storage
     /**
      * @var mixed
      */
-    private $values;
+    private $cacheValues;
 
     /**
      * @var ConfigurationRepository
@@ -54,7 +54,7 @@ class Storage
     /**
      * @var CacheItemPoolInterface
      */
-    private $cache;
+    private $cacheService;
 
     /**
      * @var ScopeService
@@ -62,16 +62,11 @@ class Storage
     private $scopeService;
 
     /**
-     * @var string[]
-     */
-    private $scoped;
-
-    /**
      * @param Definitions $definitions
      * @param ConfigurationRepository $configurationRepository
      * @param FieldList $fieldList
      * @param EntityManagerInterface $entityManager
-     * @param CacheItemPoolInterface $cache
+     * @param CacheItemPoolInterface $cacheService
      * @param ScopeService $scopeService
      */
     public function __construct(
@@ -79,14 +74,14 @@ class Storage
         ConfigurationRepository $configurationRepository,
         FieldList $fieldList,
         EntityManagerInterface $entityManager,
-        CacheItemPoolInterface $cache,
+        CacheItemPoolInterface $cacheService,
         ScopeService $scopeService
     ) {
         $this->definitions = $definitions;
         $this->configurationRepository = $configurationRepository;
         $this->fieldList = $fieldList;
         $this->entityManager = $entityManager;
-        $this->cache = $cache;
+        $this->cacheService = $cacheService;
         $this->scopeService = $scopeService;
     }
 
@@ -98,7 +93,7 @@ class Storage
     {
         $this->loadValues();
 
-        return $this->values;
+        return $this->cacheValues['values'];
     }
 
     /**
@@ -113,11 +108,11 @@ class Storage
 
         $scopes = [];
         if (!in_array($scope, [null, '', 'global', 'default'])) {
-            if (!in_array($key, $this->scoped)) {
+            if (!in_array($key, $this->cacheValues['scoped'])) {
                 throw new ConfigurationException('This configuration key is not scoped');
             }
 
-            if (!array_key_exists($scope, $this->values)) {
+            if (!array_key_exists($scope, $this->cacheValues['values'])) {
                 throw new ConfigurationScopeException(sprintf('Unknown configuration scope [%s]', $scope));
             }
 
@@ -127,8 +122,8 @@ class Storage
         $scopes[] = 'default';
 
         foreach ($scopes as $scope) {
-            if (array_key_exists($key, $this->values[$scope])) {
-                return $this->values[$scope][$key];
+            if (array_key_exists($key, $this->cacheValues['values'][$scope])) {
+                return $this->cacheValues['values'][$scope][$key];
             }
         }
 
@@ -207,26 +202,25 @@ class Storage
      */
     private function loadValues(): void
     {
-        if (is_array($this->values)) {
+        if (is_array($this->cacheValues)) {
             return;
         }
 
-        $this->loadValuesScoped();
-
         $cachedItem = $this->loadValuesCache();
         if ($cachedItem->isHit()) {
-            $this->values = unserialize($cachedItem->get());
+            $this->cacheValues = unserialize($cachedItem->get());
             return;
         }
 
         $this->loadValuesInit();
+        $this->loadValuesScoped();
         $this->loadValuesDefault();
         $this->loadValuesDatabase();
         $this->loadValuesPrepare();
 
-        $cachedItem->set(serialize($this->values));
+        $cachedItem->set(serialize($this->cacheValues));
         $cachedItem->expiresAfter(3600 * 24);
-        $this->cache->save($cachedItem);
+        $this->cacheService->save($cachedItem);
     }
 
     /**
@@ -235,9 +229,9 @@ class Storage
      */
     public function cleanValues(): void
     {
-        $this->values = null;
+        $this->cacheValues = null;
         try {
-            $this->cache->deleteItem(static::CACHE_KEY);
+            $this->cacheService->deleteItem(static::CACHE_KEY);
         } catch (InvalidArgumentException $e) {
             throw new ConfigurationException($e->getMessage());
         }
@@ -251,7 +245,7 @@ class Storage
     public function loadValuesCache(): CacheItemInterface
     {
         try {
-            return $this->cache->getItem(static::CACHE_KEY);
+            return $this->cacheService->getItem(static::CACHE_KEY);
         } catch (InvalidArgumentException $e) {
             throw new ConfigurationException($e->getMessage());
         }
@@ -262,14 +256,29 @@ class Storage
      */
     private function loadValuesInit(): void
     {
-        $this->values = [
-            'default' => [],
-            'global'  => [],
+        $this->cacheValues = [
+            'scoped' => [],
+            'values' => [
+                'default' => [],
+                'global'  => [],
+            ],
         ];
 
         if ($this->scopeService->hasScopes()) {
             foreach ($this->scopeService->getScopes() as $scope) {
-                $this->values[$scope->getCode()] = [];
+                $this->cacheValues['values'][$scope->getCode()] = [];
+            }
+        }
+    }
+
+    /**
+     * @return void
+     */
+    private function loadValuesScoped(): void
+    {
+        foreach ($this->definitions->getAll() as $definition) {
+            if ($definition->isScoped()) {
+                $this->cacheValues['scoped'][] = $definition->getCode();
             }
         }
     }
@@ -281,7 +290,7 @@ class Storage
     private function loadValuesDefault(): void
     {
         foreach ($this->definitions->getAll() as $definition) {
-            $this->values['default'][$definition->getCode()] = $definition->getDefault();
+            $this->cacheValues['values']['default'][$definition->getCode()] = $definition->getDefault();
         }
     }
 
@@ -300,12 +309,15 @@ class Storage
                 $scopeCode = 'global';
             }
 
-            if (!array_key_exists($scopeCode, $this->values) || !array_key_exists($code, $this->values['default'])) {
+            if (
+                !array_key_exists($scopeCode, $this->cacheValues['values'])
+                || !array_key_exists($code, $this->cacheValues['values']['default'])
+            ) {
                 $this->configurationRepository->remove($row);
                 continue;
             }
 
-            $this->values[$scopeCode][$code] = $row->getValue();
+            $this->cacheValues['values'][$scopeCode][$code] = $row->getValue();
         }
     }
 
@@ -316,9 +328,9 @@ class Storage
      */
     private function loadValuesPrepare(): void
     {
-        foreach ($this->values as $scopeCode => $values) {
+        foreach ($this->cacheValues['values'] as $scopeCode => $values) {
             foreach ($values as $code => $value) {
-                $this->values[$scopeCode][$code] = $this->fieldList->prepareValue(
+                $this->cacheValues['values'][$scopeCode][$code] = $this->fieldList->prepareValue(
                     $this->definitions->get($code),
                     $value
                 );
@@ -338,19 +350,5 @@ class Storage
         }
 
         return $this->scopeService->getScope($scope)->getCode();
-    }
-
-    /**
-     * @return void
-     */
-    private function loadValuesScoped(): void
-    {
-        $this->scoped = [];
-
-        foreach ($this->definitions->getAll() as $definition) {
-            if ($definition->isScoped()) {
-                $this->scoped[] = $definition->getCode();
-            }
-        }
     }
 }

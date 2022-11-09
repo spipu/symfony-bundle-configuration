@@ -195,7 +195,7 @@ class ConfigurationManagerTest extends TestCase
         // Saved in cache pool
         $cacheItem = $cachePool->getItem(Storage::CACHE_KEY);
         $this->assertSame(true, $cacheItem->isHit());
-        $this->assertSame($expected, unserialize($cacheItem->get()));
+        $this->assertSame($expected, unserialize($cacheItem->get())['values']);
         
         // Third Time : Cache Pool
         $manager = new ConfigurationManager($container, $hasherFactory, $encryptor, $fieldList, $definitions, $storage);
