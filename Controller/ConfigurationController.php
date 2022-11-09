@@ -17,6 +17,7 @@ use Spipu\ConfigurationBundle\Exception\ConfigurationScopeException;
 use Spipu\ConfigurationBundle\Service\ScopeService;
 use Spipu\ConfigurationBundle\Ui\ConfigurationForm;
 use Spipu\ConfigurationBundle\Ui\ConfigurationGrid;
+use Spipu\ConfigurationBundle\Ui\Grid\DataProvider;
 use Spipu\UiBundle\Exception\GridException;
 use Spipu\UiBundle\Exception\UiException;
 use Spipu\UiBundle\Service\Ui\FormFactory;
@@ -78,6 +79,11 @@ class ConfigurationController extends AbstractController
 
         $manager = $gridFactory->create($configurationGrid);
         $manager->setRoute('spipu_configuration_admin_list');
+
+        /** @var DataProvider $dataProvider */
+        $dataProvider = $manager->getDataProvider();
+        $dataProvider->setCurrentScope($scopeCode);
+
         $manager->validate();
 
         return $this->render(

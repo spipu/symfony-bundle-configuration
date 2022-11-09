@@ -32,6 +32,11 @@ class DataProvider extends AbstractDataProvider
     private $items;
 
     /**
+     * @var string|null
+     */
+    private $currentScope;
+
+    /**
      * Doctrine constructor.
      * @param Manager $manager
      */
@@ -68,6 +73,10 @@ class DataProvider extends AbstractDataProvider
         $this->items = [];
 
         foreach ($this->manager->getDefinitions() as $definition) {
+            if ($this->currentScope !== null && !$definition->isScoped()) {
+                continue;
+            }
+
             $item = new Entity(
                 $definition->getCode(),
                 $definition->getType(),
@@ -80,7 +89,7 @@ class DataProvider extends AbstractDataProvider
                 $definition->getFileTypes()
             );
 
-            $item->setValue($this->manager->get($item->getCode()));
+            $item->setValue($this->manager->get($item->getCode(), $this->currentScope));
 
             if ($this->filterItem($item)) {
                 $this->items[] = $item;
@@ -177,5 +186,14 @@ class DataProvider extends AbstractDataProvider
             $itemValue = '0';
         }
         return mb_strtolower((string) $itemValue);
+    }
+
+    /**
+     * @param string|null $scopeCode
+     * @return void
+     */
+    public function setCurrentScope(?string $scopeCode): void
+    {
+        $this->currentScope = $scopeCode;
     }
 }
