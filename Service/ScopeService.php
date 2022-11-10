@@ -76,6 +76,23 @@ class ScopeService
     }
 
     /**
+     * @return Scope[]
+     */
+    public function getSortedScopes(): array
+    {
+        $scopes = $this->getScopes();
+
+        uasort(
+            $scopes,
+            function (Scope $scopeA, Scope $scopeB) {
+                return $scopeA->getName() <=> $scopeB->getName();
+            }
+        );
+
+        return $scopes;
+    }
+
+    /**
      * @return bool
      */
     public function hasScopes(): bool

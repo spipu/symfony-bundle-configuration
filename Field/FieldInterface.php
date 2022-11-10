@@ -41,7 +41,9 @@ interface FieldInterface
 
     /**
      * @param Definition $definition
+     * @param string $scopeCode
+     * @param string $scopeName
      * @return Field
      */
-    public function getFormField(Definition $definition): Field;
+    public function getFormField(Definition $definition, string $scopeCode, string $scopeName): Field;
 }

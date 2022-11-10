@@ -22,5 +22,8 @@ spipu:
             admin_edit:     "Manage Configuration - Edit"
 
         scope:
-            label:  "Scope"
-            global: "Global"
+            label:       "Scope"
+            default:     "Default"
+            global:      "Global"
+            use_default: "Use the default value"
+            use_global:  "Use the global value"

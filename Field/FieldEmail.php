@@ -16,6 +16,7 @@ namespace Spipu\ConfigurationBundle\Field;
 use Spipu\ConfigurationBundle\Entity\Definition;
 use Spipu\ConfigurationBundle\Exception\ConfigurationException;
 use Spipu\UiBundle\Entity\Form\Field;
+use Spipu\UiBundle\Exception\FormException;
 use Symfony\Component\Form\Extension\Core\Type;
 
 class FieldEmail extends AbstractField implements FieldInterface
@@ -61,15 +62,18 @@ class FieldEmail extends AbstractField implements FieldInterface
 
     /**
      * @param Definition $definition
+     * @param string $scopeCode
+     * @param string $scopeName
      * @return Field
+     * @throws FormException
      */
-    public function getFormField(Definition $definition): Field
+    public function getFormField(Definition $definition, string $scopeCode, string $scopeName): Field
     {
         return new Field(
-            'value',
+            $this->buildFormFieldCode($scopeCode),
             Type\EmailType::class,
-            10,
-            $this->getFieldBuilderOptions($definition)
+            $this->buildFormFieldPosition($scopeCode),
+            $this->getFieldBuilderOptions($definition, $scopeCode, $scopeName)
         );
     }
 }

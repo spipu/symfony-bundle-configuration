@@ -13,11 +13,17 @@ namespace Spipu\ConfigurationBundle\Tests;
 
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
+use Psr\Cache\CacheItemPoolInterface;
 use Spipu\ConfigurationBundle\Entity\Definition;
 use Spipu\ConfigurationBundle\Entity\Scope;
+use Spipu\ConfigurationBundle\Repository\ConfigurationRepository;
 use Spipu\ConfigurationBundle\Service\ConfigurationManager;
+use Spipu\ConfigurationBundle\Service\Definitions;
+use Spipu\ConfigurationBundle\Service\FieldList;
 use Spipu\ConfigurationBundle\Service\ScopeListInterface;
 use Spipu\ConfigurationBundle\Service\ScopeService;
+use Spipu\ConfigurationBundle\Service\Storage;
+use Spipu\CoreBundle\Tests\SymfonyMock;
 
 class SpipuConfigurationMock extends TestCase
 {
@@ -112,6 +118,40 @@ class SpipuConfigurationMock extends TestCase
             ];
         }
         return new ScopeService(SpipuConfigurationMock::getScopeListMock($scopes));
+    }
+
+    /**
+     * @param TestCase $testCase
+     * @param Definitions $definitions
+     * @param FieldList $fieldList
+     * @param MockObject|null $repository
+     * @param MockObject|null $entityManager
+     * @param CacheItemPoolInterface|null $cachePool
+     * @return Storage
+     */
+    public static function getStorageMock(
+        TestCase $testCase,
+        Definitions $definitions,
+        FieldList $fieldList,
+        ?MockObject $repository = null,
+        ?MockObject $entityManager = null,
+        ?CacheItemPoolInterface $cachePool = null
+    ): Storage {
+        if ($repository === null) {
+            $repository = $testCase->createMock(ConfigurationRepository::class);
+        }
+
+        if ($entityManager === null) {
+            $entityManager = SymfonyMock::getEntityManager($testCase);
+        }
+
+        if ($cachePool === null) {
+            $cachePool = SymfonyMock::getCachePool($testCase);
+        }
+
+        $scopeService = SpipuConfigurationMock::getScopeServiceMock();
+
+        return new Storage($definitions, $repository, $fieldList, $entityManager, $cachePool, $scopeService);
     }
 }
 

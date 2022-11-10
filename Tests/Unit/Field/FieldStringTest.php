@@ -46,7 +46,7 @@ class FieldStringTest extends AbstractFieldTest
         $field = $this->getField();
         $definition = $this->getDefinition(true);
 
-        $formField = $field->getFormField($definition);
+        $formField = $field->getFormField($definition, 'global', 'Global');
         $this->assertSame('Unit: test | help', $formField->getOptions()['help']);
     }
 }

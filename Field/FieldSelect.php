@@ -16,6 +16,7 @@ namespace Spipu\ConfigurationBundle\Field;
 use Spipu\ConfigurationBundle\Entity\Definition;
 use Spipu\ConfigurationBundle\Exception\ConfigurationException;
 use Spipu\UiBundle\Entity\Form\Field;
+use Spipu\UiBundle\Exception\FormException;
 use Spipu\UiBundle\Form\Options\OptionsInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Form\Extension\Core\Type;
@@ -92,18 +93,21 @@ class FieldSelect extends AbstractField implements FieldInterface
 
     /**
      * @param Definition $definition
+     * @param string $scopeCode
+     * @param string $scopeName
      * @return Field
      * @throws ConfigurationException
+     * @throws FormException
      */
-    public function getFormField(Definition $definition): Field
+    public function getFormField(Definition $definition, string $scopeCode, string $scopeName): Field
     {
-        $options = $this->getFieldBuilderOptions($definition);
+        $options = $this->getFieldBuilderOptions($definition, $scopeCode, $scopeName);
         $options['choices'] = $this->getOptions($definition);
 
         return new Field(
-            'value',
+            $this->buildFormFieldCode($scopeCode),
             Type\ChoiceType::class,
-            10,
+            $this->buildFormFieldPosition($scopeCode),
             $options
         );
     }

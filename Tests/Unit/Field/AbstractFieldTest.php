@@ -3,12 +3,16 @@ namespace Spipu\ConfigurationBundle\Tests\Unit\Field;
 
 use PHPUnit\Framework\TestCase;
 use Spipu\ConfigurationBundle\Exception\ConfigurationException;
+use Spipu\ConfigurationBundle\Field\FieldInterface;
 use Spipu\UiBundle\Entity\Form\Field;
 
 abstract class AbstractFieldTest extends TestCase
 {
     abstract protected function getCode();
 
+    /**
+     * @return FieldInterface
+     */
     abstract protected function getField();
 
     abstract protected function getDefinition(bool $required);
@@ -88,12 +92,12 @@ abstract class AbstractFieldTest extends TestCase
         $field = $this->getField();
         $definition = $this->getDefinition(true);
 
-        $formField = $field->getFormField($definition);
+        $formField = $field->getFormField($definition, 'global', 'Global');
         $this->assertInstanceOf(Field::class, $formField);
-        $this->assertSame('value', $formField->getCode());
+        $this->assertSame('value_global', $formField->getCode());
         $this->assertSame($this->getFieldClassName(), $formField->getType());
-        $this->assertSame(10, $formField->getPosition());
-        $this->assertSame('spipu.configuration.field.value', $formField->getOptions()['label']);
+        $this->assertSame(2, $formField->getPosition());
+        $this->assertSame('Global', $formField->getOptions()['label']);
         $this->assertTrue($formField->getOptions()['required']);
     }
 
@@ -102,12 +106,12 @@ abstract class AbstractFieldTest extends TestCase
         $field = $this->getField();
         $definition = $this->getDefinition(false);
 
-        $formField = $field->getFormField($definition);
+        $formField = $field->getFormField($definition, 'global', 'Global');
         $this->assertInstanceOf(Field::class, $formField);
-        $this->assertSame('value', $formField->getCode());
+        $this->assertSame('value_global', $formField->getCode());
         $this->assertSame($this->getFieldClassName(), $formField->getType());
-        $this->assertSame(10, $formField->getPosition());
-        $this->assertSame('spipu.configuration.field.value', $formField->getOptions()['label']);
+        $this->assertSame(2, $formField->getPosition());
+        $this->assertSame('Global', $formField->getOptions()['label']);
         $this->assertFalse($formField->getOptions()['required']);
     }
 }

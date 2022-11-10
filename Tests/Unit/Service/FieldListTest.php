@@ -82,6 +82,6 @@ class FieldListTest extends TestCase
         $fieldList = new FieldList($list);
         $this->assertSame('value', $fieldList->prepareValue($definition, 'value'));
         $this->assertSame('value', $fieldList->validateValue($definition, 'value'));
-        $this->assertSame($formField, $fieldList->getFormField($definition));
+        $this->assertSame($formField, $fieldList->getFormField($definition, 'global', 'Global'));
     }
 }

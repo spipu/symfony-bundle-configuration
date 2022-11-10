@@ -1,4 +1,5 @@
 <?php
+
 namespace Spipu\ConfigurationBundle\Tests\Unit\Service;
 
 use Spipu\ConfigurationBundle\Entity\Configuration;
@@ -71,15 +72,13 @@ class ConfigurationManagerTest extends TestCase
         ];
 
         $container = SymfonyMock::getContainer($this, [], $parameters);
-        $entityManager = SymfonyMock::getEntityManager($this);
-        $cachePool = SymfonyMock::getCachePool($this);
-        $repository = $this->createMock(ConfigurationRepository::class);
+
         $hasherFactory = new HasherFactory();
         $encryptor = new Encryptor('my_secret_phrase');
         $fieldList = new FieldList([new Field\FieldString(), new Field\FieldInteger(), new Field\FieldFile()]);
         $definitions = new Definitions($container);
-        $scopeService = SpipuConfigurationMock::getScopeServiceMock();
-        $storage = new Storage($definitions, $repository, $fieldList, $entityManager, $cachePool, $scopeService);
+
+        $storage = SpipuConfigurationMock::getStorageMock($this, $definitions, $fieldList);
 
         $manager = new ConfigurationManager($container, $hasherFactory, $encryptor, $fieldList, $definitions, $storage);
 
@@ -99,15 +98,13 @@ class ConfigurationManagerTest extends TestCase
         $configurations = $this->getConfigurations();
 
         $container = SymfonyMock::getContainer($this, [], ['spipu_configuration' => $configurations]);
-        $entityManager = SymfonyMock::getEntityManager($this);
-        $cachePool = SymfonyMock::getCachePool($this);
-        $repository = $this->createMock(ConfigurationRepository::class);
+
         $hasherFactory = new HasherFactory();
         $encryptor = new Encryptor('my_secret_phrase');
         $fieldList = new FieldList([new Field\FieldString(), new Field\FieldInteger(), new Field\FieldFile()]);
         $definitions = new Definitions($container);
-        $scopeService = SpipuConfigurationMock::getScopeServiceMock();
-        $storage = new Storage($definitions, $repository, $fieldList, $entityManager, $cachePool, $scopeService);
+
+        $storage = SpipuConfigurationMock::getStorageMock($this, $definitions, $fieldList);
 
         $manager = new ConfigurationManager($container, $hasherFactory, $encryptor, $fieldList, $definitions, $storage);
 
@@ -143,7 +140,6 @@ class ConfigurationManagerTest extends TestCase
         $configurations = $this->getConfigurations();
 
         $container = SymfonyMock::getContainer($this, [], ['spipu_configuration' => $configurations]);
-        $entityManager = SymfonyMock::getEntityManager($this);
         $cachePool = SymfonyMock::getCachePool($this);
         $hasherFactory = new HasherFactory();
         $encryptor = new Encryptor('my_secret_phrase');
@@ -161,8 +157,8 @@ class ConfigurationManagerTest extends TestCase
             );
 
         $definitions = new Definitions($container);
-        $scopeService = SpipuConfigurationMock::getScopeServiceMock();
-        $storage = new Storage($definitions, $repository, $fieldList, $entityManager, $cachePool, $scopeService);
+
+        $storage = SpipuConfigurationMock::getStorageMock($this, $definitions, $fieldList, $repository, null, $cachePool);
 
         $manager = new ConfigurationManager($container, $hasherFactory, $encryptor, $fieldList, $definitions, $storage);
 
@@ -214,7 +210,6 @@ class ConfigurationManagerTest extends TestCase
         $configurations = $this->getConfigurations();
 
         $container = SymfonyMock::getContainer($this, [], ['spipu_configuration' => $configurations]);
-        $cachePool = SymfonyMock::getCachePool($this);
         $hasherFactory = new HasherFactory();
         $encryptor = new Encryptor('my_secret_phrase');
         $fieldList = new FieldList([new Field\FieldString(), new Field\FieldInteger(), new Field\FieldFile()]);
@@ -263,8 +258,7 @@ class ConfigurationManagerTest extends TestCase
             );
 
         $definitions = new Definitions($container);
-        $scopeService = SpipuConfigurationMock::getScopeServiceMock();
-        $storage = new Storage($definitions, $repository, $fieldList, $entityManager, $cachePool, $scopeService);
+        $storage = SpipuConfigurationMock::getStorageMock($this, $definitions, $fieldList, $repository, $entityManager);
         $manager = new ConfigurationManager($container, $hasherFactory, $encryptor, $fieldList, $definitions, $storage);
 
         $this->assertSame('default value', $manager->get('mock.test.string'));
@@ -289,16 +283,12 @@ class ConfigurationManagerTest extends TestCase
         ];
 
         $container = SymfonyMock::getContainer($this, [], $parameters);
-        $cachePool = SymfonyMock::getCachePool($this);
         $hasherFactory = new HasherFactory();
         $encryptor = new Encryptor('my_secret_phrase');
         $fieldList = new FieldList([new Field\FieldString(), new Field\FieldInteger(), new Field\FieldFile()]);
-        $entityManager = SymfonyMock::getEntityManager($this);
-        $repository = $this->createMock(ConfigurationRepository::class);
 
         $definitions = new Definitions($container);
-        $scopeService = SpipuConfigurationMock::getScopeServiceMock();
-        $storage = new Storage($definitions, $repository, $fieldList, $entityManager, $cachePool, $scopeService);
+        $storage = SpipuConfigurationMock::getStorageMock($this, $definitions, $fieldList);
         $manager = new ConfigurationManager($container, $hasherFactory, $encryptor, $fieldList, $definitions, $storage);
 
         $file = SymfonyMock::getUploadedFile($this);
@@ -317,16 +307,12 @@ class ConfigurationManagerTest extends TestCase
         ];
 
         $container = SymfonyMock::getContainer($this, [], $parameters);
-        $cachePool = SymfonyMock::getCachePool($this);
         $hasherFactory = new HasherFactory();
         $encryptor = new Encryptor('my_secret_phrase');
         $fieldList = new FieldList([new Field\FieldString(), new Field\FieldInteger(), new Field\FieldFile()]);
-        $entityManager = SymfonyMock::getEntityManager($this);
-        $repository = $this->createMock(ConfigurationRepository::class);
 
         $definitions = new Definitions($container);
-        $scopeService = SpipuConfigurationMock::getScopeServiceMock();
-        $storage = new Storage($definitions, $repository, $fieldList, $entityManager, $cachePool, $scopeService);
+        $storage = SpipuConfigurationMock::getStorageMock($this, $definitions, $fieldList);
         $manager = new ConfigurationManager($container, $hasherFactory, $encryptor, $fieldList, $definitions, $storage);
 
         $file = SymfonyMock::getUploadedFile($this);
@@ -345,16 +331,12 @@ class ConfigurationManagerTest extends TestCase
         ];
 
         $container = SymfonyMock::getContainer($this, [], $parameters);
-        $cachePool = SymfonyMock::getCachePool($this);
         $hasherFactory = new HasherFactory();
         $encryptor = new Encryptor('my_secret_phrase');
         $fieldList = new FieldList([new Field\FieldString(), new Field\FieldInteger(), new Field\FieldFile()]);
-        $entityManager = SymfonyMock::getEntityManager($this);
-        $repository = $this->createMock(ConfigurationRepository::class);
 
         $definitions = new Definitions($container);
-        $scopeService = SpipuConfigurationMock::getScopeServiceMock();
-        $storage = new Storage($definitions, $repository, $fieldList, $entityManager, $cachePool, $scopeService);
+        $storage = SpipuConfigurationMock::getStorageMock($this, $definitions, $fieldList);
         $manager = new ConfigurationManager($container, $hasherFactory, $encryptor, $fieldList, $definitions, $storage);
 
         $file = SymfonyMock::getUploadedFile($this, '/tmp/f.pdf', 'document.pdf', 'pdf', 'application/pdf');
@@ -375,16 +357,12 @@ class ConfigurationManagerTest extends TestCase
         ];
 
         $container = SymfonyMock::getContainer($this, [], $parameters);
-        $cachePool = SymfonyMock::getCachePool($this);
         $hasherFactory = new HasherFactory();
         $encryptor = new Encryptor('my_secret_phrase');
         $fieldList = new FieldList([new Field\FieldString(), new Field\FieldInteger(), new Field\FieldFile()]);
-        $entityManager = SymfonyMock::getEntityManager($this);
-        $repository = $this->createMock(ConfigurationRepository::class);
 
         $definitions = new Definitions($container);
-        $scopeService = SpipuConfigurationMock::getScopeServiceMock();
-        $storage = new Storage($definitions, $repository, $fieldList, $entityManager, $cachePool, $scopeService);
+        $storage = SpipuConfigurationMock::getStorageMock($this, $definitions, $fieldList);
         $manager = new ConfigurationManager($container, $hasherFactory, $encryptor, $fieldList, $definitions, $storage);
 
         $file = SymfonyMock::getUploadedFile($this);
@@ -405,7 +383,6 @@ class ConfigurationManagerTest extends TestCase
         ];
 
         $container = SymfonyMock::getContainer($this, [], $parameters);
-        $cachePool = SymfonyMock::getCachePool($this);
         $hasherFactory = new HasherFactory();
         $encryptor = new Encryptor('my_secret_phrase');
         $fieldList = new FieldList([new Field\FieldString(), new Field\FieldInteger(), new Field\FieldFile()]);
@@ -443,8 +420,7 @@ class ConfigurationManagerTest extends TestCase
             ->willReturn(null);
 
         $definitions = new Definitions($container);
-        $scopeService = SpipuConfigurationMock::getScopeServiceMock();
-        $storage = new Storage($definitions, $repository, $fieldList, $entityManager, $cachePool, $scopeService);
+        $storage = SpipuConfigurationMock::getStorageMock($this, $definitions, $fieldList, $repository, $entityManager);
         $manager = new ConfigurationManager($container, $hasherFactory, $encryptor, $fieldList, $definitions, $storage);
 
         $this->assertSame('', $manager->get('mock.test.file'));

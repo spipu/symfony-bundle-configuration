@@ -89,10 +89,12 @@ class FieldList implements FieldInterface
 
     /**
      * @param Definition $definition
+     * @param string $scopeCode
+     * @param string $scopeName
      * @return Field
      */
-    public function getFormField(Definition $definition): Field
+    public function getFormField(Definition $definition, string $scopeCode, string $scopeName): Field
     {
-        return $this->getField($definition)->getFormField($definition);
+        return $this->getField($definition)->getFormField($definition, $scopeCode, $scopeName);
     }
 }

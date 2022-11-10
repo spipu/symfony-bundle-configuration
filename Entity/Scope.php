@@ -68,7 +68,7 @@ class Scope
             throw new ConfigurationScopeException('Invalid scope code - char not allowed');
         }
 
-        if (preg_match('/[.*\/\\\\]/', $code)) {
+        if (preg_match('/[.*\/\\\\\[\]\(\)\{\}]/', $code)) {
             throw new ConfigurationScopeException('Invalid scope code - char not allowed');
         }
 

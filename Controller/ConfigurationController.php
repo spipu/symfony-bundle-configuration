@@ -91,7 +91,7 @@ class ConfigurationController extends AbstractController
             [
                 'manager'      => $manager,
                 'hasScopes'    => $this->scopeService->hasScopes(),
-                'scopes'       => $this->scopeService->getScopes(),
+                'scopes'       => $this->scopeService->getSortedScopes(),
                 'currentScope' => $scopeCode,
             ]
         );
@@ -142,8 +142,6 @@ class ConfigurationController extends AbstractController
             '@SpipuConfiguration/show.html.twig',
             [
                 'manager'      => $manager,
-                'hasScopes'    => $this->scopeService->hasScopes(),
-                'scopes'       => $this->scopeService->getScopes(),
                 'currentScope' => $scopeCode,
             ]
         );

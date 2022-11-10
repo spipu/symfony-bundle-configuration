@@ -22,6 +22,9 @@ use Spipu\ConfigurationBundle\Exception\ConfigurationException;
 use Spipu\ConfigurationBundle\Exception\ConfigurationScopeException;
 use Spipu\ConfigurationBundle\Repository\ConfigurationRepository;
 
+/**
+ * @SuppressWarnings(PMD.ExcessiveClassComplexity)
+ */
 class Storage
 {
     public const CACHE_KEY = "spipu_configuration_cache";
@@ -128,6 +131,31 @@ class Storage
         }
 
         throw new ConfigurationException(sprintf('Unknown configuration key [%s]', $key));
+    }
+
+    /**
+     * @param string $key
+     * @param string $scope
+     * @return mixed
+     * @throws ConfigurationException
+     */
+    public function getScopeValue(string $key, string $scope)
+    {
+        $this->loadValues();
+
+        if (!array_key_exists($scope, $this->cacheValues['values'])) {
+            throw new ConfigurationScopeException(sprintf('Unknown configuration scope [%s]', $scope));
+        }
+
+        if (!array_key_exists($key, $this->cacheValues['values']['default'])) {
+            throw new ConfigurationException(sprintf('Unknown configuration key [%s]', $key));
+        }
+
+        if (!array_key_exists($key, $this->cacheValues['values'][$scope])) {
+            throw new ConfigurationException(sprintf('no value for key [%s] on scope [%s]', $key, $scope));
+        }
+
+        return $this->cacheValues['values'][$scope][$key];
     }
 
     /**

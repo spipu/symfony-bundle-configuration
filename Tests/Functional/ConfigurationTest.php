@@ -67,23 +67,34 @@ class ConfigurationTest extends WebTestCase
         $this->assertEquals(200, $client->getResponse()->getStatusCode());
         $this->assertEquals(1, $crawler->filter('h1:contains("Edit Configuration")')->count());
         $this->assertEquals(1, $crawler->filter('div[class=card-header]:contains("app.website.url")')->count());
-        $this->assertCrawlerHasInputValue($crawler, 'generic_value', 'https://my-website.fr');
+        $this->assertCrawlerHasInputValue($crawler, 'generic_value_default', 'https://my-website.fr');
+        $this->assertCrawlerHasInputValue($crawler, 'generic_value_global', null);
+        $this->assertCrawlerHasInputValue($crawler, 'generic_check_global', '1');
         $this->assertGreaterThan(0, $crawler->filter('button:contains("Update")')->count());
 
         // Form Submit - missing value
-        $crawler = $client->submit( $crawler->filter('form#form_configuration')->form(), ['generic[value]' => '']);
+        $form = $crawler->filter('form#form_configuration')->form();
+        $form['generic[check_global]']->untick();
+        $form['generic[value_global]']->setValue('');
+        $crawler = $client->submit($form);
         $this->assertEquals(200, $client->getResponse()->getStatusCode());
         $this->assertEquals(1, $crawler->filter('h1:contains("Edit Configuration")')->count());
         $this->assertCrawlerHasAlert($crawler, 'is required');
 
         // Form Submit - bad value
-        $crawler = $client->submit( $crawler->filter('form#form_configuration')->form(), ['generic[value]' => 'bad;']);
+        $form = $crawler->filter('form#form_configuration')->form();
+        $form['generic[check_global]']->untick();
+        $form['generic[value_global]']->setValue('bad;');
+        $crawler = $client->submit($form);
         $this->assertEquals(200, $client->getResponse()->getStatusCode());
         $this->assertEquals(1, $crawler->filter('h1:contains("Edit Configuration")')->count());
         $this->assertCrawlerHasAlert($crawler, 'must be a valid url');
 
         // Form Submit - good value
-        $client->submit( $crawler->filter('form#form_configuration')->form(), ['generic[value]' => 'http://goodurl.fr']);
+        $form = $crawler->filter('form#form_configuration')->form();
+        $form['generic[check_global]']->untick();
+        $form['generic[value_global]']->setValue('http://goodurl.fr');
+        $client->submit($form);
         $this->assertTrue($client->getResponse()->isRedirect());
 
         $crawler = $client->followRedirect();

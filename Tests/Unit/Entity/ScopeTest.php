@@ -92,6 +92,48 @@ class ScopeTest extends TestCase
         new Scope('to.ta', 'Name');
     }
 
+    public function testKoCodeBadChar5()
+    {
+        $this->expectException(ConfigurationScopeException::class);
+        $this->expectExceptionMessage('Invalid scope code - char not allowed');
+        new Scope('to[ta', 'Name');
+    }
+
+    public function testKoCodeBadChar6()
+    {
+        $this->expectException(ConfigurationScopeException::class);
+        $this->expectExceptionMessage('Invalid scope code - char not allowed');
+        new Scope('to]ta', 'Name');
+    }
+
+    public function testKoCodeBadChar7()
+    {
+        $this->expectException(ConfigurationScopeException::class);
+        $this->expectExceptionMessage('Invalid scope code - char not allowed');
+        new Scope('to(ta', 'Name');
+    }
+
+    public function testKoCodeBadChar8()
+    {
+        $this->expectException(ConfigurationScopeException::class);
+        $this->expectExceptionMessage('Invalid scope code - char not allowed');
+        new Scope('to)ta', 'Name');
+    }
+
+    public function testKoCodeBadChar9()
+    {
+        $this->expectException(ConfigurationScopeException::class);
+        $this->expectExceptionMessage('Invalid scope code - char not allowed');
+        new Scope('to{ta', 'Name');
+    }
+
+    public function testKoCodeBadChar10()
+    {
+        $this->expectException(ConfigurationScopeException::class);
+        $this->expectExceptionMessage('Invalid scope code - char not allowed');
+        new Scope('to}ta', 'Name');
+    }
+
     public function testKoCodeGlobalNotAllowed()
     {
         $this->expectException(ConfigurationScopeException::class);
