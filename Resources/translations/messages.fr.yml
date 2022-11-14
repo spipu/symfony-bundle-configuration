@@ -14,8 +14,16 @@ spipu:
             value:          "Valeur"
             type:           "Type"
             required:       "Requis"
+            scoped:         "Etendue"
 
         role:
             admin:          "Gérer la Configuration"
             admin_show:     "Gérer la Configuration - Afficher"
             admin_edit:     "Gérer la Configuration - Editer"
+
+        scope:
+            label:       "Scope"
+            default:     "Défaut"
+            global:      "Global"
+            use_default: "Utiliser la valeur par défaut"
+            use_global:  "Utiliser la valeur globale"

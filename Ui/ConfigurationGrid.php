@@ -41,6 +41,11 @@ class ConfigurationGrid implements GridDefinitionInterface
     private $definition;
 
     /**
+     * @var string|null
+     */
+    private $currentScope;
+
+    /**
      * @return Grid\Grid
      */
     public function getDefinition(): Grid\Grid
@@ -68,8 +73,8 @@ class ConfigurationGrid implements GridDefinitionInterface
                         (new Grid\ColumnType(Grid\ColumnType::TYPE_TEXT))
                             ->setTemplateField('@SpipuConfiguration/grid/field/code.html.twig')
                     )
-                    ->setFilter((new Grid\ColumnFilter(true)))
-                    ->setOptions(['td-css-class' => 'pl-4 text-left'])
+                    ->setFilter((new Grid\ColumnFilter(true, true)))
+                    ->setOptions(['td-css-class' => 'pl-4 text-left w-25'])
             )
             ->addColumn(
                 (new Grid\Column('value', 'spipu.configuration.field.value', 'value', 20))
@@ -78,6 +83,7 @@ class ConfigurationGrid implements GridDefinitionInterface
                             ->setTemplateField('@SpipuConfiguration/grid/field/value.html.twig')
                     )
                     ->setFilter((new Grid\ColumnFilter(true)))
+                    ->setOptions(['td-css-class' => 'text-left w-50'])
             )
             ->addColumn(
                 (new Grid\Column('type', 'spipu.configuration.field.type', 'type', 30))
@@ -86,13 +92,43 @@ class ConfigurationGrid implements GridDefinitionInterface
             ->addColumn(
                 (new Grid\Column('required', 'spipu.configuration.field.required', 'required', 40))
                     ->setType((new Grid\ColumnType(Grid\ColumnType::TYPE_SELECT))->setOptions($this->optionsYesNo))
+                    ->setFilter((new Grid\ColumnFilter(true)))
+            )
+            ->addColumn(
+                (new Grid\Column('scoped', 'spipu.configuration.field.scoped', 'scoped', 50))
+                    ->setType((new Grid\ColumnType(Grid\ColumnType::TYPE_SELECT))->setOptions($this->optionsYesNo))
+                    ->setFilter((new Grid\ColumnFilter(true)))
             )
             ->addRowAction(
-                (new Grid\Action('edit', 'spipu.ui.action.edit', 10, 'spipu_configuration_admin_edit'))
+                (new Grid\Action(
+                    'edit',
+                    'spipu.ui.action.edit',
+                    10,
+                    'spipu_configuration_admin_edit',
+                    ['scopeCode' => $this->currentScope]
+                ))
                     ->setCssClass('success')
                     ->setIcon('edit')
                     ->setNeededRole('ROLE_ADMIN_MANAGE_CONFIGURATION_EDIT')
             )
         ;
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getCurrentScope(): ?string
+    {
+        return $this->currentScope;
+    }
+
+    /**
+     * @param string|null $currentScope
+     * @return ConfigurationGrid
+     */
+    public function setCurrentScope(?string $currentScope): ConfigurationGrid
+    {
+        $this->currentScope = $currentScope;
+        return $this;
     }
 }

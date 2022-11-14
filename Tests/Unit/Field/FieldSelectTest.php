@@ -32,9 +32,9 @@ class FieldSelectTest extends AbstractFieldTest
         return new FieldSelect($container);
     }
 
-    protected function getDefinition(bool $required)
+    protected function getDefinition(bool $required, bool $scoped = false)
     {
-        return new Definition('mock.test', $this->getCode(), $required, null, 'good_options', null, null, null);
+        return new Definition('mock.test', $this->getCode(), $required, $scoped, null, 'good_options', null, null, null);
     }
 
     protected function getGoodValue()
@@ -60,7 +60,7 @@ class FieldSelectTest extends AbstractFieldTest
     public function testBadOptions()
     {
         $field = $this->getField();
-        $definition = new Definition('mock.test', $this->getCode(), false, null, 'bad_options', null, null, null);
+        $definition = new Definition('mock.test', $this->getCode(), false, false, null, 'bad_options', null, null, null);
 
         $this->expectException(ConfigurationException::class);
         $field->validateValue($definition, 'yes');

@@ -16,9 +16,9 @@ class FieldFileTest extends AbstractFieldTest
         return new FieldFile();
     }
 
-    protected function getDefinition(bool $required)
+    protected function getDefinition(bool $required, bool $scoped = false)
     {
-        return new Definition('mock.test', $this->getCode(), $required, null, null, 'test', null, null);
+        return new Definition('mock.test', $this->getCode(), $required, $scoped, null, null, 'test', null, null);
     }
 
     protected function getGoodValue()

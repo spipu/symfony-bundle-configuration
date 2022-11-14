@@ -16,9 +16,9 @@ class FieldPasswordTest extends AbstractFieldTest
         return new FieldPassword();
     }
 
-    protected function getDefinition(bool $required)
+    protected function getDefinition(bool $required, bool $scoped = false)
     {
-        return new Definition('mock.test', $this->getCode(), $required, null, null, 'test', null, null);
+        return new Definition('mock.test', $this->getCode(), $required, $scoped, null, null, 'test', null, null);
     }
 
     protected function getGoodValue()
@@ -38,6 +38,6 @@ class FieldPasswordTest extends AbstractFieldTest
 
     protected function getFieldClassName()
     {
-        return \Symfony\Component\Form\Extension\Core\Type\PasswordType::class;
+        return \Symfony\Component\Form\Extension\Core\Type\TextType::class;
     }
 }

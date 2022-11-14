@@ -12,8 +12,8 @@ class ShowCommandTest extends TestCase
     {
         $manager = SpipuConfigurationMock::getManager($this);
         $manager->expects($this->never())->method('getDefinition');
-        $manager->expects($this->once())->method('getDefinitions');
-        $manager->expects($this->exactly(3))->method('get');
+        $manager->expects($this->never())->method('getDefinitions');
+        $manager->expects($this->atMost(1))->method('get');
 
         $inputMock = SymfonyMock::getConsoleInput($this);
 
@@ -44,6 +44,7 @@ class ShowCommandTest extends TestCase
         $command->run($inputMock, $outputMock);
 
         $result = SymfonyMock::getConsoleOutputResult();
-        $this->assertSame('Show Configuration [mock.string]', $result[0]);
+        $this->assertSame('Show Configuration', $result[0]);
+        $this->assertSame('- Key:   mock.string', $result[1]);
     }
 }

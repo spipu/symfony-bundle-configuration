@@ -33,9 +33,14 @@ class Definition
     private $type;
 
     /**
-     * @var boolean
+     * @var bool
      */
     private $required;
+
+    /**
+     * @var bool
+     */
+    private $scoped;
 
     /**
      * @var mixed
@@ -67,6 +72,7 @@ class Definition
      * @param string $code
      * @param string $type
      * @param bool $required
+     * @param bool $scoped
      * @param mixed $default
      * @param null|string $options
      * @param null|string $unit
@@ -78,6 +84,7 @@ class Definition
         string $code,
         string $type,
         bool $required,
+        bool $scoped,
         $default,
         ?string $options,
         ?string $unit,
@@ -87,6 +94,7 @@ class Definition
         $this->code = $code;
         $this->type = $type;
         $this->required = $required;
+        $this->scoped = $scoped;
         $this->default = $default;
         $this->options = $options;
         $this->unit = $unit;
@@ -163,6 +171,14 @@ class Definition
     public function isRequired(): bool
     {
         return $this->required;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isScoped(): bool
+    {
+        return $this->scoped;
     }
 
     /**

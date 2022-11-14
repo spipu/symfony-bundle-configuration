@@ -23,7 +23,7 @@ use Spipu\UiBundle\Entity\TimestampableTrait;
  * @ORM\HasLifecycleCallbacks()
  * @ORM\Table(
  *     name="spipu_configuration",
- *     uniqueConstraints={@ORM\UniqueConstraint(name="UNIQ_CODE", columns={"code"})}
+ *     uniqueConstraints={@ORM\UniqueConstraint(name="UNIQ_CODE_SCOPE", columns={"code", "scope"})}
  * )
  */
 class Configuration implements EntityInterface, TimestampableInterface
@@ -43,6 +43,12 @@ class Configuration implements EntityInterface, TimestampableInterface
      * @ORM\Column(type="string", length=255)
      */
     private $code;
+
+    /**
+     * @var string
+     * @ORM\Column(type="string", length=128, nullable=true)
+     */
+    private $scope;
 
     /**
      * @var string|null
@@ -73,6 +79,25 @@ class Configuration implements EntityInterface, TimestampableInterface
     public function setCode(string $code): self
     {
         $this->code = $code;
+
+        return $this;
+    }
+
+    /**
+     * @return null|string
+     */
+    public function getScope(): ?string
+    {
+        return $this->scope;
+    }
+
+    /**
+     * @param string|null $scope
+     * @return Configuration
+     */
+    public function setScope(?string $scope): self
+    {
+        $this->scope = $scope;
 
         return $this;
     }

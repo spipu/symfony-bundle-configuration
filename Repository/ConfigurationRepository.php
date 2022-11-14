@@ -33,4 +33,14 @@ class ConfigurationRepository extends ServiceEntityRepository
     {
         parent::__construct($registry, Configuration::class);
     }
+
+    /**
+     * @param Configuration $row
+     * @return void
+     */
+    public function remove(Configuration $row): void
+    {
+        $this->getEntityManager()->remove($row);
+        $this->getEntityManager()->flush();
+    }
 }

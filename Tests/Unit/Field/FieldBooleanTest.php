@@ -26,9 +26,9 @@ class FieldBooleanTest extends AbstractFieldTest
         return new FieldBoolean($container);
     }
 
-    protected function getDefinition(bool $required)
+    protected function getDefinition(bool $required, bool $scoped = false)
     {
-        return new Definition('mock.test', $this->getCode(), $required, null, 'good_options', null, null, null);
+        return new Definition('mock.test', $this->getCode(), $required, $scoped, null, 'good_options', null, null, null);
     }
 
     protected function getGoodValue()

@@ -16,9 +16,9 @@ class FieldFloatTest extends AbstractFieldTest
         return new FieldFloat();
     }
 
-    protected function getDefinition(bool $required)
+    protected function getDefinition(bool $required, bool $scoped = false)
     {
-        return new Definition('mock.test', $this->getCode(), $required, null, null, null, null, null);
+        return new Definition('mock.test', $this->getCode(), $required, $scoped, null, null, null, null, null);
     }
 
     protected function getGoodValue()

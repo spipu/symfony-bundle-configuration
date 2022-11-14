@@ -72,6 +72,7 @@ class SpipuConfigurationExtensionTest extends TestCase
                 'help'      => null,
                 'options'   => BooleanStatus::class,
                 'required'  => true,
+                'scoped'    => false,
                 'type'      => 'boolean',
                 'unit'      => null,
             ],
@@ -82,6 +83,7 @@ class SpipuConfigurationExtensionTest extends TestCase
                 'help'      => null,
                 'options'   => null,
                 'required'  => true,
+                'scoped'    => false,
                 'type'      => 'file',
                 'unit'      => null,
             ],
@@ -92,6 +94,7 @@ class SpipuConfigurationExtensionTest extends TestCase
                 'help'      => null,
                 'options'   => YesNo::class,
                 'required'  => true,
+                'scoped'    => false,
                 'type'      => 'select',
                 'unit'      => null,
             ],
@@ -102,6 +105,7 @@ class SpipuConfigurationExtensionTest extends TestCase
                 'help'      => null,
                 'options'   => null,
                 'required'  => false,
+                'scoped'    => false,
                 'type'      => 'string',
                 'unit'      => null,
             ],
@@ -164,6 +168,26 @@ class SpipuConfigurationExtensionTest extends TestCase
                 'type'      => 'string',
                 'required'  => true,
                 'file_type' => ['pdf'],
+            ],
+        ];
+
+        $this->assertFalse($builder->hasParameter('spipu_configuration'));
+
+        $this->expectException(InvalidConfigurationException::class);
+        $extension->load([0 => $config], $builder);
+    }
+
+    public function testConfigErrorDefaultValueWithEncrypted()
+    {
+        $builder = SymfonyMock::getContainerBuilder($this);
+
+        $extension = new SpipuConfigurationExtension();
+
+        $config = [
+            'test.string'   => [
+                'type'     => 'encrypted',
+                'required' => true,
+                'default'  => 'foo',
             ],
         ];
 

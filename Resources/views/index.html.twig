@@ -5,6 +5,40 @@
 
 {% block header_title %}{{ parent() }} - {{ block('main_title') }}{% endblock %}
 
-{% block main_title %}{{ 'spipu.configuration.page.admin.list'|trans() }}{% endblock %}
+{% block main_title_container %}
+    <div class="col-12 col-md-6">
+        <h1>{% block main_title %}{{ 'spipu.configuration.page.admin.list'|trans() }}{% endblock %}</h1>
+    </div>
+    <div class="col-12 col-md-6">
+        {% if hasScopes %}
+            <div class="form-inline float-right pt-2">
+                <label for="scopeCode" class="mr-2">{{ 'spipu.configuration.scope.label'|trans }}</label>
+                <select class="form-control" id="scopeCode">
+                    <option value="">{{ 'spipu.configuration.scope.global'|trans }}</option>
+                    {% for scope in scopes %}
+                        <option value="{{ scope.code }}" {% if scope.code == currentScope %}selected="selected"{% endif %}>{{ scope.name }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+        {% endif %}
+    </div>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    {% if hasScopes %}
+        <script>
+            window.onload = function () {
+                let scopeSelect = $('#scopeCode');
+
+                scopeSelect.on('change', function () {
+                    window.location = '{{ path('spipu_configuration_admin_list') }}/' + scopeSelect.val();
+                });
+            };
+        </script>
+    {% endif %}
+{% endblock %}
+
+{%  block main_class %}container-fluid{% endblock %}
 
 {% block body %}{{ renderManager(manager) }}{% endblock %}

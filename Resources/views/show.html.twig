@@ -8,7 +8,7 @@
 {% block main_title %}{{ 'spipu.configuration.page.admin.edit'|trans() }}{% endblock %}
 
 {% block main_actions %}
-    {{ buttons.back(path('spipu_configuration_admin_list')) }}
+    {{ buttons.back(path('spipu_configuration_admin_list', {scopeCode: currentScope})) }}
     {{ buttons.submitManagerForm(manager) }}
 {% endblock %}
 

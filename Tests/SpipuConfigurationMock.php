@@ -13,8 +13,17 @@ namespace Spipu\ConfigurationBundle\Tests;
 
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
+use Psr\Cache\CacheItemPoolInterface;
 use Spipu\ConfigurationBundle\Entity\Definition;
+use Spipu\ConfigurationBundle\Entity\Scope;
+use Spipu\ConfigurationBundle\Repository\ConfigurationRepository;
 use Spipu\ConfigurationBundle\Service\ConfigurationManager;
+use Spipu\ConfigurationBundle\Service\Definitions;
+use Spipu\ConfigurationBundle\Service\FieldList;
+use Spipu\ConfigurationBundle\Service\ScopeListInterface;
+use Spipu\ConfigurationBundle\Service\ScopeService;
+use Spipu\ConfigurationBundle\Service\Storage;
+use Spipu\CoreBundle\Tests\SymfonyMock;
 
 class SpipuConfigurationMock extends TestCase
 {
@@ -36,7 +45,7 @@ class SpipuConfigurationMock extends TestCase
 
         $definitionMap = [];
         foreach ($definition as $key => $type) {
-            $definitionMap[$key] = new Definition($key, $type, true, '', null, null, null, null);
+            $definitionMap[$key] = new Definition($key, $type, true, false, '', null, null, null, null);
         }
 
         $service = $testCase->createMock(ConfigurationManager::class);
@@ -52,7 +61,7 @@ class SpipuConfigurationMock extends TestCase
         } else {
             $map = [];
             foreach ($values as $key => $value) {
-                $map[] = [$key, $value];
+                $map[] = [$key, null, $value];
             }
 
             $service
@@ -83,5 +92,89 @@ class SpipuConfigurationMock extends TestCase
 
         /** @var ConfigurationManager $service */
         return $service;
+    }
+
+    /**
+     * @param array $scopes
+     * @return ConfigurationScopeListMock
+     */
+    public static function getScopeListMock(array $scopes = []): ConfigurationScopeListMock
+    {
+        $scopeList = new ConfigurationScopeListMock();
+        $scopeList->set($scopes);
+
+        return $scopeList;
+    }
+
+    /**
+     * @param array|null $scopes
+     * @return ScopeService
+     */
+    public static function getScopeServiceMock(?array $scopes = null): ScopeService
+    {
+        if ($scopes === null) {
+            $scopes = [
+                new Scope('test', 'Test')
+            ];
+        }
+        return new ScopeService(SpipuConfigurationMock::getScopeListMock($scopes));
+    }
+
+    /**
+     * @param TestCase $testCase
+     * @param Definitions $definitions
+     * @param FieldList $fieldList
+     * @param MockObject|null $repository
+     * @param MockObject|null $entityManager
+     * @param CacheItemPoolInterface|null $cachePool
+     * @return Storage
+     */
+    public static function getStorageMock(
+        TestCase $testCase,
+        Definitions $definitions,
+        FieldList $fieldList,
+        ?MockObject $repository = null,
+        ?MockObject $entityManager = null,
+        ?CacheItemPoolInterface $cachePool = null
+    ): Storage {
+        if ($repository === null) {
+            $repository = $testCase->createMock(ConfigurationRepository::class);
+        }
+
+        if ($entityManager === null) {
+            $entityManager = SymfonyMock::getEntityManager($testCase);
+        }
+
+        if ($cachePool === null) {
+            $cachePool = SymfonyMock::getCachePool($testCase);
+        }
+
+        $scopeService = SpipuConfigurationMock::getScopeServiceMock();
+
+        return new Storage($definitions, $repository, $fieldList, $entityManager, $cachePool, $scopeService);
+    }
+}
+
+class ConfigurationScopeListMock implements ScopeListInterface
+{
+    /**
+     * @var array
+     */
+    private $scopes;
+
+    /**
+     * @param array $scopes
+     */
+    public function set(array $scopes): void
+    {
+        $this->scopes = $scopes;
+    }
+
+    /**
+     * @return array
+     */
+    public function getAll(): array
+    {
+        return $this->scopes;
     }
 }

@@ -57,6 +57,7 @@ class Definitions
                 $configuration['code'],
                 $configuration['type'],
                 $configuration['required'],
+                $configuration['scoped'],
                 $configuration['default'],
                 $configuration['options'],
                 $configuration['unit'],

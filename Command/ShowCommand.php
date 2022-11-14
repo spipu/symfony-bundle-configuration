@@ -26,6 +26,7 @@ use Symfony\Component\Console\Output\OutputInterface;
 class ShowCommand extends Command
 {
     public const OPTION_KEY = 'key';
+    public const OPTION_SCOPE = 'scope';
     public const OPTION_DIRECT = 'direct';
 
     /**
@@ -65,6 +66,12 @@ class ShowCommand extends Command
                 'Key of the configuration to see (if empty, see all)'
             )
             ->addOption(
+                static::OPTION_SCOPE,
+                's',
+                InputOption::VALUE_OPTIONAL,
+                'Code of the scope to see. To use only with a key. (if empty, use global)'
+            )
+            ->addOption(
                 static::OPTION_DIRECT,
                 'd',
                 InputOption::VALUE_NONE,
@@ -86,12 +93,18 @@ class ShowCommand extends Command
         $key = $input->getOption(static::OPTION_KEY);
         $direct = $input->getOption(static::OPTION_DIRECT);
 
+        $scope = $input->getOption(static::OPTION_SCOPE);
+        if ($scope === null || $scope === 'global') {
+            $scope = '';
+        }
+
+
         if ($key) {
             if ($direct) {
-                $this->showOneDirect($output, $key);
+                $this->showOneDirect($output, $key, $scope);
                 return self::SUCCESS;
             }
-            $this->showOne($output, $key);
+            $this->showOne($output, $key, $scope);
             return self::SUCCESS;
         }
 
@@ -103,12 +116,13 @@ class ShowCommand extends Command
     /**
      * @param OutputInterface $output
      * @param string $key
+     * @param string $scope
      * @return void
      * @throws ConfigurationException
      */
-    protected function showOneDirect(OutputInterface $output, string $key): void
+    protected function showOneDirect(OutputInterface $output, string $key, string $scope): void
     {
-        $value = $this->manager->get($key);
+        $value = $this->manager->get($key, $scope);
         if ($value === null) {
             $value = '';
         }
@@ -122,18 +136,21 @@ class ShowCommand extends Command
     /**
      * @param OutputInterface $output
      * @param string $key
+     * @param string $scope
      * @return void
      * @throws ConfigurationException
      */
-    private function showOne(OutputInterface $output, string $key): void
+    private function showOne(OutputInterface $output, string $key, string $scope): void
     {
-        $output->writeln(sprintf("Show Configuration [%s]", $key));
-        $output->writeln("");
+        $output->writeln('Show Configuration');
+        $output->writeln('  - Key:   ' . $key);
+        $output->writeln('  - Scope: ' . ($scope === '' ? 'global' : $scope));
+        $output->writeln('');
 
         $list = [
             $this->prepareItem(
                 $this->manager->getDefinition($key),
-                $this->manager->get($key)
+                $this->manager->get($key, $scope)
             )
         ];
 
@@ -147,19 +164,33 @@ class ShowCommand extends Command
      */
     private function showAll(OutputInterface $output): void
     {
-        $output->writeln("Show All Configurations");
-        $output->writeln("");
+        $output->writeln('Show All Configurations');
+        $output->writeln('');
 
-        $definitions = $this->manager->getDefinitions();
-        $list = [];
-        foreach ($definitions as $definition) {
-            $list[] = $this->prepareItem(
-                $definition,
-                $this->manager->get($definition->getCode())
-            );
+        $allValues = $this->manager->getAll();
+        foreach ($allValues as $scopeCode => $values) {
+            $scopeMessage = 'Values for scope [' . $scopeCode . ']';
+            if ($scopeCode === 'default') {
+                $scopeMessage = 'Default Values';
+            }
+
+            $list = [];
+            foreach ($values as $key => $value) {
+                $definition = $this->manager->getDefinition($key);
+                $list[] = $this->prepareItem(
+                    $definition,
+                    $value
+                );
+            }
+
+            if (count($list) === 0) {
+                $list[] = ['empty' => 'empty'];
+            }
+
+            $output->writeln($scopeMessage);
+            $this->displayTable($output, $list);
+            $output->writeln('');
         }
-
-        $this->displayTable($output, $list);
     }
 
     /**
@@ -173,6 +204,7 @@ class ShowCommand extends Command
             'code'     => $definition->getCode(),
             'type'     => $definition->getType(),
             'required' => $definition->isRequired() ? 'yes' : 'no',
+            'scoped'   => $definition->isScoped() ? 'yes' : 'no',
             'value'    => $value,
         ];
     }

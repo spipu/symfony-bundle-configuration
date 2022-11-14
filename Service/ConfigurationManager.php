@@ -122,6 +122,7 @@ class ConfigurationManager
 
     /**
      * @return array
+     * @throws ConfigurationException
      */
     public function getAll(): array
     {
@@ -131,34 +132,49 @@ class ConfigurationManager
     /**
      * Get a configuration value
      * @param string $key
+     * @param string|null $scope
      * @return mixed
      * @throws ConfigurationException
      */
-    public function get(string $key)
+    public function get(string $key, ?string $scope = null)
     {
-        return $this->storage->get($key);
+        return $this->storage->get($key, $scope);
     }
 
     /**
      * @param string $key
      * @param mixed $value
+     * @param string|null $scope
      * @return void
      * @throws ConfigurationException
      */
-    public function set(string $key, $value): void
+    public function set(string $key, $value, ?string $scope = null): void
     {
-        $this->storage->set($key, $value);
+        $this->storage->set($key, $value, $scope);
+    }
+
+    /**
+     * Delete a configuration value, to restore the default or the global value
+     * @param string $key
+     * @param string|null $scope
+     * @return void
+     * @throws ConfigurationException
+     */
+    public function delete(string $key, ?string $scope = null): void
+    {
+        $this->storage->delete($key, $scope);
     }
 
     /**
      * @param string $key
      * @param string $raw
+     * @param string|null $scope
      * @return bool
      * @throws ConfigurationException
      */
-    public function isPasswordValid(string $key, string $raw): bool
+    public function isPasswordValid(string $key, string $raw, ?string $scope = null): bool
     {
-        $encoded = $this->get($key);
+        $encoded = $this->get($key, $scope);
 
         return $this->getHasher()->verify($encoded, $raw);
     }
@@ -166,16 +182,17 @@ class ConfigurationManager
     /**
      * @param string $key
      * @param ?string $value
+     * @param string|null $scope
      * @return void
      * @throws ConfigurationException
      */
-    public function setPassword(string $key, ?string $value): void
+    public function setPassword(string $key, ?string $value, ?string $scope = null): void
     {
         if ($value !== null) {
             $value = $this->getHasher()->hash($value);
         }
 
-        $this->set($key, $value);
+        $this->set($key, $value, $scope);
     }
 
     /**
@@ -192,12 +209,13 @@ class ConfigurationManager
 
     /**
      * @param string $key
+     * @param string|null $scope
      * @return string|null
      * @throws ConfigurationException
      */
-    public function getEncrypted(string $key): ?string
+    public function getEncrypted(string $key, ?string $scope = null): ?string
     {
-        $value = $this->get($key);
+        $value = $this->get($key, $scope);
         if ($value === null) {
             return null;
         }
@@ -208,26 +226,27 @@ class ConfigurationManager
     /**
      * @param string $key
      * @param ?string $value
+     * @param string|null $scope
      * @return void
      * @throws ConfigurationException
      */
-    public function setEncrypted(string $key, ?string $value): void
+    public function setEncrypted(string $key, ?string $value, ?string $scope = null): void
     {
-        if ($value === null) {
-            $this->set($key, null);
-            return;
+        if ($value !== null) {
+            $value = $this->encryptor->encrypt($value);
         }
 
-        $this->set($key, $this->encryptor->encrypt($value));
+        $this->set($key, $value, $scope);
     }
 
     /**
      * @param string $key
      * @param UploadedFile $file
+     * @param string|null $scope
      * @return void
      * @throws ConfigurationException
      */
-    public function setFile(string $key, UploadedFile $file): void
+    public function setFile(string $key, UploadedFile $file, ?string $scope = null): void
     {
         if (!$this->container->getParameter('spipu.configuration.file.allow')) {
             throw new ConfigurationException('File are not allowed. Look at spipu.configuration.file.allow parameter');
@@ -253,7 +272,7 @@ class ConfigurationManager
 
         $file->move($path, $fileName);
 
-        $this->set($key, $fileName);
+        $this->set($key, $fileName, $scope);
     }
 
     /**
@@ -281,6 +300,7 @@ class ConfigurationManager
 
     /**
      * @return void
+     * @throws ConfigurationException
      */
     public function clearCache(): void
     {
