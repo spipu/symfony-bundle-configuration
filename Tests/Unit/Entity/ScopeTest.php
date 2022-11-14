@@ -134,6 +134,20 @@ class ScopeTest extends TestCase
         new Scope('to}ta', 'Name');
     }
 
+    public function testKoCodeTooLong()
+    {
+        $this->expectException(ConfigurationScopeException::class);
+        $this->expectExceptionMessage('Invalid scope code - too long');
+
+        $code = '0123456789abcdef';
+        $code .= $code;
+        $code .= $code;
+        $code .= $code;
+        $code .= '0';
+
+        new Scope($code, 'Name');
+    }
+
     public function testKoCodeGlobalNotAllowed()
     {
         $this->expectException(ConfigurationScopeException::class);
