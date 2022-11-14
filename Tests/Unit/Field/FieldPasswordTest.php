@@ -38,6 +38,6 @@ class FieldPasswordTest extends AbstractFieldTest
 
     protected function getFieldClassName()
     {
-        return \Symfony\Component\Form\Extension\Core\Type\PasswordType::class;
+        return \Symfony\Component\Form\Extension\Core\Type\TextType::class;
     }
 }

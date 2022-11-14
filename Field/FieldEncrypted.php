@@ -51,7 +51,7 @@ class FieldEncrypted extends AbstractField implements FieldInterface
     {
         return new Field(
             $this->buildFormFieldCode($scopeCode),
-            Type\PasswordType::class,
+            Type\TextType::class,
             $this->buildFormFieldPosition($scopeCode),
             $this->getFieldBuilderOptions($definition, $scopeCode, $scopeName)
         );

@@ -34,6 +34,8 @@ use Symfony\Component\Form\Extension\Core\Type;
  */
 class ConfigurationForm implements EntityDefinitionInterface
 {
+    private const FAKE_VALUE = '**********';
+
     /**
      * @var ConfigurationManager
      */
@@ -152,7 +154,10 @@ class ConfigurationForm implements EntityDefinitionInterface
         }
 
         $valueField = $this->prepareScopeFieldValue($definition, $scopeCode);
-        if (!in_array($definition->getType(), ['file', 'encrypted', 'password']) && $hasValue) {
+        if ($hasValue && !in_array($currentValue, ['', null])) {
+            if (in_array($definition->getType(), ['file', 'encrypted', 'password'])) {
+                $currentValue = self::FAKE_VALUE;
+            }
             $valueField->setValue($currentValue);
         }
 
@@ -273,16 +278,29 @@ class ConfigurationForm implements EntityDefinitionInterface
                 break;
 
             case 'password':
-                $this->configurationManager->setPassword($this->configurationCode, $value, $scopeCode);
+                if (!$this->isFakeValue($value)) {
+                    $this->configurationManager->setPassword($this->configurationCode, $value, $scopeCode);
+                }
                 break;
 
             case 'encrypted':
-                $this->configurationManager->setEncrypted($this->configurationCode, $value, $scopeCode);
+                if (!$this->isFakeValue($value)) {
+                    $this->configurationManager->setEncrypted($this->configurationCode, $value, $scopeCode);
+                }
                 break;
 
             default:
                 $this->configurationManager->set($this->configurationCode, $value, $scopeCode);
                 break;
         }
+    }
+
+    /**
+     * @param string|null $value
+     * @return bool
+     */
+    private function isFakeValue(?string $value): bool
+    {
+        return ($value === self::FAKE_VALUE);
     }
 }
