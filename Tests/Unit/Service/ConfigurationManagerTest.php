@@ -249,11 +249,11 @@ class ConfigurationManagerTest extends TestCase
 
         $repository
             ->expects($this->exactly(2))
-            ->method('findOneBy')
+            ->method('loadConfig')
             ->willReturnMap(
                 [
-                    [['code' => 'mock.test.integer', 'scope' => null], null, $entity],
-                    [['code' => 'mock.test.text',    'scope' => null], null, null],
+                    ['mock.test.integer', null, $entity],
+                    ['mock.test.text',    null, null],
                 ]
             );
 
@@ -416,7 +416,7 @@ class ConfigurationManagerTest extends TestCase
 
         $repository
             ->expects($this->once())
-            ->method('findOneBy')
+            ->method('loadConfig')
             ->willReturn(null);
 
         $definitions = new Definitions($container);

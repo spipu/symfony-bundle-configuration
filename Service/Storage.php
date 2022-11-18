@@ -183,7 +183,7 @@ class Storage
             $value = (string) $value;
         }
 
-        $config = $this->configurationRepository->findOneBy(['code' => $key, 'scope' => $scope]);
+        $config = $this->configurationRepository->loadConfig($key, $scope);
         if (!$config) {
             $config = new Configuration();
             $config->setCode($key);
@@ -217,7 +217,7 @@ class Storage
             throw new ConfigurationException('This configuration key is not scoped');
         }
 
-        $config = $this->configurationRepository->findOneBy(['code' => $key, 'scope' => $scope]);
+        $config = $this->configurationRepository->loadConfig($key, $scope);
         if ($config) {
             $this->configurationRepository->remove($config);
         }

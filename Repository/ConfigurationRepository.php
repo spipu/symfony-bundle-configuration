@@ -43,4 +43,18 @@ class ConfigurationRepository extends ServiceEntityRepository
         $this->getEntityManager()->remove($row);
         $this->getEntityManager()->flush();
     }
+
+    /**
+     * @param string $code
+     * @param string|null $scope
+     * @return Configuration|null
+     */
+    public function loadConfig(string $code, ?string $scope): ?Configuration
+    {
+        if ($scope === null) {
+            $scope = '';
+        }
+
+        return $this->findOneBy(['code' => $code, 'scope' => $scope]);
+    }
 }
