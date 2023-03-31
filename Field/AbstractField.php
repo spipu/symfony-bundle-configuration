@@ -18,12 +18,7 @@ use Spipu\ConfigurationBundle\Exception\ConfigurationException;
 
 abstract class AbstractField implements FieldInterface
 {
-    /**
-     * @param Definition $definition
-     * @param mixed $value
-     * @return mixed
-     */
-    public function prepareValue(Definition $definition, $value)
+    public function prepareValue(Definition $definition, mixed $value): mixed
     {
         if (!$definition->isRequired() && ($value === null || $value === '')) {
             return null;
@@ -32,13 +27,7 @@ abstract class AbstractField implements FieldInterface
         return (string) $value;
     }
 
-    /**
-     * @param Definition $definition
-     * @param mixed $value
-     * @return mixed|null
-     * @throws ConfigurationException
-     */
-    protected function isRequired(Definition $definition, $value)
+    protected function isRequired(Definition $definition, mixed $value): mixed
     {
         if ($value !== null) {
             $value = (string) $value;
@@ -59,14 +48,7 @@ abstract class AbstractField implements FieldInterface
         return $value;
     }
 
-    /**
-     * @param Definition $definition
-     * @param mixed $value
-     * @param int|null $validator
-     * @return string|null
-     * @throws ConfigurationException
-     */
-    protected function validateValueType(Definition $definition, $value, ?int $validator)
+    protected function validateValueType(Definition $definition, mixed $value, ?int $validator): mixed
     {
         $value = $this->isRequired($definition, $value);
 
@@ -83,12 +65,6 @@ abstract class AbstractField implements FieldInterface
         return $value;
     }
 
-    /**
-     * @param Definition $definition
-     * @param string $scopeCode
-     * @param string $scopeName
-     * @return array
-     */
     protected function getFieldBuilderOptions(Definition $definition, string $scopeCode, string $scopeName): array
     {
         $options = [
@@ -116,19 +92,11 @@ abstract class AbstractField implements FieldInterface
         return $options;
     }
 
-    /**
-     * @param string $scope
-     * @return string
-     */
     protected function buildFormFieldCode(string $scope): string
     {
         return 'value_' . $scope;
     }
 
-    /**
-     * @param string $scope
-     * @return int
-     */
     protected function buildFormFieldPosition(string $scope): int
     {
         if ($scope === 'default') {

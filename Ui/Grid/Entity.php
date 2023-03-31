@@ -18,34 +18,21 @@ use Spipu\UiBundle\Entity\EntityInterface;
 
 class Entity extends Definition implements EntityInterface
 {
-    /**
-     * @var mixed
-     */
-    private $value;
+    private mixed $value;
 
-    /**
-     * @return int|null
-     */
     public function getId(): ?int
     {
         return null;
     }
 
-    /**
-     * @param mixed $value
-     * @return self
-     */
-    public function setValue($value): self
+    public function setValue(mixed $value): self
     {
         $this->value = $value;
 
         return $this;
     }
 
-    /**
-     * @return mixed
-     */
-    public function getValue()
+    public function getValue(): mixed
     {
         return $this->value;
     }

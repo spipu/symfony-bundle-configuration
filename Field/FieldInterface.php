@@ -19,31 +19,11 @@ use Spipu\UiBundle\Entity\Form\Field;
 
 interface FieldInterface
 {
-    /**
-     * @return string
-     */
     public function getCode(): string;
 
-    /**
-     * @param Definition $definition
-     * @param mixed $value
-     * @return mixed
-     */
-    public function prepareValue(Definition $definition, $value);
+    public function prepareValue(Definition $definition, mixed $value): mixed;
 
-    /**
-     * @param Definition $definition
-     * @param mixed $value
-     * @return mixed
-     * @throws ConfigurationException
-     */
-    public function validateValue(Definition $definition, $value);
+    public function validateValue(Definition $definition, mixed $value): mixed;
 
-    /**
-     * @param Definition $definition
-     * @param string $scopeCode
-     * @param string $scopeName
-     * @return Field
-     */
     public function getFormField(Definition $definition, string $scopeCode, string $scopeName): Field;
 }

@@ -23,21 +23,12 @@ class FieldEmail extends AbstractField implements FieldInterface
 {
     public const MAIL_SEPARATOR = ',';
 
-    /**
-     * @return string
-     */
     public function getCode(): string
     {
         return 'email';
     }
 
-    /**
-     * @param Definition $definition
-     * @param mixed $value
-     * @return mixed
-     * @throws ConfigurationException
-     */
-    public function validateValue(Definition $definition, $value)
+    public function validateValue(Definition $definition, mixed $value): mixed
     {
         $value = $this->isRequired($definition, $value);
 
@@ -60,13 +51,6 @@ class FieldEmail extends AbstractField implements FieldInterface
         return $value;
     }
 
-    /**
-     * @param Definition $definition
-     * @param string $scopeCode
-     * @param string $scopeName
-     * @return Field
-     * @throws FormException
-     */
     public function getFormField(Definition $definition, string $scopeCode, string $scopeName): Field
     {
         return new Field(

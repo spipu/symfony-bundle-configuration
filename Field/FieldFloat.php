@@ -21,20 +21,12 @@ use Symfony\Component\Form\Extension\Core\Type;
 
 class FieldFloat extends AbstractField implements FieldInterface
 {
-    /**
-     * @return string
-     */
     public function getCode(): string
     {
         return 'float';
     }
 
-    /**
-     * @param Definition $definition
-     * @param mixed $value
-     * @return mixed
-     */
-    public function prepareValue(Definition $definition, $value)
+    public function prepareValue(Definition $definition, mixed $value): mixed
     {
         $value = parent::prepareValue($definition, $value);
 
@@ -45,13 +37,7 @@ class FieldFloat extends AbstractField implements FieldInterface
         return $value;
     }
 
-    /**
-     * @param Definition $definition
-     * @param mixed $value
-     * @return mixed
-     * @throws ConfigurationException
-     */
-    public function validateValue(Definition $definition, $value)
+    public function validateValue(Definition $definition, mixed $value): mixed
     {
         // Issue on PHP filter_var when testing 0 as float.
         if ($value === 0 | preg_match('/^[0]+$/', (string) $value)) {
@@ -67,13 +53,6 @@ class FieldFloat extends AbstractField implements FieldInterface
         return $value;
     }
 
-    /**
-     * @param Definition $definition
-     * @param string $scopeCode
-     * @param string $scopeName
-     * @return Field
-     * @throws FormException
-     */
     public function getFormField(Definition $definition, string $scopeCode, string $scopeName): Field
     {
         return new Field(

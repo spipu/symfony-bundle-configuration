@@ -23,41 +23,21 @@ use Symfony\Component\Form\Extension\Core\Type;
 
 class FieldSelect extends AbstractField implements FieldInterface
 {
-    /**
-     * @var ContainerInterface
-     */
-    private $container;
+    private ContainerInterface $container;
+    private array $options = [];
 
-    /**
-     * @var OptionsInterface[]
-     */
-    private $options = [];
-
-    /**
-     * FieldSelect constructor.
-     * @param ContainerInterface $container
-     */
     public function __construct(
         ContainerInterface $container
     ) {
         $this->container = $container;
     }
 
-    /**
-     * @return string
-     */
     public function getCode(): string
     {
         return 'select';
     }
 
-    /**
-     * @param Definition $definition
-     * @param mixed $value
-     * @return mixed
-     * @throws ConfigurationException
-     */
-    public function prepareValue(Definition $definition, $value)
+    public function prepareValue(Definition $definition, mixed $value): mixed
     {
         $options = $this->getOptions($definition);
         if (!$options->hasKey($value)) {
@@ -67,13 +47,7 @@ class FieldSelect extends AbstractField implements FieldInterface
         return parent::prepareValue($definition, $value);
     }
 
-    /**
-     * @param Definition $definition
-     * @param mixed $value
-     * @return mixed
-     * @throws ConfigurationException
-     */
-    public function validateValue(Definition $definition, $value)
+    public function validateValue(Definition $definition, mixed $value): mixed
     {
         $value = parent::validateValueType($definition, $value, null);
 
@@ -91,14 +65,6 @@ class FieldSelect extends AbstractField implements FieldInterface
         return $value;
     }
 
-    /**
-     * @param Definition $definition
-     * @param string $scopeCode
-     * @param string $scopeName
-     * @return Field
-     * @throws ConfigurationException
-     * @throws FormException
-     */
     public function getFormField(Definition $definition, string $scopeCode, string $scopeName): Field
     {
         $options = $this->getFieldBuilderOptions($definition, $scopeCode, $scopeName);
@@ -112,11 +78,6 @@ class FieldSelect extends AbstractField implements FieldInterface
         );
     }
 
-    /**
-     * @param Definition $definition
-     * @return OptionsInterface
-     * @throws ConfigurationException
-     */
     private function getOptions(Definition $definition): OptionsInterface
     {
         if (array_key_exists($definition->getCode(), $this->options)) {
