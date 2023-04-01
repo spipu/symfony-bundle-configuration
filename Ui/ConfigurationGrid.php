@@ -115,14 +115,6 @@ class ConfigurationGrid implements GridDefinitionInterface
     }
 
     /**
-     * @return string|null
-     */
-    public function getCurrentScope(): ?string
-    {
-        return $this->currentScope;
-    }
-
-    /**
      * @param string|null $currentScope
      * @return ConfigurationGrid
      */

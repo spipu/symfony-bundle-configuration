@@ -16,7 +16,6 @@ namespace Spipu\ConfigurationBundle\Service;
 use Doctrine\ORM\EntityManagerInterface;
 use Psr\Cache\CacheItemInterface;
 use Psr\Cache\CacheItemPoolInterface;
-use Psr\Cache\InvalidArgumentException;
 use Spipu\ConfigurationBundle\Entity\Configuration;
 use Spipu\ConfigurationBundle\Exception\ConfigurationException;
 use Spipu\ConfigurationBundle\Exception\ConfigurationScopeException;
@@ -121,7 +120,10 @@ class Storage
 
             $scopes[] = $scope;
         }
-        $scopes[] = 'global';
+
+        if ($scope !== 'default') {
+            $scopes[] = 'global';
+        }
         $scopes[] = 'default';
 
         foreach ($scopes as $scope) {
@@ -253,30 +255,20 @@ class Storage
 
     /**
      * @return void
-     * @throws ConfigurationException
      */
     public function cleanValues(): void
     {
         $this->cacheValues = null;
-        try {
-            $this->cacheService->deleteItem(static::CACHE_KEY);
-        } catch (InvalidArgumentException $e) {
-            throw new ConfigurationException($e->getMessage());
-        }
+        $this->cacheService->deleteItem(static::CACHE_KEY);
     }
 
 
     /**
      * @return CacheItemInterface
-     * @throws ConfigurationException
      */
     public function loadValuesCache(): CacheItemInterface
     {
-        try {
-            return $this->cacheService->getItem(static::CACHE_KEY);
-        } catch (InvalidArgumentException $e) {
-            throw new ConfigurationException($e->getMessage());
-        }
+        return $this->cacheService->getItem(static::CACHE_KEY);
     }
 
     /**
