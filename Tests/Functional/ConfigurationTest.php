@@ -97,10 +97,91 @@ class ConfigurationTest extends WebTestCase
         $client->submit($form);
         $this->assertTrue($client->getResponse()->isRedirect());
 
+        // List - check new value
         $crawler = $client->followRedirect();
         $this->assertEquals(200, $client->getResponse()->getStatusCode());
         $this->assertGreaterThan(0, $crawler->filter('h1:contains("Configurations")')->count());
         $this->assertEquals(1, $crawler->filter('span[data-grid-role=total-rows]:contains("1 item found")')->count());
         $this->assertEquals(1, $crawler->filter('td:contains("http://goodurl.fr")')->count());
+
+        // List - reset filter
+        $client->submit($crawler->selectButton('Advanced Search')->form(), ['fl[code]' => null]);
+        $this->assertEquals(200, $client->getResponse()->getStatusCode());
+
+        // List - Global scope
+        $crawler = $client->request('GET', '/configuration/list');
+        $this->assertEquals(200, $client->getResponse()->getStatusCode());
+        $this->assertGreaterThan(0, $crawler->filter('h1:contains("Configurations")')->count());
+        $this->assertEquals(1, $crawler->filter('span[data-grid-role=total-rows]:contains("21 items found")')->count());
+
+        // List - Fr scope
+        $crawler = $client->request('GET', '/configuration/list/fr');
+        $this->assertEquals(200, $client->getResponse()->getStatusCode());
+        $this->assertGreaterThan(0, $crawler->filter('h1:contains("Configurations")')->count());
+        $this->assertEquals(1, $crawler->filter('span[data-grid-role=total-rows]:contains("1 item found")')->count());
+
+        // List - Bad scope
+        $client->request('GET', '/configuration/list/foo');
+        $this->assertEquals(404, $client->getResponse()->getStatusCode());
+
+        // Show - Global scope
+        $crawler = $client->request('GET', '/configuration/show/test.type.text');
+        $this->assertEquals(200, $client->getResponse()->getStatusCode());
+        $this->assertEquals(1, $crawler->filter('h1:contains("Edit Configuration")')->count());
+
+        // Show - Fr scope
+        $crawler = $client->request('GET', '/configuration/show/test.type.text/fr');
+        $this->assertEquals(200, $client->getResponse()->getStatusCode());
+        $this->assertEquals(1, $crawler->filter('h1:contains("Edit Configuration")')->count());
+
+        // Show - Bad scope
+        $client->request('GET', '/configuration/show/test.type.text/foo');
+        $this->assertEquals(404, $client->getResponse()->getStatusCode());
+
+        // Show - Encrypted value
+        $crawler = $client->request('GET', '/configuration/show/test.type.encrypted');
+        $this->assertEquals(200, $client->getResponse()->getStatusCode());
+        $this->assertEquals(1, $crawler->filter('h1:contains("Edit Configuration")')->count());
+
+        $form = $crawler->filter('form#form_configuration')->form();
+        $form['generic[check_global]']->untick();
+        $form['generic[value_global]']->setValue('Foo Bar');
+        $client->submit($form);
+        $this->assertTrue($client->getResponse()->isRedirect());
+
+        $crawler = $client->request('GET', '/configuration/show/test.type.encrypted');
+        $this->assertEquals(200, $client->getResponse()->getStatusCode());
+        $this->assertEquals(1, $crawler->filter('h1:contains("Edit Configuration")')->count());
+
+        $this->assertCrawlerHasInputValue($crawler, 'generic_value_global', '**********');
+
+        $form = $crawler->filter('form#form_configuration')->form();
+        $form['generic[value_global]']->setValue('');
+        $form['generic[check_global]']->tick();
+        $client->submit($form);
+        $this->assertTrue($client->getResponse()->isRedirect());
+
+        // Show - Password value
+        $crawler = $client->request('GET', '/configuration/show/test.type.password');
+        $this->assertEquals(200, $client->getResponse()->getStatusCode());
+        $this->assertEquals(1, $crawler->filter('h1:contains("Edit Configuration")')->count());
+
+        $form = $crawler->filter('form#form_configuration')->form();
+        $form['generic[check_global]']->untick();
+        $form['generic[value_global]']->setValue('Foo Bar');
+        $client->submit($form);
+        $this->assertTrue($client->getResponse()->isRedirect());
+
+        $crawler = $client->request('GET', '/configuration/show/test.type.password');
+        $this->assertEquals(200, $client->getResponse()->getStatusCode());
+        $this->assertEquals(1, $crawler->filter('h1:contains("Edit Configuration")')->count());
+
+        $this->assertCrawlerHasInputValue($crawler, 'generic_value_global', '**********');
+
+        $form = $crawler->filter('form#form_configuration')->form();
+        $form['generic[value_global]']->setValue('');
+        $form['generic[check_global]']->tick();
+        $client->submit($form);
+        $this->assertTrue($client->getResponse()->isRedirect());
     }
 }
