@@ -135,15 +135,17 @@ class DataProvider extends AbstractDataProvider
         $methods = [
             'get' . ucfirst($fieldName),
             'is' . ucfirst($fieldName),
+            $fieldName
         ];
 
-        foreach ($methods as $method) {
+        $found = count($methods) - 1;
+        foreach ($methods as $key => $method) {
             if (method_exists($item, $method)) {
-                return $method;
+                $found = $key;
             }
         }
 
-        return $fieldName;
+        return $methods[$found];
     }
 
     /**

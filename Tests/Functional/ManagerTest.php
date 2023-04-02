@@ -27,6 +27,26 @@ class ManagerTest extends WebTestCase
         $this->assertSame('My text', $manager->get('test.type.text'));
     }
 
+    public function testSetKoNotScoped()
+    {
+        $manager = $this->getManager();
+
+        $this->expectException(ConfigurationException::class);
+        $this->expectExceptionMessage('This configuration key is not scoped');
+
+        $manager->set('app.website.name', 'My app', 'fr');
+    }
+
+    public function testGetKoNotScoped()
+    {
+        $manager = $this->getManager();
+
+        $this->expectException(ConfigurationException::class);
+        $this->expectExceptionMessage('This configuration key is not scoped');
+
+        $manager->get('app.website.name', 'fr');
+    }
+
     public function testEncrypted()
     {
         $manager = $this->getManager();

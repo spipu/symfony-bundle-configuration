@@ -104,6 +104,12 @@ class ConfigurationTest extends WebTestCase
         $this->assertEquals(1, $crawler->filter('span[data-grid-role=total-rows]:contains("1 item found")')->count());
         $this->assertEquals(1, $crawler->filter('td:contains("http://goodurl.fr")')->count());
 
+        // Conf List - quick search
+        $crawler = $client->submit($crawler->selectButton('Search')->form(), ['qs[field]' => 'code', 'qs[value]' => 'test.type.']);
+        $this->assertEquals(200, $client->getResponse()->getStatusCode());
+        $this->assertGreaterThan(0, $crawler->filter('h1:contains("Configurations")')->count());
+        $this->assertEquals(1, $crawler->filter('span[data-grid-role=total-rows]:contains("5 items found")')->count());
+
         // List - reset filter
         $client->submit($crawler->selectButton('Advanced Search')->form(), ['fl[code]' => null]);
         $this->assertEquals(200, $client->getResponse()->getStatusCode());
@@ -181,6 +187,34 @@ class ConfigurationTest extends WebTestCase
         $form = $crawler->filter('form#form_configuration')->form();
         $form['generic[value_global]']->setValue('');
         $form['generic[check_global]']->tick();
+        $client->submit($form);
+        $this->assertTrue($client->getResponse()->isRedirect());
+
+        // Show - Text scoped value
+        $crawler = $client->request('GET', '/configuration/show/test.type.text');
+        $this->assertEquals(200, $client->getResponse()->getStatusCode());
+        $this->assertEquals(1, $crawler->filter('h1:contains("Edit Configuration")')->count());
+
+        $form = $crawler->filter('form#form_configuration')->form();
+        $form['generic[check_global]']->untick();
+        $form['generic[value_global]']->setValue('My global');
+        $form['generic[check_fr]']->untick();
+        $form['generic[value_fr]']->setValue('My french');
+        $client->submit($form);
+        $this->assertTrue($client->getResponse()->isRedirect());
+
+        $crawler = $client->request('GET', '/configuration/show/test.type.text');
+        $this->assertEquals(200, $client->getResponse()->getStatusCode());
+        $this->assertEquals(1, $crawler->filter('h1:contains("Edit Configuration")')->count());
+
+        $this->assertCrawlerHasInputValue($crawler, 'generic_value_global', 'My global');
+        $this->assertCrawlerHasInputValue($crawler, 'generic_value_fr', 'My french');
+
+        $form = $crawler->filter('form#form_configuration')->form();
+        $form['generic[value_global]']->setValue('');
+        $form['generic[check_global]']->tick();
+        $form['generic[value_fr]']->setValue('');
+        $form['generic[check_fr]']->tick();
         $client->submit($form);
         $this->assertTrue($client->getResponse()->isRedirect());
     }
