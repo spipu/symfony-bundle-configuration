@@ -12,41 +12,17 @@
 namespace Spipu\ConfigurationBundle\Tests\Functional;
 
 use Spipu\CoreBundle\Tests\WebTestCase;
+use Spipu\UiBundle\Tests\UiWebTestCaseTrait;
 
 class ConfigurationTest extends WebTestCase
 {
+    use UiWebTestCaseTrait;
+
     public function testAdmin()
     {
         $client = static::createClient();
 
-        // Home page not logged
-        $crawler = $client->request('GET', '/');
-        $this->assertEquals(200, $client->getResponse()->getStatusCode());
-        $this->assertGreaterThan(0, $crawler->filter('a:contains("Log In")')->count());
-        $this->assertEquals(0, $crawler->filter('a:contains("Log Out")')->count());
-        $this->assertEquals(0, $crawler->filter('a:contains("Configurations")')->count());
-
-        // Login page
-        $crawler = $client->clickLink("Log In");
-        $this->assertEquals(200, $client->getResponse()->getStatusCode());
-        $this->assertGreaterThan(0, $crawler->filter('button:contains("Log In")')->count());
-
-        // Login
-        $client->submit(
-            $crawler->selectButton('Log In')->form(),
-            [
-                '_username' => 'admin',
-                '_password' => 'password'
-            ]
-        );
-        $this->assertTrue($client->getResponse()->isRedirect());
-
-        // Home page logged with "Configuration" access
-        $crawler = $client->followRedirect();
-        $this->assertEquals(200, $client->getResponse()->getStatusCode());
-        $this->assertEquals(0, $crawler->filter('a:contains("Log In")')->count());
-        $this->assertGreaterThan(0, $crawler->filter('a:contains("Log Out")')->count());
-        $this->assertGreaterThan(0, $crawler->filter('a:contains("Configurations")')->count());
+        $this->adminLogin($client, 'Configurations');
 
         // Conf List
         $crawler = $client->clickLink('Configurations');
