@@ -18,14 +18,12 @@ use Spipu\ConfigurationBundle\Command\ScopeCommand;
 use Spipu\ConfigurationBundle\Command\ShowCommand;
 use Spipu\ConfigurationBundle\Exception\ConfigurationException;
 use Spipu\CoreBundle\Tests\WebTestCase;
-use Symfony\Bundle\FrameworkBundle\Console\Application;
-use Symfony\Component\Console\Tester\CommandTester;
 
 class CommandsTest extends WebTestCase
 {
     public function testScope()
     {
-        $commandTester = $this->loadCommand(
+        $commandTester = self::loadCommand(
             ScopeCommand::class,
             'spipu:configuration:scope'
         );
@@ -41,7 +39,7 @@ class CommandsTest extends WebTestCase
 
     public function testShowOkAll()
     {
-        $commandTester = $this->loadCommand(ShowCommand::class, 'spipu:configuration:show');
+        $commandTester = self::loadCommand(ShowCommand::class, 'spipu:configuration:show');
 
         $commandTester->execute([]);
         $output = $commandTester->getDisplay();
@@ -54,7 +52,7 @@ class CommandsTest extends WebTestCase
 
     public function testShowOkOne()
     {
-        $commandTester = $this->loadCommand(ShowCommand::class, 'spipu:configuration:show');
+        $commandTester = self::loadCommand(ShowCommand::class, 'spipu:configuration:show');
 
         $commandTester->execute(['--key' => 'test.type.text', '--scope' => 'global']);
         $output = $commandTester->getDisplay();
@@ -72,7 +70,7 @@ class CommandsTest extends WebTestCase
 
     public function testShowKoNotExist()
     {
-        $commandTester = $this->loadCommand(ShowCommand::class, 'spipu:configuration:show');
+        $commandTester = self::loadCommand(ShowCommand::class, 'spipu:configuration:show');
 
         $this->expectException(ConfigurationException::class);
         $this->expectExceptionMessage('Unknown configuration key [bad key]');
@@ -81,7 +79,7 @@ class CommandsTest extends WebTestCase
 
     public function testShowKoNotScoped()
     {
-        $commandTester = $this->loadCommand(ShowCommand::class, 'spipu:configuration:show');
+        $commandTester = self::loadCommand(ShowCommand::class, 'spipu:configuration:show');
 
         $this->expectException(ConfigurationException::class);
         $this->expectExceptionMessage('This configuration key is not scoped');
@@ -90,7 +88,7 @@ class CommandsTest extends WebTestCase
 
     public function testShowKoUnknownScope()
     {
-        $commandTester = $this->loadCommand(ShowCommand::class, 'spipu:configuration:show');
+        $commandTester = self::loadCommand(ShowCommand::class, 'spipu:configuration:show');
 
         $this->expectException(ConfigurationException::class);
         $this->expectExceptionMessage('Unknown configuration scope [foo]');
@@ -99,7 +97,7 @@ class CommandsTest extends WebTestCase
 
     public function testEditKoFile()
     {
-        $commandTester = $this->loadCommand(EditCommand::class, 'spipu:configuration:edit');
+        $commandTester = self::loadCommand(EditCommand::class, 'spipu:configuration:edit');
 
         $this->expectException(ConfigurationException::class);
         $this->expectExceptionMessage('Unable to set a file in CLI');
@@ -108,7 +106,7 @@ class CommandsTest extends WebTestCase
 
     public function testCacheClearOk()
     {
-        $commandTester = $this->loadCommand(ClearCacheCommand::class, 'spipu:configuration:clear-cache');
+        $commandTester = self::loadCommand(ClearCacheCommand::class, 'spipu:configuration:clear-cache');
 
         $commandTester->execute([]);
         $output = trim($commandTester->getDisplay());
@@ -148,7 +146,7 @@ class CommandsTest extends WebTestCase
 
     private function getConfigurationValue(string $key, string $scope): string
     {
-        $commandTester = $this->loadCommand(ShowCommand::class, 'spipu:configuration:show');
+        $commandTester = self::loadCommand(ShowCommand::class, 'spipu:configuration:show');
 
         $commandTester->execute(['--key' => $key, '--scope' => $scope, '--direct' => true]);
         return trim($commandTester->getDisplay());
@@ -156,7 +154,7 @@ class CommandsTest extends WebTestCase
 
     private function setConfigurationValue(string $key, string $scope, string $value): void
     {
-        $commandTester = $this->loadCommand(EditCommand::class, 'spipu:configuration:edit');
+        $commandTester = self::loadCommand(EditCommand::class, 'spipu:configuration:edit');
 
         $commandTester->execute(['--key' => $key, '--scope' => $scope, '--value' => $value]);
         $output = trim($commandTester->getDisplay());
@@ -165,22 +163,10 @@ class CommandsTest extends WebTestCase
 
     private function delConfigurationValue(string $key, string $scope): void
     {
-        $commandTester = $this->loadCommand(DeleteCommand::class, 'spipu:configuration:delete');
+        $commandTester = self::loadCommand(DeleteCommand::class, 'spipu:configuration:delete');
 
         $commandTester->execute(['--key' => $key, '--scope' => $scope]);
         $output = trim($commandTester->getDisplay());
         $this->assertStringContainsString('=> done', $output);
-    }
-
-    private function loadCommand(string $class, string $name): CommandTester
-    {
-        $kernel = static::bootKernel();
-        $application = new Application($kernel);
-
-        /** @var \Symfony\Component\Console\Command\Command $command */
-        $command = static::getContainer()->get($class);
-        $application->add($command);
-
-        return new CommandTester($application->find($name));
     }
 }
