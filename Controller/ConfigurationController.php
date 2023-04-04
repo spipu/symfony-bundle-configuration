@@ -83,11 +83,7 @@ class ConfigurationController extends AbstractController
         /** @var DataProvider $dataProvider */
         $dataProvider = $manager->getDataProvider();
         $dataProvider->setCurrentScope($scopeCode);
-
         $manager->validate();
-        if ($manager->needRefresh()) {
-            return $this->redirectToRoute('spipu_configuration_admin_list');
-        }
 
         return $this->render(
             '@SpipuConfiguration/index.html.twig',
