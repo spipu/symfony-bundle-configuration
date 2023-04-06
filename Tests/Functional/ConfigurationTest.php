@@ -31,10 +31,11 @@ class ConfigurationTest extends WebTestCase
         $this->assertGreaterThan(0, $crawler->filter('button:contains("Advanced Search")')->count());
 
         // Conf List with filter
-        $crawler = $client->submit($crawler->selectButton('Advanced Search')->form(), ['fl[code]' => 'app.website.url']);
-        $this->assertEquals(200, $client->getResponse()->getStatusCode());
+        $crawler = $this->submitGridFilter($client, $crawler, ['fl[code]' => 'app.website.url']);
+        $gridProperties = $this->getGridProperties($crawler, 'configuration');
+        $this->assertSame(1, $gridProperties['count']['nb']);
+
         $this->assertGreaterThan(0, $crawler->filter('h1:contains("Configurations")')->count());
-        $this->assertEquals(1, $crawler->filter('span[data-grid-role=total-rows]:contains("1 item found")')->count());
         $this->assertEquals(1, $crawler->filter('td:contains("https://my-website.fr")')->count());
         $this->assertEquals(1, $crawler->filter('a:contains("Edit")')->count());
 
@@ -77,30 +78,32 @@ class ConfigurationTest extends WebTestCase
         $crawler = $client->followRedirect();
         $this->assertEquals(200, $client->getResponse()->getStatusCode());
         $this->assertGreaterThan(0, $crawler->filter('h1:contains("Configurations")')->count());
-        $this->assertEquals(1, $crawler->filter('span[data-grid-role=total-rows]:contains("1 item found")')->count());
+        $gridProperties = $this->getGridProperties($crawler, 'configuration');
+        $this->assertSame(1, $gridProperties['count']['nb']);
         $this->assertEquals(1, $crawler->filter('td:contains("http://goodurl.fr")')->count());
 
         // Conf List - quick search
-        $crawler = $client->submit($crawler->selectButton('Search')->form(), ['qs[field]' => 'code', 'qs[value]' => 'test.type.']);
-        $this->assertEquals(200, $client->getResponse()->getStatusCode());
+        $crawler = $this->submitGridQuickSearch($client, $crawler, 'code', 'test.type.');
         $this->assertGreaterThan(0, $crawler->filter('h1:contains("Configurations")')->count());
-        $this->assertEquals(1, $crawler->filter('span[data-grid-role=total-rows]:contains("5 items found")')->count());
+        $gridProperties = $this->getGridProperties($crawler, 'configuration');
+        $this->assertSame(5, $gridProperties['count']['nb']);
 
         // List - reset filter
-        $client->submit($crawler->selectButton('Advanced Search')->form(), ['fl[code]' => null]);
-        $this->assertEquals(200, $client->getResponse()->getStatusCode());
+        $this->submitGridFilter($client, $crawler, ['fl[code]' => null]);
 
         // List - Global scope
         $crawler = $client->request('GET', '/configuration/list');
         $this->assertEquals(200, $client->getResponse()->getStatusCode());
         $this->assertGreaterThan(0, $crawler->filter('h1:contains("Configurations")')->count());
-        $this->assertEquals(1, $crawler->filter('span[data-grid-role=total-rows]:contains("21 items found")')->count());
+        $gridProperties = $this->getGridProperties($crawler, 'configuration');
+        $this->assertSame(21, $gridProperties['count']['nb']);
 
         // List - Fr scope
         $crawler = $client->request('GET', '/configuration/list/fr');
         $this->assertEquals(200, $client->getResponse()->getStatusCode());
         $this->assertGreaterThan(0, $crawler->filter('h1:contains("Configurations")')->count());
-        $this->assertEquals(1, $crawler->filter('span[data-grid-role=total-rows]:contains("1 item found")')->count());
+        $gridProperties = $this->getGridProperties($crawler, 'configuration');
+        $this->assertSame(1, $gridProperties['count']['nb']);
 
         // List - Bad scope
         $client->request('GET', '/configuration/list/foo');
