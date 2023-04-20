@@ -11,6 +11,13 @@ services:
         autowire: true
         autoconfigure: true
 
+    # Options
+    Spipu\ConfigurationBundle\Form\Options\ScopeOptions:
+        public: true
+        autowire: true
+        arguments:
+            $scopeList: '@spipu.configuration.service.scope_list'
+
     # Configuration Manager
     Spipu\ConfigurationBundle\Service\ConfigurationManager:
         public: true
