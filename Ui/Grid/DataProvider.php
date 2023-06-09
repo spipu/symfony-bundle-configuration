@@ -13,44 +13,25 @@ declare(strict_types=1);
 
 namespace Spipu\ConfigurationBundle\Ui\Grid;
 
-use Exception;
 use Spipu\ConfigurationBundle\Service\ConfigurationManager as Manager;
-use Spipu\UiBundle\Entity\EntityInterface;
-use Spipu\UiBundle\Exception\GridException;
 use Spipu\UiBundle\Service\Ui\Grid\DataProvider\AbstractDataProvider;
 
 class DataProvider extends AbstractDataProvider
 {
-    /**
-     * @var Manager
-     */
-    private $manager;
+    private Manager $manager;
 
     /**
-     * @var Entity[]
+     * @var Entity[]|null
      */
-    private $items;
+    private ?array $items = null;
+    private ?string $currentScope = null;
 
-    /**
-     * @var string|null
-     */
-    private $currentScope;
-
-    /**
-     * Doctrine constructor.
-     * @param Manager $manager
-     */
     public function __construct(
         Manager $manager
     ) {
         $this->manager = $manager;
     }
 
-    /**
-     * need by Spipu Ui
-     *
-     * @return void
-     */
     public function __clone()
     {
         $this->items = null;
@@ -58,10 +39,6 @@ class DataProvider extends AbstractDataProvider
         parent::__clone();
     }
 
-    /**
-     * @return void
-     * @throws Exception
-     */
     private function loadItems(): void
     {
         if (is_array($this->items)) {
@@ -97,18 +74,13 @@ class DataProvider extends AbstractDataProvider
         }
     }
 
-    /**
-     * @param Entity $item
-     * @return bool
-     * @throws GridException
-     */
     private function filterItem(Entity $item): bool
     {
         foreach ($this->getFilters() as $filterField => $filterValue) {
             $filterValue = mb_strtolower((string) $filterValue);
             $itemValue = $this->getItemValue($item, (string) $filterField);
 
-            if (strpos($itemValue, $filterValue) === false) {
+            if (!str_contains($itemValue, $filterValue)) {
                 return false;
             }
         }
@@ -117,7 +89,7 @@ class DataProvider extends AbstractDataProvider
             $filterValue = mb_strtolower($this->request->getQuickSearchValue());
             $itemValue = $this->getItemValue($item, $this->request->getQuickSearchField());
 
-            if (strpos($itemValue, $filterValue) !== 0) {
+            if (!str_starts_with($itemValue, $filterValue)) {
                 return false;
             }
         }
@@ -125,11 +97,6 @@ class DataProvider extends AbstractDataProvider
         return true;
     }
 
-    /**
-     * @param Entity $item
-     * @param string $fieldName
-     * @return string
-     */
     private function getGetterName(Entity $item, string $fieldName): string
     {
         $methods = [
@@ -148,10 +115,6 @@ class DataProvider extends AbstractDataProvider
         return $methods[$found];
     }
 
-    /**
-     * @return int
-     * @throws Exception
-     */
     public function getNbTotalRows(): int
     {
         $this->loadItems();
@@ -159,10 +122,6 @@ class DataProvider extends AbstractDataProvider
         return count($this->items);
     }
 
-    /**
-     * @return EntityInterface[]
-     * @throws Exception
-     */
     public function getPageRows(): array
     {
         $this->loadItems();
@@ -170,11 +129,6 @@ class DataProvider extends AbstractDataProvider
         return $this->items;
     }
 
-    /**
-     * @param Entity $item
-     * @param string $filterField
-     * @return string
-     */
     private function getItemValue(Entity $item, string $filterField): string
     {
         $method = $this->getGetterName($item, $filterField);
@@ -190,10 +144,6 @@ class DataProvider extends AbstractDataProvider
         return mb_strtolower((string) $itemValue);
     }
 
-    /**
-     * @param string|null $scopeCode
-     * @return void
-     */
     public function setCurrentScope(?string $scopeCode): void
     {
         $this->currentScope = $scopeCode;

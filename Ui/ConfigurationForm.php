@@ -23,7 +23,6 @@ use Spipu\UiBundle\Entity\Form\Field;
 use Spipu\UiBundle\Entity\Form\FieldConstraint;
 use Spipu\UiBundle\Entity\Form\FieldSet;
 use Spipu\UiBundle\Entity\Form\Form;
-use Spipu\UiBundle\Exception\FormException;
 use Spipu\UiBundle\Service\Ui\Definition\EntityDefinitionInterface;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
@@ -36,43 +35,13 @@ class ConfigurationForm implements EntityDefinitionInterface
 {
     private const FAKE_VALUE = '**********';
 
-    /**
-     * @var ConfigurationManager
-     */
-    private $configurationManager;
+    private ConfigurationManager $configurationManager;
+    private ScopeService $scopeService;
+    private TranslatorInterface $translator;
+    private Storage $storage;
+    private string $configurationCode = '';
+    private ?Form $definition = null;
 
-    /**
-     * @var Form
-     */
-    private $definition;
-
-    /**
-     * @var string
-     */
-    private $configurationCode;
-
-    /**
-     * @var ScopeService
-     */
-    private $scopeService;
-
-    /**
-     * @var TranslatorInterface
-     */
-    private $translator;
-
-    /**
-     * @var Storage
-     */
-    private $storage;
-
-    /**
-     * ConfigurationForm constructor.
-     * @param ConfigurationManager $configurationManager
-     * @param ScopeService $scopeService
-     * @param TranslatorInterface $translator
-     * @param Storage $storage
-     */
     public function __construct(
         ConfigurationManager $configurationManager,
         ScopeService $scopeService,
@@ -85,10 +54,6 @@ class ConfigurationForm implements EntityDefinitionInterface
         $this->storage = $storage;
     }
 
-    /**
-     * @param string $configurationCode
-     * @return self
-     */
     public function setConfigurationCode(string $configurationCode): self
     {
         $this->configurationCode = $configurationCode;
@@ -96,11 +61,6 @@ class ConfigurationForm implements EntityDefinitionInterface
         return $this;
     }
 
-    /**
-     * @return Form
-     * @throws ConfigurationException
-     * @throws FormException
-     */
     public function getDefinition(): Form
     {
         if (!$this->definition) {
@@ -110,11 +70,6 @@ class ConfigurationForm implements EntityDefinitionInterface
         return $this->definition;
     }
 
-    /**
-     * @return void
-     * @throws ConfigurationException
-     * @throws FormException
-     */
     private function prepareForm(): void
     {
         $definition = $this->getFieldDefinition();
@@ -135,14 +90,6 @@ class ConfigurationForm implements EntityDefinitionInterface
         $this->definition->addFieldSet($fieldSet);
     }
 
-    /**
-     * @param FieldSet $fieldSet
-     * @param Definition $definition
-     * @param string $scopeCode
-     * @return void
-     * @throws ConfigurationException
-     * @throws FormException
-     */
     private function prepareScopeField(FieldSet $fieldSet, Definition $definition, string $scopeCode): void
     {
         try {
@@ -174,12 +121,6 @@ class ConfigurationForm implements EntityDefinitionInterface
         $valueField->addConstraint(new FieldConstraint('use', $checkField->getCode(), ''));
     }
 
-    /**
-     * @param Definition $definition
-     * @param string $scopeCode
-     * @return Field
-     * @throws ConfigurationException
-     */
     private function prepareScopeFieldValue(Definition $definition, string $scopeCode): Field
     {
         switch ($scopeCode) {
@@ -203,12 +144,6 @@ class ConfigurationForm implements EntityDefinitionInterface
         );
     }
 
-    /**
-     * @param Field $valueField
-     * @param string $scopeCode
-     * @return Field
-     * @throws FormException
-     */
     private function prepareScopeFieldCheck(Field $valueField, string $scopeCode): Field
     {
         $checkLabel = 'spipu.configuration.scope.' . (($scopeCode === 'global') ? 'use_default' : 'use_global');
@@ -224,10 +159,6 @@ class ConfigurationForm implements EntityDefinitionInterface
         );
     }
 
-    /**
-     * @return Definition
-     * @throws ConfigurationException
-     */
     private function getFieldDefinition(): Definition
     {
         return $this->configurationManager->getDefinition($this->configurationCode);

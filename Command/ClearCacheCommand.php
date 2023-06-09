@@ -20,16 +20,8 @@ use Symfony\Component\Console\Output\OutputInterface;
 
 class ClearCacheCommand extends Command
 {
-    /**
-     * @var Manager
-     */
-    private $manager;
+    private Manager $manager;
 
-    /**
-     * ConfigurationCommand constructor.
-     * @param Manager $manager
-     * @param null|string $name
-     */
     public function __construct(
         Manager $manager,
         ?string $name = null
@@ -39,11 +31,6 @@ class ClearCacheCommand extends Command
         $this->manager = $manager;
     }
 
-    /**
-     * Configure the command
-     *
-     * @return void
-     */
     protected function configure(): void
     {
         $this

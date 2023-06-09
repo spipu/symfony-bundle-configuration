@@ -160,7 +160,7 @@ class ConfigurationScopeListMock implements ScopeListInterface
     /**
      * @var array
      */
-    private $scopes;
+    private array $scopes = [];
 
     /**
      * @param array $scopes

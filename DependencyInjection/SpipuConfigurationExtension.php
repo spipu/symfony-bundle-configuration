@@ -27,10 +27,6 @@ use Symfony\Component\DependencyInjection\Loader\YamlFileLoader;
 
 final class SpipuConfigurationExtension extends Extension implements RolesHierarchyExtensionExtensionInterface
 {
-    /**
-     * Get the alias in config file
-     * @return string
-     */
     public function getAlias(): string
     {
         return 'spipu_configuration';
@@ -142,9 +138,6 @@ final class SpipuConfigurationExtension extends Extension implements RolesHierar
         return new SpipuConfigurationConfiguration();
     }
 
-    /**
-     * @return RoleDefinitionInterface
-     */
     public function getRolesHierarchy(): RoleDefinitionInterface
     {
         return new RoleDefinition();

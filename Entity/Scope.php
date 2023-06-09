@@ -17,21 +17,9 @@ use Spipu\ConfigurationBundle\Exception\ConfigurationScopeException;
 
 class Scope
 {
-    /**
-     * @var string
-     */
-    private $code;
+    private string $code;
+    private string $name;
 
-    /**
-     * @var string
-     */
-    private $name;
-
-    /**
-     * @param string $code
-     * @param string $name
-     * @throws ConfigurationScopeException
-     */
     public function __construct(string $code, string $name)
     {
         $this->validateCode($code);
@@ -41,27 +29,16 @@ class Scope
         $this->name = $name;
     }
 
-    /**
-     * @return string
-     */
     public function getCode(): string
     {
         return $this->code;
     }
 
-    /**
-     * @return string
-     */
     public function getName(): string
     {
         return $this->name;
     }
 
-    /**
-     * @param string $code
-     * @return void
-     * @throws ConfigurationScopeException
-     */
     private function validateCode(string $code): void
     {
         if ($code !== mb_strtolower(trim(strip_tags($code)))) {
@@ -85,12 +62,7 @@ class Scope
         }
     }
 
-    /**
-     * @param string $name
-     * @return void
-     * @throws ConfigurationScopeException
-     */
-    private function validateName(string $name)
+    private function validateName(string $name): void
     {
         if ($name !== trim(strip_tags($name))) {
             throw new ConfigurationScopeException('Invalid scope name - char not allowed');

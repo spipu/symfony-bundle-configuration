@@ -27,16 +27,8 @@ class EditCommand extends Command
     public const OPTION_SCOPE = 'scope';
     public const OPTION_VALUE = 'value';
 
-    /**
-     * @var Manager
-     */
-    private $manager;
+    private Manager $manager;
 
-    /**
-     * ConfigurationCommand constructor.
-     * @param Manager $manager
-     * @param null|string $name
-     */
     public function __construct(
         Manager $manager,
         ?string $name = null
@@ -46,11 +38,6 @@ class EditCommand extends Command
         $this->manager = $manager;
     }
 
-    /**
-     * Configure the command
-     *
-     * @return void
-     */
     protected function configure(): void
     {
         $this
@@ -77,15 +64,6 @@ class EditCommand extends Command
             );
     }
 
-    /**
-     * Execute the command
-     *
-     * @param InputInterface $input
-     * @param OutputInterface $output
-     *
-     * @return int
-     * @throws Exception
-     */
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $key = (string) $input->getOption(static::OPTION_KEY);
