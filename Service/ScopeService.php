@@ -18,28 +18,19 @@ use Spipu\ConfigurationBundle\Exception\ConfigurationScopeException;
 
 class ScopeService
 {
-    /**
-     * @var ScopeListInterface
-     */
-    private $scopeList;
+    private ScopeListInterface $scopeList;
 
     /**
      * @var Scope[]
      */
-    private $scopes;
+    private ?array $scopes = null;
 
-    /**
-     * @param ScopeListInterface $scopeList
-     */
     public function __construct(
         ScopeListInterface $scopeList
     ) {
         $this->scopeList = $scopeList;
     }
 
-    /**
-     * @return void
-     */
     private function loadScopes(): void
     {
         if ($this->scopes !== null) {

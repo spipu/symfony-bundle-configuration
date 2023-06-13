@@ -18,64 +18,38 @@ use Spipu\UiBundle\Entity\EntityInterface;
 use Spipu\UiBundle\Entity\TimestampableInterface;
 use Spipu\UiBundle\Entity\TimestampableTrait;
 
-/**
- * @ORM\Entity(repositoryClass="Spipu\ConfigurationBundle\Repository\ConfigurationRepository")
- * @ORM\HasLifecycleCallbacks()
- * @ORM\Table(
- *     name="spipu_configuration",
- *     uniqueConstraints={@ORM\UniqueConstraint(name="UNIQ_CODE_SCOPE", columns={"code", "scope"})}
- * )
- */
+#[ORM\Entity(repositoryClass: 'Spipu\ConfigurationBundle\Repository\ConfigurationRepository')]
+#[ORM\Table(name: "spipu_configuration")]
+#[ORM\UniqueConstraint(name: "UNIQ_CODE_SCOPE", columns: ["code", "scope"])]
+#[ORM\HasLifecycleCallbacks]
 class Configuration implements EntityInterface, TimestampableInterface
 {
     use TimestampableTrait;
 
-    /**
-     * @var int|null
-     * @ORM\Id()
-     * @ORM\GeneratedValue()
-     * @ORM\Column(type="integer")
-     */
-    private $id;
+    #[ORM\Id]
+    #[ORM\GeneratedValue]
+    #[ORM\Column]
+    private ?int $id = null;
 
-    /**
-     * @var string
-     * @ORM\Column(type="string", length=255)
-     */
-    private $code;
+    #[ORM\Column(length: 255)]
+    private ?string $code = null;
 
-    /**
-     * @var string
-     * @ORM\Column(type="string", length=128, options={"default" : ""})
-     */
-    private $scope = '';
+    #[ORM\Column(length: 128, options: ["default" => ""])]
+    private string $scope = '';
 
-    /**
-     * @var string|null
-     * @ORM\Column(type="string", length=255, nullable=true)
-     */
-    private $value;
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $value = null;
 
-    /**
-     * @return int|null
-     */
     public function getId(): ?int
     {
         return $this->id;
     }
 
-    /**
-     * @return null|string
-     */
     public function getCode(): ?string
     {
         return $this->code;
     }
 
-    /**
-     * @param string $code
-     * @return Configuration
-     */
     public function setCode(string $code): self
     {
         $this->code = $code;
@@ -83,9 +57,6 @@ class Configuration implements EntityInterface, TimestampableInterface
         return $this;
     }
 
-    /**
-     * @return null|string
-     */
     public function getScope(): ?string
     {
         if ($this->scope === '') {
@@ -95,10 +66,6 @@ class Configuration implements EntityInterface, TimestampableInterface
         return $this->scope;
     }
 
-    /**
-     * @param string|null $scope
-     * @return Configuration
-     */
     public function setScope(?string $scope): self
     {
         if ($scope === null) {
@@ -110,18 +77,11 @@ class Configuration implements EntityInterface, TimestampableInterface
         return $this;
     }
 
-    /**
-     * @return string|null
-     */
     public function getValue(): ?string
     {
         return $this->value;
     }
 
-    /**
-     * @param string|null $value
-     * @return Configuration
-     */
     public function setValue(?string $value): self
     {
         $this->value = $value;

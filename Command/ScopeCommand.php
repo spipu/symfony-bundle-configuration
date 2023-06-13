@@ -20,15 +20,8 @@ use Symfony\Component\Console\Output\OutputInterface;
 
 class ScopeCommand extends Command
 {
-    /**
-     * @var ScopeService
-     */
-    private $scopeService;
+    private ScopeService $scopeService;
 
-    /**
-     * @param ScopeService $scopeService
-     * @param null|string $name
-     */
     public function __construct(
         ScopeService $scopeService,
         ?string $name = null
@@ -37,11 +30,6 @@ class ScopeCommand extends Command
         $this->scopeService = $scopeService;
     }
 
-    /**
-     * Configure the command
-     *
-     * @return void
-     */
     protected function configure(): void
     {
         $this

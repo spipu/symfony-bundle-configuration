@@ -18,74 +18,26 @@ use Spipu\ConfigurationBundle\Exception\ConfigurationException;
 class Definition
 {
     /**
-     * Category separator user in the code.
+     * Category separator used in the code.
      */
     public const CATEGORY_SEPARATOR = '.';
 
-    /**
-     * @var string
-     */
-    private $code;
+    private string $code;
+    private string $type;
+    private bool $required;
+    private bool $scoped;
+    private mixed $default;
+    private ?string $unit;
+    private ?string $help;
+    private ?string $options;
+    private ?array $fileTypes;
 
-    /**
-     * @var string
-     */
-    private $type;
-
-    /**
-     * @var bool
-     */
-    private $required;
-
-    /**
-     * @var bool
-     */
-    private $scoped;
-
-    /**
-     * @var mixed
-     */
-    private $default;
-
-    /**
-     * @var string|null
-     */
-    private $unit;
-
-    /**
-     * @var string|null
-     */
-    private $help;
-
-    /**
-     * @var string|null
-     */
-    private $options;
-
-    /**
-     * @var array|null
-     */
-    private $fileTypes;
-
-    /**
-     * Definition constructor.
-     * @param string $code
-     * @param string $type
-     * @param bool $required
-     * @param bool $scoped
-     * @param mixed $default
-     * @param null|string $options
-     * @param null|string $unit
-     * @param string|null $help
-     * @param array|null $fileTypes
-     * @throws ConfigurationException
-     */
     public function __construct(
         string $code,
         string $type,
         bool $required,
         bool $scoped,
-        $default,
+        mixed $default,
         ?string $options,
         ?string $unit,
         ?string $help,
@@ -104,11 +56,6 @@ class Definition
         $this->validateCode();
     }
 
-    /**
-     * The code must have at least 2 parts
-     * @return void
-     * @throws ConfigurationException
-     */
     private function validateCode(): void
     {
         if (count($this->getCategories()) < 2) {
@@ -121,9 +68,6 @@ class Definition
         }
     }
 
-    /**
-     * @return string
-     */
     public function getCode(): string
     {
         return $this->code;
@@ -137,19 +81,11 @@ class Definition
         return explode(self::CATEGORY_SEPARATOR, $this->code);
     }
 
-    /**
-     * Get the main category of the code
-     * @return string
-     */
     public function getMainCategory(): string
     {
         return $this->getCategories()[0];
     }
 
-    /**
-     * Get the sub categories of the code
-     * @return string
-     */
     public function getSubCategories(): string
     {
         $categories = $this->getCategories();
@@ -157,57 +93,36 @@ class Definition
         return implode(self::CATEGORY_SEPARATOR, $categories);
     }
 
-    /**
-     * @return string
-     */
     public function getType(): string
     {
         return $this->type;
     }
 
-    /**
-     * @return bool
-     */
     public function isRequired(): bool
     {
         return $this->required;
     }
 
-    /**
-     * @return bool
-     */
     public function isScoped(): bool
     {
         return $this->scoped;
     }
 
-    /**
-     * @return mixed
-     */
-    public function getDefault()
+    public function getDefault(): mixed
     {
         return $this->default;
     }
 
-    /**
-     * @return null|string
-     */
     public function getOptions(): ?string
     {
         return $this->options;
     }
 
-    /**
-     * @return null|string
-     */
     public function getUnit(): ?string
     {
         return $this->unit;
     }
 
-    /**
-     * @return null|string
-     */
     public function getHelp(): ?string
     {
         return $this->help;

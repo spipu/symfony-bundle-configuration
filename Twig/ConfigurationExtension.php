@@ -20,23 +20,13 @@ use Twig\TwigFilter;
 
 class ConfigurationExtension extends AbstractExtension
 {
-    /**
-     * @var ConfigurationManager
-     */
-    private $configurationManager;
+    private ConfigurationManager $configurationManager;
 
-    /**
-     * ConfigurationExtension constructor.
-     * @param ConfigurationManager $configurationManager
-     */
     public function __construct(ConfigurationManager $configurationManager)
     {
         $this->configurationManager = $configurationManager;
     }
 
-    /**
-     * @return TwigFilter[]
-     */
     public function getFilters(): array
     {
         return [
@@ -45,23 +35,11 @@ class ConfigurationExtension extends AbstractExtension
         ];
     }
 
-    /**
-     * @param string $key
-     * @param string|null $scope
-     * @return mixed
-     * @throws ConfigurationException
-     */
-    public function getValue(string $key, string $scope = null)
+    public function getValue(string $key, string $scope = null): mixed
     {
         return $this->configurationManager->get($key, $scope);
     }
 
-    /**
-     * @param string $key
-     * @param string|null $scope
-     * @return string
-     * @throws ConfigurationException
-     */
     public function getFileUrl(string $key, string $scope = null): string
     {
         return '/' . $this->configurationManager->getFileUrl() . $this->getValue($key, $scope);

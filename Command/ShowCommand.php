@@ -29,16 +29,8 @@ class ShowCommand extends Command
     public const OPTION_SCOPE = 'scope';
     public const OPTION_DIRECT = 'direct';
 
-    /**
-     * @var Manager
-     */
-    private $manager;
+    private Manager $manager;
 
-    /**
-     * ConfigurationCommand constructor.
-     * @param Manager $manager
-     * @param null|string $name
-     */
     public function __construct(
         Manager $manager,
         ?string $name = null
@@ -48,11 +40,6 @@ class ShowCommand extends Command
         $this->manager = $manager;
     }
 
-    /**
-     * Configure the command
-     *
-     * @return void
-     */
     protected function configure(): void
     {
         $this
@@ -79,15 +66,6 @@ class ShowCommand extends Command
             );
     }
 
-    /**
-     * Execute the command
-     *
-     * @param InputInterface $input
-     * @param OutputInterface $output
-     *
-     * @return int
-     * @throws Exception
-     */
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $key = $input->getOption(static::OPTION_KEY);
@@ -113,13 +91,6 @@ class ShowCommand extends Command
         return self::SUCCESS;
     }
 
-    /**
-     * @param OutputInterface $output
-     * @param string $key
-     * @param string $scope
-     * @return void
-     * @throws ConfigurationException
-     */
     protected function showOneDirect(OutputInterface $output, string $key, string $scope): void
     {
         $value = $this->manager->get($key, $scope);
@@ -133,13 +104,6 @@ class ShowCommand extends Command
         $output->writeln((string) $value);
     }
 
-    /**
-     * @param OutputInterface $output
-     * @param string $key
-     * @param string $scope
-     * @return void
-     * @throws ConfigurationException
-     */
     private function showOne(OutputInterface $output, string $key, string $scope): void
     {
         $output->writeln('Show Configuration');
@@ -157,11 +121,6 @@ class ShowCommand extends Command
         $this->displayTable($output, $list);
     }
 
-    /**
-     * @param OutputInterface $output
-     * @return void
-     * @throws ConfigurationException
-     */
     private function showAll(OutputInterface $output): void
     {
         $output->writeln('Show All Configurations');
@@ -193,12 +152,7 @@ class ShowCommand extends Command
         }
     }
 
-    /**
-     * @param Definition $definition
-     * @param mixed $value
-     * @return array
-     */
-    private function prepareItem(Definition $definition, $value): array
+    private function prepareItem(Definition $definition, mixed $value): array
     {
         return [
             'code'     => $definition->getCode(),
@@ -209,11 +163,6 @@ class ShowCommand extends Command
         ];
     }
 
-    /**
-     * @param OutputInterface $output
-     * @param array $values
-     * @return void
-     */
     private function displayTable(OutputInterface $output, array $values): void
     {
         $table = new Table($output);

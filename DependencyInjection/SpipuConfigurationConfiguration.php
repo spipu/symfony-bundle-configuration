@@ -40,11 +40,7 @@ class SpipuConfigurationConfiguration implements ConfigurationInterface
         ];
     }
 
-    /**
-     * Build the config tree
-     * @return TreeBuilder
-     */
-    public function getConfigTreeBuilder()
+    public function getConfigTreeBuilder(): TreeBuilder
     {
         $treeBuilder = new TreeBuilder('spipu_configuration');
 

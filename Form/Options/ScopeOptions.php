@@ -18,23 +18,13 @@ use Spipu\UiBundle\Form\Options\AbstractOptions;
 
 class ScopeOptions extends AbstractOptions
 {
-    /**
-     * @var ScopeListInterface
-     */
     private ScopeListInterface $scopeList;
 
-    /**
-     * @param ScopeListInterface $scopeList
-     */
     public function __construct(ScopeListInterface $scopeList)
     {
         $this->scopeList = $scopeList;
     }
 
-    /**
-     * Build the list of the available options
-     * @return array
-     */
     protected function buildOptions(): array
     {
         $list = [];

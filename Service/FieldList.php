@@ -23,13 +23,8 @@ class FieldList implements FieldInterface
     /**
      * @var FieldInterface[]
      */
-    private $fields = [];
+    private array $fields = [];
 
-    /**
-     * ActionList constructor.
-     * @param iterable $fields
-     * @throws ConfigurationException
-     */
     public function __construct(
         iterable $fields
     ) {
@@ -41,9 +36,6 @@ class FieldList implements FieldInterface
         }
     }
 
-    /**
-     * @return string
-     */
     public function getCode(): string
     {
         return 'list';
@@ -57,42 +49,21 @@ class FieldList implements FieldInterface
         return $this->fields;
     }
 
-    /**
-     * @param Definition $definition
-     * @param mixed $value
-     * @return mixed
-     */
-    public function prepareValue(Definition $definition, $value)
+    public function prepareValue(Definition $definition, mixed $value): mixed
     {
         return $this->getField($definition)->prepareValue($definition, $value);
     }
 
-    /**
-     * @param Definition $definition
-     * @param mixed $value
-     * @return mixed
-     * @throws ConfigurationException
-     */
-    public function validateValue(Definition $definition, $value)
+    public function validateValue(Definition $definition, mixed $value): mixed
     {
         return $this->getField($definition)->validateValue($definition, $value);
     }
 
-    /**
-     * @param Definition $definition
-     * @return FieldInterface
-     */
     public function getField(Definition $definition): FieldInterface
     {
         return $this->fields[$definition->getType()];
     }
 
-    /**
-     * @param Definition $definition
-     * @param string $scopeCode
-     * @param string $scopeName
-     * @return Field
-     */
     public function getFormField(Definition $definition, string $scopeCode, string $scopeName): Field
     {
         return $this->getField($definition)->getFormField($definition, $scopeCode, $scopeName);

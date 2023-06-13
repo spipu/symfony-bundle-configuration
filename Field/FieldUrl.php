@@ -21,32 +21,16 @@ use Symfony\Component\Form\Extension\Core\Type;
 
 class FieldUrl extends AbstractField implements FieldInterface
 {
-    /**
-     * @return string
-     */
     public function getCode(): string
     {
         return 'url';
     }
 
-    /**
-     * @param Definition $definition
-     * @param mixed $value
-     * @return mixed
-     * @throws ConfigurationException
-     */
-    public function validateValue(Definition $definition, $value)
+    public function validateValue(Definition $definition, mixed $value): mixed
     {
         return $this->validateValueType($definition, $value, FILTER_VALIDATE_URL);
     }
 
-    /**
-     * @param Definition $definition
-     * @param string $scopeCode
-     * @param string $scopeName
-     * @return Field
-     * @throws FormException
-     */
     public function getFormField(Definition $definition, string $scopeCode, string $scopeName): Field
     {
         return new Field(

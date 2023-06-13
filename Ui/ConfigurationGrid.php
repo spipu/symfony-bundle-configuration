@@ -20,34 +20,16 @@ use Spipu\UiBundle\Service\Ui\Definition\GridDefinitionInterface;
 
 class ConfigurationGrid implements GridDefinitionInterface
 {
-    /**
-     * @var OptionsYesNo
-     */
-    private $optionsYesNo;
+    private OptionsYesNo $optionsYesNo;
+    private ?Grid\Grid $definition = null;
+    private ?string $currentScope = null;
 
-    /**
-     * UserGrid constructor.
-     * @param OptionsYesNo $optionsYesNo
-     */
     public function __construct(
         OptionsYesNo $optionsYesNo
     ) {
         $this->optionsYesNo = $optionsYesNo;
     }
 
-    /**
-     * @var Grid\Grid
-     */
-    private $definition;
-
-    /**
-     * @var string|null
-     */
-    private $currentScope;
-
-    /**
-     * @return Grid\Grid
-     */
     public function getDefinition(): Grid\Grid
     {
         if (!$this->definition) {
@@ -57,9 +39,6 @@ class ConfigurationGrid implements GridDefinitionInterface
         return $this->definition;
     }
 
-    /**
-     * @return void
-     */
     private function prepareGrid(): void
     {
         $this->definition = (new Grid\Grid('configuration'))
@@ -114,10 +93,6 @@ class ConfigurationGrid implements GridDefinitionInterface
         ;
     }
 
-    /**
-     * @param string|null $currentScope
-     * @return ConfigurationGrid
-     */
     public function setCurrentScope(?string $currentScope): ConfigurationGrid
     {
         $this->currentScope = $currentScope;

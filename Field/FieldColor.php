@@ -21,21 +21,12 @@ use Symfony\Component\Form\Extension\Core\Type;
 
 class FieldColor extends AbstractField implements FieldInterface
 {
-    /**
-     * @return string
-     */
     public function getCode(): string
     {
         return 'color';
     }
 
-    /**
-     * @param Definition $definition
-     * @param mixed $value
-     * @return string|null
-     * @throws ConfigurationException
-     */
-    public function validateValue(Definition $definition, $value)
+    public function validateValue(Definition $definition, mixed $value): mixed
     {
         $value = $this->validateValueType($definition, $value, null);
 
@@ -51,13 +42,6 @@ class FieldColor extends AbstractField implements FieldInterface
         return $value;
     }
 
-    /**
-     * @param Definition $definition
-     * @param string $scopeCode
-     * @param string $scopeName
-     * @return Field
-     * @throws FormException
-     */
     public function getFormField(Definition $definition, string $scopeCode, string $scopeName): Field
     {
         return new Field(

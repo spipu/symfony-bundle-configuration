@@ -19,30 +19,19 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 
 class Definitions
 {
-    /**
-     * @var ContainerInterface
-     */
-    private $container;
+    private ContainerInterface $container;
 
     /**
      * @var Definition[]
      */
-    private $definitions;
+    private ?array $definitions = null;
 
-    /**
-     * @param ContainerInterface $container
-     */
     public function __construct(
         ContainerInterface $container
     ) {
         $this->container = $container;
     }
 
-    /**
-     * Load the definitions
-     *
-     * @return void
-     */
     private function load(): void
     {
         if (is_array($this->definitions)) {
@@ -79,11 +68,6 @@ class Definitions
         return $this->definitions;
     }
 
-    /**
-     * @param string $key
-     * @return Definition
-     * @throws ConfigurationException
-     */
     public function get(string $key): Definition
     {
         $this->load();

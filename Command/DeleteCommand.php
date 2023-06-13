@@ -25,16 +25,8 @@ class DeleteCommand extends Command
     public const OPTION_KEY = 'key';
     public const OPTION_SCOPE = 'scope';
 
-    /**
-     * @var Manager
-     */
-    private $manager;
+    private Manager $manager;
 
-    /**
-     * ConfigurationCommand constructor.
-     * @param Manager $manager
-     * @param null|string $name
-     */
     public function __construct(
         Manager $manager,
         ?string $name = null
@@ -44,11 +36,6 @@ class DeleteCommand extends Command
         $this->manager = $manager;
     }
 
-    /**
-     * Configure the command
-     *
-     * @return void
-     */
     protected function configure(): void
     {
         $this
@@ -69,15 +56,6 @@ class DeleteCommand extends Command
             );
     }
 
-    /**
-     * Execute the command
-     *
-     * @param InputInterface $input
-     * @param OutputInterface $output
-     *
-     * @return int
-     * @throws Exception
-     */
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $key = (string) $input->getOption(static::OPTION_KEY);

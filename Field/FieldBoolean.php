@@ -18,21 +18,12 @@ use Spipu\ConfigurationBundle\Exception\ConfigurationException;
 
 class FieldBoolean extends FieldSelect
 {
-    /**
-     * @return string
-     */
     public function getCode(): string
     {
         return 'boolean';
     }
 
-    /**
-     * @param Definition $definition
-     * @param mixed $value
-     * @return mixed
-     * @throws ConfigurationException
-     */
-    public function prepareValue(Definition $definition, $value)
+    public function prepareValue(Definition $definition, mixed $value): mixed
     {
         $value = parent::prepareValue($definition, $value);
 
@@ -43,13 +34,7 @@ class FieldBoolean extends FieldSelect
         return $value;
     }
 
-    /**
-     * @param Definition $definition
-     * @param mixed $value
-     * @return int|mixed
-     * @throws ConfigurationException
-     */
-    public function validateValue(Definition $definition, $value)
+    public function validateValue(Definition $definition, mixed $value): mixed
     {
         $value = parent::validateValue($definition, $value);
 
