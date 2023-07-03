@@ -53,7 +53,7 @@ class Scope
             throw new ConfigurationScopeException('Invalid scope code - empty');
         }
 
-        if (in_array($code, ['global', 'default', 'scoped'])) {
+        if (in_array($code, ['global', 'default', 'scoped'], true)) {
             throw new ConfigurationScopeException('Invalid scope code - value not allowed');
         }
 

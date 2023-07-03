@@ -64,8 +64,8 @@ class Storage
         $this->loadValues();
 
         $scopes = [];
-        if (!in_array($scope, [null, '', 'global', 'default'])) {
-            if (!in_array($key, $this->cacheValues['scoped'])) {
+        if (!in_array($scope, [null, '', 'global', 'default'], true)) {
+            if (!in_array($key, $this->cacheValues['scoped'], true)) {
                 throw new ConfigurationException('This configuration key is not scoped');
             }
 
@@ -268,7 +268,7 @@ class Storage
         }
     }
 
-    private function validateScope(?string $scope): string
+    public function validateScope(?string $scope): string
     {
         if ($scope === '' || $scope === null) {
             return 'global';

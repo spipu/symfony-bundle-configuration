@@ -107,7 +107,7 @@ final class SpipuConfigurationExtension extends Extension implements RolesHierar
         }
 
         // Password or Encrypted => no default value.
-        if (in_array($config['type'], ['password', 'encrypted']) && $config['default'] !== null) {
+        if (in_array($config['type'], ['password', 'encrypted'], true) && $config['default'] !== null) {
             throw new InvalidConfigurationException(
                 sprintf(
                     'Unauthorized default value for type "%s" under "configurations.%s"',

@@ -142,6 +142,8 @@ class CommandsTest extends WebTestCase
         $this->assertSame('My text', $this->getConfigurationValue('test.type.text', 'default'));
         $this->assertSame('My text', $this->getConfigurationValue('test.type.text', 'global'));
         $this->assertSame('My text', $this->getConfigurationValue('test.type.text', 'fr'));
+
+        $this->assertSame('0', $this->getConfigurationValue('test.type.boolean', 'global'));
     }
 
     private function getConfigurationValue(string $key, string $scope): string

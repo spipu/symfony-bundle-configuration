@@ -18,35 +18,33 @@ use Spipu\ConfigurationBundle\Exception\ConfigurationException;
 use Spipu\ConfigurationBundle\Field\FieldInterface;
 use Spipu\CoreBundle\Service\HasherFactory;
 use Spipu\CoreBundle\Service\EncryptorInterface;
-use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\PasswordHasher\PasswordHasherInterface;
 
 class ConfigurationManager
 {
-    private ContainerInterface $container;
     private HasherFactory $hasherFactory;
     private EncryptorInterface $encryptor;
     private FieldList $fieldList;
     private Definitions $definitions;
     private Storage $storage;
-    private ?string $filePath = null;
+    private FileManagerInterface $fileManager;
     private ?PasswordHasherInterface $hasher = null;
 
     public function __construct(
-        ContainerInterface $container,
         HasherFactory $hasherFactory,
         EncryptorInterface $encryptor,
         FieldList $fieldList,
         Definitions $definitions,
-        Storage $storage
+        Storage $storage,
+        FileManagerInterface $fileManager
     ) {
-        $this->container = $container;
         $this->hasherFactory = $hasherFactory;
         $this->encryptor = $encryptor;
         $this->fieldList = $fieldList;
         $this->definitions = $definitions;
         $this->storage = $storage;
+        $this->fileManager = $fileManager;
     }
 
     /**
@@ -137,48 +135,63 @@ class ConfigurationManager
 
     public function setFile(string $key, UploadedFile $file, ?string $scope = null): void
     {
-        if (!$this->container->getParameter('spipu.configuration.file.allow')) {
-            throw new ConfigurationException('File are not allowed. Look at spipu.configuration.file.allow parameter');
-        }
-
         $definition = $this->getDefinition($key);
         if ($definition->getType() !== 'file') {
             throw new ConfigurationException('This configuration is not a file!');
         }
 
+        $scope = $this->storage->validateScope($scope);
+        if ($scope === 'global') {
+            $scope = null;
+        }
+
+        if ($scope !== null && !$definition->isScoped()) {
+            throw new ConfigurationException('This configuration key is not scoped');
+        }
+
+        if (!$this->fileManager->isAllowed()) {
+            throw new ConfigurationException('Configuration Files are not allowed');
+        }
+
         $fileTypes = $definition->getFileTypes();
         $guessExtension = $file->guessExtension();
-        if (!empty($fileTypes) && ($guessExtension === null || !in_array(strtolower($guessExtension), $fileTypes))) {
+        if (
+            !empty($fileTypes)
+            && ($guessExtension === null || !in_array(strtolower($guessExtension), $fileTypes, true))
+        ) {
             throw new ConfigurationException('File extension not allowed: ' . $guessExtension);
         }
 
-        $path = $this->getFilePath();
-        if (!is_dir($path)  || !is_writable($path)) {
-            throw new ConfigurationException('The file path does not exist or is not writable: ' . $path);
-        }
-
-        $fileName  = md5($definition->getCode()) . '.' . $file->guessExtension();
-
-        $file->move($path, $fileName);
-
+        $fileName = $this->fileManager->saveFile($definition, $scope ?? 'global', $file);
         $this->set($key, $fileName, $scope);
     }
 
-    public function getFilePath(): string
+    public function getFile(string $key, ?string $scope = null): ?string
     {
-        if ($this->filePath === null) {
-            $this->filePath = $this->container->getParameter('kernel.project_dir')
-                . DIRECTORY_SEPARATOR
-                . $this->container->getParameter('spipu.configuration.file.path');
-
-            $this->filePath = rtrim($this->filePath, DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR;
+        $definition = $this->getDefinition($key);
+        if ($definition->getType() !== 'file') {
+            throw new ConfigurationException('This configuration is not a file!');
         }
-        return $this->filePath;
-    }
 
-    public function getFileUrl(): string
-    {
-        return $this->container->getParameter('spipu.configuration.file.url');
+        $scope = $this->storage->validateScope($scope);
+        if ($scope === 'global') {
+            $scope = null;
+        }
+
+        if (!$this->fileManager->isAllowed()) {
+            throw new ConfigurationException('Configuration Files are not allowed');
+        }
+
+        $filename = $this->get($key, $scope);
+        if ($filename === null) {
+            return null;
+        }
+        $filename = (string) $filename;
+        if ($filename === '') {
+            return null;
+        }
+
+        return $this->fileManager->loadFile($definition, $scope ?? 'global', $filename);
     }
 
     public function clearCache(): void

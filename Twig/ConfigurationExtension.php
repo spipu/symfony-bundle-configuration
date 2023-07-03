@@ -35,13 +35,13 @@ class ConfigurationExtension extends AbstractExtension
         ];
     }
 
-    public function getValue(string $key, string $scope = null): mixed
+    public function getValue(string $key, ?string $scope = null): mixed
     {
         return $this->configurationManager->get($key, $scope);
     }
 
-    public function getFileUrl(string $key, string $scope = null): string
+    public function getFileUrl(string $key, ?string $scope = null): ?string
     {
-        return '/' . $this->configurationManager->getFileUrl() . $this->getValue($key, $scope);
+        return $this->configurationManager->getFile($key, $scope);
     }
 }

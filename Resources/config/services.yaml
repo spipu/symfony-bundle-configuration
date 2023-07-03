@@ -1,8 +1,3 @@
-parameters:
-    spipu.configuration.file.allow: true
-    spipu.configuration.file.path: "public/media/config/"
-    spipu.configuration.file.url: "media/config/"
-
 services:
     # Generic Declaration
     Spipu\ConfigurationBundle\:
@@ -10,6 +5,15 @@ services:
         exclude: '../../{DependencyInjection,Entity,Tests,SpipuConfigurationBundle.php}'
         autowire: true
         autoconfigure: true
+
+    # File Manager
+    Spipu\ConfigurationBundle\Service\FileManagerInterface:
+        class: Spipu\ConfigurationBundle\Service\FileManager
+        arguments:
+            $allowFiles: true
+            $projectDir: '%kernel.project_dir%'
+            $filePath:   'public/media/config/'
+            $fileUrl:    'media/config/'
 
     # Options
     Spipu\ConfigurationBundle\Form\Options\ScopeOptions:
@@ -22,15 +26,6 @@ services:
     Spipu\ConfigurationBundle\Service\ConfigurationManager:
         public: true
         autowire: true
-        arguments:
-            $container: '@service_container'
-
-    # Configuration Manager Deprecated
-    Spipu\ConfigurationBundle\Service\Manager:
-        public: true
-        autowire: true
-        arguments:
-            $container: '@service_container'
 
     # Configuration Definitions
     Spipu\ConfigurationBundle\Service\Definitions:

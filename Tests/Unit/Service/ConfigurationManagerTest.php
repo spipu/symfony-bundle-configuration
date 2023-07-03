@@ -61,38 +61,6 @@ class ConfigurationManagerTest extends TestCase
         ];
     }
 
-    public function testBase()
-    {
-        $parameters = [
-            'kernel.project_dir'             => '/mock/project/',
-            'spipu.configuration.file.allow' => true,
-            'spipu.configuration.file.path'  => '/file_path/',
-            'spipu.configuration.file.url'   => 'file_url/',
-            'spipu_configuration'            => [],
-        ];
-
-        $container = SymfonyMock::getContainer($this, [], $parameters);
-
-        $hasherFactory = new HasherFactory();
-        $encryptor = new Encryptor('my_secret_phrase');
-        $fieldList = new FieldList([new Field\FieldString(), new Field\FieldInteger(), new Field\FieldFile()]);
-        $definitions = new Definitions($container);
-
-        $storage = SpipuConfigurationMock::getStorageMock($this, $definitions, $fieldList);
-
-        $manager = new ConfigurationManager($container, $hasherFactory, $encryptor, $fieldList, $definitions, $storage);
-
-        $this->assertSame(
-            $parameters['spipu.configuration.file.url'],
-            $manager->getFileUrl()
-        );
-
-        $this->assertSame(
-            $parameters['kernel.project_dir'] . DIRECTORY_SEPARATOR . $parameters['spipu.configuration.file.path'],
-            $manager->getFilePath()
-        );
-    }
-
     public function testDefinitions()
     {
         $configurations = $this->getConfigurations();
@@ -106,7 +74,9 @@ class ConfigurationManagerTest extends TestCase
 
         $storage = SpipuConfigurationMock::getStorageMock($this, $definitions, $fieldList);
 
-        $manager = new ConfigurationManager($container, $hasherFactory, $encryptor, $fieldList, $definitions, $storage);
+        $fileManager = FileManagerTest::getService();
+
+        $manager = new ConfigurationManager($hasherFactory, $encryptor, $fieldList, $definitions, $storage, $fileManager);
 
         $definitions = $manager->getDefinitions();
         self::assertSame(array_keys($configurations), array_keys($definitions));
@@ -160,7 +130,9 @@ class ConfigurationManagerTest extends TestCase
 
         $storage = SpipuConfigurationMock::getStorageMock($this, $definitions, $fieldList, $repository, null, $cachePool);
 
-        $manager = new ConfigurationManager($container, $hasherFactory, $encryptor, $fieldList, $definitions, $storage);
+        $fileManager = FileManagerTest::getService();
+
+        $manager = new ConfigurationManager($hasherFactory, $encryptor, $fieldList, $definitions, $storage, $fileManager);
 
         $expected = [
             'default' => [
@@ -194,7 +166,7 @@ class ConfigurationManagerTest extends TestCase
         $this->assertSame($expected, unserialize($cacheItem->get())['values']);
         
         // Third Time : Cache Pool
-        $manager = new ConfigurationManager($container, $hasherFactory, $encryptor, $fieldList, $definitions, $storage);
+        $manager = new ConfigurationManager($hasherFactory, $encryptor, $fieldList, $definitions, $storage, $fileManager);
         $this->assertSame($expected, $manager->getAll());
 
         foreach ($expectedValues as $key => $value) {
@@ -259,7 +231,8 @@ class ConfigurationManagerTest extends TestCase
 
         $definitions = new Definitions($container);
         $storage = SpipuConfigurationMock::getStorageMock($this, $definitions, $fieldList, $repository, $entityManager);
-        $manager = new ConfigurationManager($container, $hasherFactory, $encryptor, $fieldList, $definitions, $storage);
+        $fileManager = FileManagerTest::getService();
+        $manager = new ConfigurationManager($hasherFactory, $encryptor, $fieldList, $definitions, $storage, $fileManager);
 
         $this->assertSame('default value', $manager->get('mock.test.string'));
         $this->assertSame(42, $manager->get('mock.test.integer'));
@@ -279,7 +252,6 @@ class ConfigurationManagerTest extends TestCase
 
         $parameters = [
             'spipu_configuration' => $configurations,
-            'spipu.configuration.file.allow' => false,
         ];
 
         $container = SymfonyMock::getContainer($this, [], $parameters);
@@ -289,7 +261,8 @@ class ConfigurationManagerTest extends TestCase
 
         $definitions = new Definitions($container);
         $storage = SpipuConfigurationMock::getStorageMock($this, $definitions, $fieldList);
-        $manager = new ConfigurationManager($container, $hasherFactory, $encryptor, $fieldList, $definitions, $storage);
+        $fileManager = FileManagerTest::getService(false);
+        $manager = new ConfigurationManager($hasherFactory, $encryptor, $fieldList, $definitions, $storage, $fileManager);
 
         $file = SymfonyMock::getUploadedFile($this);
 
@@ -303,7 +276,6 @@ class ConfigurationManagerTest extends TestCase
 
         $parameters = [
             'spipu_configuration' => $configurations,
-            'spipu.configuration.file.allow' => true,
         ];
 
         $container = SymfonyMock::getContainer($this, [], $parameters);
@@ -313,7 +285,8 @@ class ConfigurationManagerTest extends TestCase
 
         $definitions = new Definitions($container);
         $storage = SpipuConfigurationMock::getStorageMock($this, $definitions, $fieldList);
-        $manager = new ConfigurationManager($container, $hasherFactory, $encryptor, $fieldList, $definitions, $storage);
+        $fileManager = FileManagerTest::getService();
+        $manager = new ConfigurationManager($hasherFactory, $encryptor, $fieldList, $definitions, $storage, $fileManager);
 
         $file = SymfonyMock::getUploadedFile($this);
 
@@ -327,7 +300,6 @@ class ConfigurationManagerTest extends TestCase
 
         $parameters = [
             'spipu_configuration' => $configurations,
-            'spipu.configuration.file.allow' => true,
         ];
 
         $container = SymfonyMock::getContainer($this, [], $parameters);
@@ -337,7 +309,8 @@ class ConfigurationManagerTest extends TestCase
 
         $definitions = new Definitions($container);
         $storage = SpipuConfigurationMock::getStorageMock($this, $definitions, $fieldList);
-        $manager = new ConfigurationManager($container, $hasherFactory, $encryptor, $fieldList, $definitions, $storage);
+        $fileManager = FileManagerTest::getService();
+        $manager = new ConfigurationManager($hasherFactory, $encryptor, $fieldList, $definitions, $storage, $fileManager);
 
         $file = SymfonyMock::getUploadedFile($this, '/tmp/f.pdf', 'document.pdf', 'pdf', 'application/pdf');
 
@@ -350,10 +323,7 @@ class ConfigurationManagerTest extends TestCase
         $configurations = $this->getConfigurations();
 
         $parameters = [
-            'kernel.project_dir'             => '/mock/project',
             'spipu_configuration' => $configurations,
-            'spipu.configuration.file.allow' => true,
-            'spipu.configuration.file.path'  => 'file_path/',
         ];
 
         $container = SymfonyMock::getContainer($this, [], $parameters);
@@ -363,7 +333,8 @@ class ConfigurationManagerTest extends TestCase
 
         $definitions = new Definitions($container);
         $storage = SpipuConfigurationMock::getStorageMock($this, $definitions, $fieldList);
-        $manager = new ConfigurationManager($container, $hasherFactory, $encryptor, $fieldList, $definitions, $storage);
+        $fileManager = FileManagerTest::getService();
+        $manager = new ConfigurationManager($hasherFactory, $encryptor, $fieldList, $definitions, $storage, $fileManager);
 
         $file = SymfonyMock::getUploadedFile($this);
 
@@ -378,8 +349,6 @@ class ConfigurationManagerTest extends TestCase
         $parameters = [
             'kernel.project_dir'             => '/tmp/',
             'spipu_configuration' => $configurations,
-            'spipu.configuration.file.allow' => true,
-            'spipu.configuration.file.path'  => '/',
         ];
 
         $container = SymfonyMock::getContainer($this, [], $parameters);
@@ -390,23 +359,10 @@ class ConfigurationManagerTest extends TestCase
         $list = [];
 
         $entityManager = SymfonyMock::getEntityManager($this);
-        $entityManager
-            ->expects($this->exactly(1))
-            ->method('persist')
-            ->willReturnCallback(
-                function ($object) use (&$list) {
-                    /** @var Configuration $object */
-                    $this->assertInstanceOf(Configuration::class, $object);
-                    $list[$object->getCode()] = $object;
-                }
-            );
-        $entityManager
-            ->expects($this->exactly(1))
-            ->method('flush');
 
         $repository = $this->createMock(ConfigurationRepository::class);
         $repository
-            ->expects($this->exactly(2))
+            ->expects($this->exactly(1))
             ->method('findAll')
             ->willReturnCallback(
                 function () use (&$list) {
@@ -414,22 +370,19 @@ class ConfigurationManagerTest extends TestCase
                 }
             );
 
-        $repository
-            ->expects($this->once())
-            ->method('loadConfig')
-            ->willReturn(null);
 
         $definitions = new Definitions($container);
         $storage = SpipuConfigurationMock::getStorageMock($this, $definitions, $fieldList, $repository, $entityManager);
-        $manager = new ConfigurationManager($container, $hasherFactory, $encryptor, $fieldList, $definitions, $storage);
+        $fileManager = FileManagerTest::getService();
+        $manager = new ConfigurationManager($hasherFactory, $encryptor, $fieldList, $definitions, $storage, $fileManager);
 
         $this->assertSame('', $manager->get('mock.test.file'));
 
         $file = SymfonyMock::getUploadedFile($this);
-        $file->expects($this->once())->method('move');
+        $file->expects($this->never())->method('move');
 
+        $this->expectException(ConfigurationException::class);
+        $this->expectExceptionMessage('The file path does not exist or is not writable: /mock/project/media/foo/');
         $manager->setFile('mock.test.file', $file);
-
-        $this->assertSame(md5('mock.test.file') . '.' . $file->guessExtension(), $manager->get('mock.test.file'));
     }
 }

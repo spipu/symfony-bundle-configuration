@@ -30,7 +30,7 @@ class ConfigurationExtensionTest extends TestCase
 
         $foundNames = [];
         foreach ($filters as $filter) {
-            $this->assertTrue(in_array($filter->getName(), $allowedNames));
+            $this->assertTrue(in_array($filter->getName(), $allowedNames, true));
             $this->assertTrue(call_user_func_array('method_exists', $filter->getCallable()));
             $foundNames[] = $filter->getName();
         }

@@ -101,8 +101,8 @@ class ConfigurationForm implements EntityDefinitionInterface
         }
 
         $valueField = $this->prepareScopeFieldValue($definition, $scopeCode);
-        if ($hasValue && !in_array($currentValue, ['', null]) && $definition->getType() !== 'file') {
-            if (in_array($definition->getType(), ['encrypted', 'password'])) {
+        if ($hasValue && !in_array($currentValue, ['', null], true) && $definition->getType() !== 'file') {
+            if (in_array($definition->getType(), ['encrypted', 'password'], true)) {
                 $currentValue = self::FAKE_VALUE;
             }
             $valueField->setValue($currentValue);
