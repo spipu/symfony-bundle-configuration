@@ -42,6 +42,6 @@ class ConfigurationExtension extends AbstractExtension
 
     public function getFileUrl(string $key, ?string $scope = null): ?string
     {
-        return $this->configurationManager->getFile($key, $scope);
+        return $this->configurationManager->getFileUrl($key, $scope);
     }
 }

@@ -133,7 +133,16 @@ class ConfigurationManager
         $this->set($key, $value, $scope);
     }
 
-    public function setFile(string $key, UploadedFile $file, ?string $scope = null): void
+    /**
+     * @param string $key
+     * @param UploadedFile|null $file
+     * @param string|null $scope
+     * @return void
+     * @throws ConfigurationException
+     * @SuppressWarnings(PMD.CyclomaticComplexity)
+     * @SuppressWarnings(PMD.NPathComplexity)
+     */
+    public function setFile(string $key, ?UploadedFile $file, ?string $scope = null): void
     {
         $definition = $this->getDefinition($key);
         if ($definition->getType() !== 'file') {
@@ -153,20 +162,44 @@ class ConfigurationManager
             throw new ConfigurationException('Configuration Files are not allowed');
         }
 
-        $fileTypes = $definition->getFileTypes();
-        $guessExtension = $file->guessExtension();
-        if (
-            !empty($fileTypes)
-            && ($guessExtension === null || !in_array(strtolower($guessExtension), $fileTypes, true))
-        ) {
-            throw new ConfigurationException('File extension not allowed: ' . $guessExtension);
+        if ($file === null && $definition->isRequired()) {
+            throw new ConfigurationException('This Configuration is required');
         }
 
-        $fileName = $this->fileManager->saveFile($definition, $scope ?? 'global', $file);
-        $this->set($key, $fileName, $scope);
+        if ($file !== null) {
+            $fileTypes = $definition->getFileTypes();
+            $guessExtension = $file->guessExtension();
+            if (
+                !empty($fileTypes)
+                && ($guessExtension === null || !in_array(strtolower($guessExtension), $fileTypes, true))
+            ) {
+                throw new ConfigurationException('File extension not allowed: ' . $guessExtension);
+            }
+        }
+
+        $oldFilename = $this->get($key, $scope);
+        if ($oldFilename !== null && (string) $oldFilename !== '') {
+            $this->fileManager->removeFile($definition, $scope ?? 'global', (string) $oldFilename);
+            $this->set($key, null, $scope);
+        }
+
+        if ($file !== null) {
+            $fileName = $this->fileManager->saveFile($definition, $scope ?? 'global', $file);
+            $this->set($key, $fileName, $scope);
+        }
     }
 
-    public function getFile(string $key, ?string $scope = null): ?string
+    public function getFilePath(string $key, ?string $scope = null): ?string
+    {
+        return $this->getFile($key, $scope, [$this->fileManager, 'getFilePath']);
+    }
+
+    public function getFileUrl(string $key, ?string $scope = null): ?string
+    {
+        return $this->getFile($key, $scope, [$this->fileManager, 'getFileUrl']);
+    }
+
+    private function getFile(string $key, ?string $scope, callable $fileCallback): ?string
     {
         $definition = $this->getDefinition($key);
         if ($definition->getType() !== 'file') {
@@ -191,7 +224,7 @@ class ConfigurationManager
             return null;
         }
 
-        return $this->fileManager->loadFile($definition, $scope ?? 'global', $filename);
+        return call_user_func_array($fileCallback, [$definition, $scope ?? 'global', $filename]);
     }
 
     public function clearCache(): void

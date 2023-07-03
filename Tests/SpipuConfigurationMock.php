@@ -51,7 +51,7 @@ class SpipuConfigurationMock extends TestCase
         $service = $testCase->createMock(ConfigurationManager::class);
 
         $service
-            ->method('getFile')
+            ->method('getFileUrl')
             ->willReturnCallback(
                 function (string $key, ?string $scope = null) {
                     return '/folder/mock/' . $key;
@@ -143,6 +143,9 @@ class SpipuConfigurationMock extends TestCase
     ): Storage {
         if ($repository === null) {
             $repository = $testCase->createMock(ConfigurationRepository::class);
+            $repository
+                ->method('findAll')
+                ->willReturn([]);
         }
 
         if ($entityManager === null) {

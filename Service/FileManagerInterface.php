@@ -22,5 +22,9 @@ interface FileManagerInterface
 
     public function saveFile(Definition $definition, string $scope, UploadedFile $file): string;
 
-    public function loadFile(Definition $definition, string $scope, string $filename): ?string;
+    public function removeFile(Definition $definition, string $scope, string $filename): void;
+
+    public function getFilePath(Definition $definition, string $scope, string $filename): ?string;
+
+    public function getFileUrl(Definition $definition, string $scope, string $filename): ?string;
 }
