@@ -14,7 +14,6 @@ declare(strict_types=1);
 namespace Spipu\ConfigurationBundle\Field;
 
 use Spipu\ConfigurationBundle\Entity\Definition;
-use Spipu\ConfigurationBundle\Exception\ConfigurationException;
 
 class FieldBoolean extends FieldSelect
 {
@@ -28,7 +27,7 @@ class FieldBoolean extends FieldSelect
         $value = parent::prepareValue($definition, $value);
 
         if ($value !== null) {
-            $value = (int) $value;
+            $value = (((int) $value) > 0 ? 1 : 0);
         }
 
         return $value;
@@ -39,7 +38,7 @@ class FieldBoolean extends FieldSelect
         $value = parent::validateValue($definition, $value);
 
         if ($value !== null) {
-            $value = (int) $value;
+            $value = (((int) $value) > 0 ? 1 : 0);
         }
 
         return $value;

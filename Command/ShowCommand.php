@@ -97,9 +97,6 @@ class ShowCommand extends Command
         if ($value === null) {
             $value = '';
         }
-        if (is_bool($value)) {
-            $value = (int) $value;
-        }
 
         $output->writeln((string) $value);
     }
