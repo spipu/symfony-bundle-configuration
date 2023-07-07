@@ -180,7 +180,9 @@ class ConfigurationManager
         $oldFilename = $this->get($key, $scope);
         if ($oldFilename !== null && (string) $oldFilename !== '') {
             $this->fileManager->removeFile($definition, $scope ?? 'global', (string) $oldFilename);
-            $this->set($key, null, $scope);
+            if (!$definition->isRequired()) {
+                $this->set($key, null, $scope);
+            }
         }
 
         if ($file !== null) {
