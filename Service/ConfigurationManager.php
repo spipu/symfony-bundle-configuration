@@ -13,77 +13,32 @@ declare(strict_types=1);
 
 namespace Spipu\ConfigurationBundle\Service;
 
-use Spipu\ConfigurationBundle\Entity\Definition;
 use Spipu\ConfigurationBundle\Exception\ConfigurationException;
-use Spipu\ConfigurationBundle\Field\FieldInterface;
 use Spipu\CoreBundle\Service\HasherFactory;
 use Spipu\CoreBundle\Service\EncryptorInterface;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\PasswordHasher\PasswordHasherInterface;
 
-class ConfigurationManager
+class ConfigurationManager extends BasicConfigurationManager
 {
     private HasherFactory $hasherFactory;
     private EncryptorInterface $encryptor;
-    private FieldList $fieldList;
-    private Definitions $definitions;
-    private Storage $storage;
     private FileManagerInterface $fileManager;
     private ?PasswordHasherInterface $hasher = null;
 
     public function __construct(
-        HasherFactory $hasherFactory,
-        EncryptorInterface $encryptor,
         FieldList $fieldList,
         Definitions $definitions,
         Storage $storage,
+        HasherFactory $hasherFactory,
+        EncryptorInterface $encryptor,
         FileManagerInterface $fileManager
     ) {
+        parent::__construct($fieldList, $definitions, $storage);
+
         $this->hasherFactory = $hasherFactory;
         $this->encryptor = $encryptor;
-        $this->fieldList = $fieldList;
-        $this->definitions = $definitions;
-        $this->storage = $storage;
         $this->fileManager = $fileManager;
-    }
-
-    /**
-     * @return Definition[]
-     */
-    public function getDefinitions(): array
-    {
-        return $this->definitions->getAll();
-    }
-
-    public function getDefinition(string $key): Definition
-    {
-        return $this->definitions->get($key);
-    }
-
-    public function getField(string $key): FieldInterface
-    {
-        $definition = $this->definitions->get($key);
-        return $this->fieldList->getField($definition);
-    }
-
-    public function getAll(): array
-    {
-        return $this->storage->getAll();
-    }
-
-    public function get(string $key, ?string $scope = null): mixed
-    {
-        return $this->storage->get($key, $scope);
-    }
-
-    public function set(string $key, mixed $value, ?string $scope = null): void
-    {
-        $this->storage->set($key, $value, $scope);
-    }
-
-    public function delete(string $key, ?string $scope = null): void
-    {
-        $this->storage->delete($key, $scope);
     }
 
     public function isPasswordValid(string $key, string $raw, ?string $scope = null): bool
@@ -149,7 +104,7 @@ class ConfigurationManager
             throw new ConfigurationException('This configuration is not a file!');
         }
 
-        $scope = $this->storage->validateScope($scope);
+        $scope = $this->validateScope($scope);
         if ($scope === 'global') {
             $scope = null;
         }
@@ -208,7 +163,7 @@ class ConfigurationManager
             throw new ConfigurationException('This configuration is not a file!');
         }
 
-        $scope = $this->storage->validateScope($scope);
+        $scope = $this->validateScope($scope);
         if ($scope === 'global') {
             $scope = null;
         }
@@ -227,10 +182,5 @@ class ConfigurationManager
         }
 
         return call_user_func_array($fileCallback, [$definition, $scope ?? 'global', $filename]);
-    }
-
-    public function clearCache(): void
-    {
-        $this->storage->cleanValues();
     }
 }
