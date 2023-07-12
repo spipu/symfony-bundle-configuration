@@ -24,6 +24,8 @@ class ConfigurationGrid implements GridDefinitionInterface
     private ?Grid\Grid $definition = null;
     private ?string $currentScope = null;
     private string $showNeededRole = 'NOT_ALLOWED';
+    private string $editRouteName = 'spipu_configuration_admin_edit';
+    private array $editRouteParams = [];
 
     public function __construct(
         OptionsYesNo $optionsYesNo
@@ -84,8 +86,8 @@ class ConfigurationGrid implements GridDefinitionInterface
                     'edit',
                     'spipu.ui.action.edit',
                     10,
-                    'spipu_configuration_admin_edit',
-                    ['scopeCode' => $this->currentScope]
+                    $this->editRouteName,
+                    $this->editRouteParams + ['scopeCode' => $this->currentScope]
                 ))
                     ->setCssClass('success')
                     ->setIcon('edit')
@@ -103,6 +105,14 @@ class ConfigurationGrid implements GridDefinitionInterface
     public function setShowNeededRole(string $role): ConfigurationGrid
     {
         $this->showNeededRole = $role;
+        return $this;
+    }
+
+    public function setEditRoute(string $routeName, array $routeParams): ConfigurationGrid
+    {
+        $this->editRouteName = $routeName;
+        $this->editRouteParams = $routeParams;
+
         return $this;
     }
 }

@@ -1,14 +1,12 @@
 {% extends 'base.html.twig' %}
 {% import '@SpipuUi/macro/buttons.html.twig' as buttons %}
 
-{% set menuCurrentItem = 'spipu-configuration-admin' %}
-
 {% block header_title %}{{ parent() }} - {{ 'spipu.configuration.page.admin.list'|trans() }} - {{ block('main_title') }}{% endblock %}
 
 {% block main_title %}{{ 'spipu.configuration.page.admin.edit'|trans() }}{% endblock %}
 
 {% block main_actions %}
-    {{ buttons.back(path('spipu_configuration_admin_list', {scopeCode: currentScope})) }}
+    {{ buttons.back(path(routes.list.name, routes.list.params)) }}
     {{ buttons.submitManagerForm(manager) }}
 {% endblock %}
 

@@ -31,6 +31,7 @@ abstract class AbstractConfigurationController extends AbstractController
     private FormFactory $formFactory;
     private ConfigurationForm $configurationForm;
     protected array $routes = [];
+    protected string $menuCurrentItem = '';
     protected ?array $allowedCodes = null;
 
     public function __construct(
@@ -65,6 +66,7 @@ abstract class AbstractConfigurationController extends AbstractController
             $scopeCode = $scope->getCode();
         }
         $this->configurationGrid->setShowNeededRole($this->routes['list']['role']);
+        $this->configurationGrid->setEditRoute($this->routes['edit']['name'], $this->routes['edit']['params']);
         $this->configurationGrid->setCurrentScope($scopeCode);
 
         $manager = $this->gridFactory->create($this->configurationGrid);
@@ -79,10 +81,12 @@ abstract class AbstractConfigurationController extends AbstractController
         return $this->render(
             $this->routes['list']['template'],
             [
-                'manager'      => $manager,
-                'hasScopes'    => $this->scopeService->hasScopes(),
-                'scopes'       => $this->scopeService->getSortedScopes(),
-                'currentScope' => $scopeCode,
+                'routes'          => $this->routes,
+                'menuCurrentItem' => $this->menuCurrentItem,
+                'manager'         => $manager,
+                'hasScopes'       => $this->scopeService->hasScopes(),
+                'scopes'          => $this->scopeService->getSortedScopes(),
+                'currentScope'    => $scopeCode,
             ]
         );
     }
@@ -109,21 +113,20 @@ abstract class AbstractConfigurationController extends AbstractController
         }
 
         $this->configurationForm->setConfigurationCode($code);
+        $this->routes['list']['params']['scopeCode'] = $scopeCode;
 
         $manager = $this->formFactory->create($this->configurationForm);
         $manager->setSubmitButton('spipu.ui.action.update');
         if ($manager->validate()) {
-            return $this->redirectToRoute(
-                $this->routes['list']['name'],
-                $this->routes['list']['params'] + ['scopeCode' => $scopeCode]
-            );
+            return $this->redirectToRoute($this->routes['list']['name'], $this->routes['list']['params']);
         }
 
         return $this->render(
             $this->routes['edit']['template'],
             [
-                'manager'      => $manager,
-                'currentScope' => $scopeCode,
+                'routes'          => $this->routes,
+                'menuCurrentItem' => $this->menuCurrentItem,
+                'manager'         => $manager,
             ]
         );
     }

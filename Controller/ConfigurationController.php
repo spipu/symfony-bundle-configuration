@@ -36,6 +36,8 @@ class ConfigurationController extends AbstractConfigurationController
             ],
         ];
 
+        $this->menuCurrentItem = 'spipu-configuration-admin';
+
         $this->allowedCodes = null;
     }
 

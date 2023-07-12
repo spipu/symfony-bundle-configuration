@@ -1,8 +1,6 @@
 {% extends 'base.html.twig' %}
 {% import '@SpipuUi/macro/buttons.html.twig' as buttons %}
 
-{% set menuCurrentItem='spipu-configuration-admin' %}
-
 {% block header_title %}{{ parent() }} - {{ block('main_title') }}{% endblock %}
 
 {% block main_title_container %}
@@ -32,7 +30,7 @@
                 let scopeSelect = $('#scopeCode');
 
                 scopeSelect.on('change', function () {
-                    window.location = '{{ path('spipu_configuration_admin_list') }}/' + scopeSelect.val();
+                    window.location = '{{ path(routes.list.name, routes.list.params) }}/' + scopeSelect.val();
                 });
             };
         </script>
