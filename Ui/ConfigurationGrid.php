@@ -23,6 +23,7 @@ class ConfigurationGrid implements GridDefinitionInterface
     private OptionsYesNo $optionsYesNo;
     private ?Grid\Grid $definition = null;
     private ?string $currentScope = null;
+    private string $showNeededRole = 'NOT_ALLOWED';
 
     public function __construct(
         OptionsYesNo $optionsYesNo
@@ -88,7 +89,7 @@ class ConfigurationGrid implements GridDefinitionInterface
                 ))
                     ->setCssClass('success')
                     ->setIcon('edit')
-                    ->setNeededRole('ROLE_ADMIN_MANAGE_CONFIGURATION_EDIT')
+                    ->setNeededRole($this->showNeededRole)
             )
         ;
     }
@@ -96,6 +97,12 @@ class ConfigurationGrid implements GridDefinitionInterface
     public function setCurrentScope(?string $currentScope): ConfigurationGrid
     {
         $this->currentScope = $currentScope;
+        return $this;
+    }
+
+    public function setShowNeededRole(string $role): ConfigurationGrid
+    {
+        $this->showNeededRole = $role;
         return $this;
     }
 }

@@ -25,6 +25,7 @@ class ConfigurationGridTest extends TestCase
         $grid = self::getGrid();
         $this->assertInstanceOf(GridDefinitionInterface::class, $grid);
 
+        $grid->setShowNeededRole('ACL_TO_EDIT');
         $definition = $grid->getDefinition();
         $this->assertInstanceOf(Grid\Grid::class, $definition);
 
@@ -53,6 +54,6 @@ class ConfigurationGridTest extends TestCase
         $action = $definition->getRowAction('edit');
         $this->assertInstanceOf(Grid\Action::class, $action);
         $this->assertSame('spipu_configuration_admin_edit', $action->getRouteName());
-        $this->assertSame('ROLE_ADMIN_MANAGE_CONFIGURATION_EDIT', $action->getNeededRole());
+        $this->assertSame('ACL_TO_EDIT', $action->getNeededRole());
     }
 }

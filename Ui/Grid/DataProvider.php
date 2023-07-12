@@ -25,6 +25,7 @@ class DataProvider extends AbstractDataProvider
      */
     private ?array $items = null;
     private ?string $currentScope = null;
+    private ?array $allowedCodes = null;
 
     public function __construct(
         Manager $manager
@@ -50,6 +51,10 @@ class DataProvider extends AbstractDataProvider
         $this->items = [];
 
         foreach ($this->manager->getDefinitions() as $definition) {
+            if ($this->allowedCodes !== null && !in_array($definition->getCode(), $this->allowedCodes)) {
+                continue;
+            }
+
             if ($this->currentScope !== null && !$definition->isScoped()) {
                 continue;
             }
@@ -147,5 +152,10 @@ class DataProvider extends AbstractDataProvider
     public function setCurrentScope(?string $scopeCode): void
     {
         $this->currentScope = $scopeCode;
+    }
+
+    public function setAllowedCodes(?array $allowedCodes): void
+    {
+        $this->allowedCodes = $allowedCodes;
     }
 }
