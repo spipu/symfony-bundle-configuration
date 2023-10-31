@@ -25,6 +25,7 @@ use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 
 /**
  * @SuppressWarnings(PMD.ExcessiveClassComplexity)
+ * @SuppressWarnings(PMD.CouplingBetweenObjects)
  */
 class Storage
 {
@@ -57,10 +58,6 @@ class Storage
         $this->eventDispatcher = $eventDispatcher;
     }
 
-    /**
-     * @return array
-     * @throws ConfigurationException
-     */
     public function getAll(): array
     {
         $this->loadValues();
