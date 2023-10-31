@@ -13,31 +13,19 @@ declare(strict_types=1);
 
 namespace Spipu\ConfigurationBundle\Service;
 
-use Spipu\ConfigurationBundle\Entity\Definition;
 use Spipu\ConfigurationBundle\Exception\ConfigurationException;
-use Spipu\ConfigurationBundle\Field\FieldInterface;
 use Spipu\CoreBundle\Service\HasherFactory;
 use Spipu\CoreBundle\Service\EncryptorInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\PasswordHasher\PasswordHasherInterface;
 
-class ConfigurationManager
+class ConfigurationManager extends BasicConfigurationManager
 {
-    /**
-     * @var ContainerInterface
-     */
-    private $container;
-
     /**
      * @var HasherFactory
      */
     private $hasherFactory;
-
-    /**
-     * @var PasswordHasherInterface
-     */
-    private $hasher;
 
     /**
      * @var EncryptorInterface
@@ -45,9 +33,14 @@ class ConfigurationManager
     private $encryptor;
 
     /**
-     * @var FieldList
+     * @var ContainerInterface
      */
-    private $fieldList;
+    private $container;
+
+    /**
+     * @var PasswordHasherInterface|null
+     */
+    private $hasher = null;
 
     /**
      * @var string
@@ -55,115 +48,30 @@ class ConfigurationManager
     private $filePath;
 
     /**
-     * @var Definitions
-     */
-    private $definitions;
-
-    /**
-     * @var Storage
-     */
-    private $storage;
-
-    /**
      * Configuration constructor.
-     * @param ContainerInterface $container
-     * @param HasherFactory $hasherFactory
-     * @param EncryptorInterface $encryptor
      * @param FieldList $fieldList
      * @param Definitions $definitions
      * @param Storage $storage
+     * @param HasherFactory $hasherFactory
+     * @param EncryptorInterface $encryptor
+     * @param ContainerInterface $container
      */
     public function __construct(
-        ContainerInterface $container,
-        HasherFactory $hasherFactory,
-        EncryptorInterface $encryptor,
         FieldList $fieldList,
         Definitions $definitions,
-        Storage $storage
+        Storage $storage,
+        HasherFactory $hasherFactory,
+        EncryptorInterface $encryptor,
+        ContainerInterface $container
     ) {
-        $this->container = $container;
+        parent::__construct($fieldList, $definitions, $storage);
+
         $this->hasherFactory = $hasherFactory;
         $this->encryptor = $encryptor;
-        $this->fieldList = $fieldList;
-        $this->definitions = $definitions;
-        $this->storage = $storage;
+        $this->container = $container;
     }
 
-    /**
-     * Get the configuration definitions
-     * @return Definition[]
-     */
-    public function getDefinitions(): array
-    {
-        return $this->definitions->getAll();
-    }
 
-    /**
-     * Get the configuration definition of a specific key
-     * @param string $key
-     * @return Definition
-     * @throws ConfigurationException
-     */
-    public function getDefinition(string $key): Definition
-    {
-        return $this->definitions->get($key);
-    }
-
-    /**
-     * @param string $key
-     * @return FieldInterface
-     * @throws ConfigurationException
-     */
-    public function getField(string $key): FieldInterface
-    {
-        $definition = $this->definitions->get($key);
-        return $this->fieldList->getField($definition);
-    }
-
-    /**
-     * @return array
-     * @throws ConfigurationException
-     */
-    public function getAll(): array
-    {
-        return $this->storage->getAll();
-    }
-
-    /**
-     * Get a configuration value
-     * @param string $key
-     * @param string|null $scope
-     * @return mixed
-     * @throws ConfigurationException
-     */
-    public function get(string $key, ?string $scope = null)
-    {
-        return $this->storage->get($key, $scope);
-    }
-
-    /**
-     * @param string $key
-     * @param mixed $value
-     * @param string|null $scope
-     * @return void
-     * @throws ConfigurationException
-     */
-    public function set(string $key, $value, ?string $scope = null): void
-    {
-        $this->storage->set($key, $value, $scope);
-    }
-
-    /**
-     * Delete a configuration value, to restore the default or the global value
-     * @param string $key
-     * @param string|null $scope
-     * @return void
-     * @throws ConfigurationException
-     */
-    public function delete(string $key, ?string $scope = null): void
-    {
-        $this->storage->delete($key, $scope);
-    }
 
     /**
      * @param string $key
@@ -299,14 +207,5 @@ class ConfigurationManager
     public function getFileUrl(): string
     {
         return $this->container->getParameter('spipu.configuration.file.url');
-    }
-
-    /**
-     * @return void
-     * @throws ConfigurationException
-     */
-    public function clearCache(): void
-    {
-        $this->storage->cleanValues();
     }
 }
