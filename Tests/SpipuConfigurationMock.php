@@ -150,8 +150,9 @@ class SpipuConfigurationMock extends TestCase
         }
 
         $scopeService = SpipuConfigurationMock::getScopeServiceMock();
+        $eventDispatcher = SymfonyMock::getEventDispatcher($testCase);
 
-        return new Storage($definitions, $repository, $fieldList, $entityManager, $cachePool, $scopeService);
+        return new Storage($definitions, $repository, $fieldList, $entityManager, $cachePool, $scopeService, $eventDispatcher);
     }
 }
 
