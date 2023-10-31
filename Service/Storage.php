@@ -17,9 +17,11 @@ use Doctrine\ORM\EntityManagerInterface;
 use Psr\Cache\CacheItemInterface;
 use Psr\Cache\CacheItemPoolInterface;
 use Spipu\ConfigurationBundle\Entity\Configuration;
+use Spipu\ConfigurationBundle\Event\ConfigurationEvent;
 use Spipu\ConfigurationBundle\Exception\ConfigurationException;
 use Spipu\ConfigurationBundle\Exception\ConfigurationScopeException;
 use Spipu\ConfigurationBundle\Repository\ConfigurationRepository;
+use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 
 /**
  * @SuppressWarnings(PMD.ExcessiveClassComplexity)
@@ -34,6 +36,7 @@ class Storage
     private EntityManagerInterface $entityManager;
     private CacheItemPoolInterface $cacheService;
     private ScopeService $scopeService;
+    private EventDispatcherInterface $eventDispatcher;
     private ?array $cacheValues = null;
 
     public function __construct(
@@ -42,7 +45,8 @@ class Storage
         FieldList $fieldList,
         EntityManagerInterface $entityManager,
         CacheItemPoolInterface $cacheService,
-        ScopeService $scopeService
+        ScopeService $scopeService,
+        EventDispatcherInterface $eventDispatcher
     ) {
         $this->definitions = $definitions;
         $this->configurationRepository = $configurationRepository;
@@ -50,8 +54,13 @@ class Storage
         $this->entityManager = $entityManager;
         $this->cacheService = $cacheService;
         $this->scopeService = $scopeService;
+        $this->eventDispatcher = $eventDispatcher;
     }
 
+    /**
+     * @return array
+     * @throws ConfigurationException
+     */
     public function getAll(): array
     {
         $this->loadValues();
@@ -140,6 +149,10 @@ class Storage
         $this->entityManager->flush();
 
         $this->cleanValues();
+
+        $event = new ConfigurationEvent($definition, $scope);
+        $this->eventDispatcher->dispatch($event, $event->getGlobalEventCode());
+        $this->eventDispatcher->dispatch($event, $event->getSpecificEventCode());
     }
 
     public function delete(string $key, ?string $scope): void
@@ -161,6 +174,10 @@ class Storage
         }
 
         $this->cleanValues();
+
+        $event = new ConfigurationEvent($definition, $scope);
+        $this->eventDispatcher->dispatch($event, $event->getGlobalEventCode());
+        $this->eventDispatcher->dispatch($event, $event->getSpecificEventCode());
     }
 
     private function loadValues(): void
