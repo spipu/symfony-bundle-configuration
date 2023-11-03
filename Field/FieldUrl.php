@@ -36,7 +36,7 @@ class FieldUrl extends AbstractField implements FieldInterface
         return new Field(
             $this->buildFormFieldCode($scopeCode),
             Type\UrlType::class,
-            $this->buildFormFieldPosition($scopeCode),
+            10,
             $this->getFieldBuilderOptions($definition, $scopeCode, $scopeName)
         );
     }

@@ -97,6 +97,10 @@ abstract class AbstractField implements FieldInterface
         return 'value_' . $scope;
     }
 
+    /**
+     * @param string $scope
+     * @return int
+     */
     protected function buildFormFieldPosition(string $scope): int
     {
         if ($scope === 'default') {

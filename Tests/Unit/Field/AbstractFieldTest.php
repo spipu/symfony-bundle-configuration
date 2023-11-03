@@ -96,7 +96,7 @@ abstract class AbstractFieldTest extends TestCase
         $this->assertInstanceOf(Field::class, $formField);
         $this->assertSame('value_global', $formField->getCode());
         $this->assertSame($this->getFieldClassName(), $formField->getType());
-        $this->assertSame(2, $formField->getPosition());
+        $this->assertSame(10, $formField->getPosition());
         $this->assertSame('Global', $formField->getOptions()['label']);
         $this->assertTrue($formField->getOptions()['required']);
     }
@@ -110,7 +110,7 @@ abstract class AbstractFieldTest extends TestCase
         $this->assertInstanceOf(Field::class, $formField);
         $this->assertSame('value_global', $formField->getCode());
         $this->assertSame($this->getFieldClassName(), $formField->getType());
-        $this->assertSame(2, $formField->getPosition());
+        $this->assertSame(10, $formField->getPosition());
         $this->assertSame('Global', $formField->getOptions()['label']);
         $this->assertFalse($formField->getOptions()['required']);
     }

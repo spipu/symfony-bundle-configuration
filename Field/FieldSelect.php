@@ -73,7 +73,7 @@ class FieldSelect extends AbstractField implements FieldInterface
         return new Field(
             $this->buildFormFieldCode($scopeCode),
             Type\ChoiceType::class,
-            $this->buildFormFieldPosition($scopeCode),
+            10,
             $options
         );
     }
