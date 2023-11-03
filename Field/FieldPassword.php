@@ -52,7 +52,7 @@ class FieldPassword extends AbstractField implements FieldInterface
         return new Field(
             $this->buildFormFieldCode($scopeCode),
             Type\TextType::class,
-            $this->buildFormFieldPosition($scopeCode),
+            10,
             $this->getFieldBuilderOptions($definition, $scopeCode, $scopeName)
         );
     }

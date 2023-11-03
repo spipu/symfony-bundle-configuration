@@ -63,7 +63,7 @@ class FieldColor extends AbstractField implements FieldInterface
         return new Field(
             $this->buildFormFieldCode($scopeCode),
             Type\ColorType::class,
-            $this->buildFormFieldPosition($scopeCode),
+            10,
             $this->getFieldBuilderOptions($definition, $scopeCode, $scopeName)
         );
     }

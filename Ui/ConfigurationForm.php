@@ -122,12 +122,13 @@ class ConfigurationForm implements EntityDefinitionInterface
         $fieldSet = new FieldSet('configuration', $definition->getCode(), 10);
         $fieldSet->setCssClass('col-xs-12 col-md-8 m-auto');
 
-        $this->prepareScopeField($fieldSet, $definition, 'default');
-        $this->prepareScopeField($fieldSet, $definition, 'global');
+        $position = 0;
+        $this->prepareScopeField($fieldSet, $definition, 'default', ++$position);
+        $this->prepareScopeField($fieldSet, $definition, 'global', ++$position);
 
         if ($definition->isScoped() && $this->scopeService->hasScopes()) {
             foreach ($this->scopeService->getScopes() as $scope) {
-                $this->prepareScopeField($fieldSet, $definition, $scope->getCode());
+                $this->prepareScopeField($fieldSet, $definition, $scope->getCode(), ++$position);
             }
         }
 
@@ -139,12 +140,17 @@ class ConfigurationForm implements EntityDefinitionInterface
      * @param FieldSet $fieldSet
      * @param Definition $definition
      * @param string $scopeCode
+     * @param int $position
      * @return void
      * @throws ConfigurationException
      * @throws FormException
      */
-    private function prepareScopeField(FieldSet $fieldSet, Definition $definition, string $scopeCode): void
-    {
+    private function prepareScopeField(
+        FieldSet $fieldSet,
+        Definition $definition,
+        string $scopeCode,
+        int $position
+    ): void {
         try {
             $currentValue = $this->storage->getScopeValue($this->configurationCode, $scopeCode);
             $hasValue = true;
@@ -160,6 +166,7 @@ class ConfigurationForm implements EntityDefinitionInterface
             }
             $valueField->setValue($currentValue);
         }
+        $valueField->setPosition($position * 10);
 
         $fieldSet->addField($valueField);
 

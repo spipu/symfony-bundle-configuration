@@ -79,7 +79,7 @@ class FieldFloat extends AbstractField implements FieldInterface
         return new Field(
             $this->buildFormFieldCode($scopeCode),
             Type\NumberType::class,
-            $this->buildFormFieldPosition($scopeCode),
+            10,
             $this->getFieldBuilderOptions($definition, $scopeCode, $scopeName)
         );
     }

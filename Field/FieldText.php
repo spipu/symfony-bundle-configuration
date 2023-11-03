@@ -52,7 +52,7 @@ class FieldText extends AbstractField implements FieldInterface
         return new Field(
             $this->buildFormFieldCode($scopeCode),
             Type\TextareaType::class,
-            $this->buildFormFieldPosition($scopeCode),
+            10,
             $this->getFieldBuilderOptions($definition, $scopeCode, $scopeName) + ['attr' => ['rows' => 10]]
         );
     }
