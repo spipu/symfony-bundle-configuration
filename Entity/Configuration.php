@@ -37,7 +37,7 @@ class Configuration implements EntityInterface, TimestampableInterface
     #[ORM\Column(length: 128, options: ["default" => ""])]
     private string $scope = '';
 
-    #[ORM\Column(length: 255, nullable: true)]
+    #[ORM\Column(type: "text", nullable: true)]
     private ?string $value = null;
 
     public function getId(): ?int
