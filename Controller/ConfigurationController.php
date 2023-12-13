@@ -14,7 +14,7 @@ declare(strict_types=1);
 namespace Spipu\ConfigurationBundle\Controller;
 
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Routing\Attribute\Route;
 
 #[Route(path: '/configuration')]
 class ConfigurationController extends AbstractConfigurationController

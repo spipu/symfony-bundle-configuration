@@ -16,7 +16,6 @@ namespace Spipu\ConfigurationBundle\Field;
 use Spipu\ConfigurationBundle\Entity\Definition;
 use Spipu\ConfigurationBundle\Exception\ConfigurationException;
 use Spipu\UiBundle\Entity\Form\Field;
-use Spipu\UiBundle\Exception\FormException;
 use Spipu\UiBundle\Form\Options\OptionsInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Form\Extension\Core\Type;

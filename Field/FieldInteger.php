@@ -14,9 +14,7 @@ declare(strict_types=1);
 namespace Spipu\ConfigurationBundle\Field;
 
 use Spipu\ConfigurationBundle\Entity\Definition;
-use Spipu\ConfigurationBundle\Exception\ConfigurationException;
 use Spipu\UiBundle\Entity\Form\Field;
-use Spipu\UiBundle\Exception\FormException;
 use Symfony\Component\Form\Extension\Core\Type;
 
 class FieldInteger extends AbstractField implements FieldInterface
@@ -40,7 +38,7 @@ class FieldInteger extends AbstractField implements FieldInterface
     public function validateValue(Definition $definition, mixed $value): mixed
     {
         // Issue on PHP filter_var when testing 0 as int.
-        if ($value === 0 | preg_match('/^[0]+$/', (string) $value)) {
+        if ($value === 0 | preg_match('/^0+$/', (string) $value)) {
             return 0;
         }
 

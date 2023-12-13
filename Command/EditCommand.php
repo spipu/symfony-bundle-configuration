@@ -13,7 +13,6 @@ declare(strict_types=1);
 
 namespace Spipu\ConfigurationBundle\Command;
 
-use Exception;
 use Spipu\ConfigurationBundle\Exception\ConfigurationException;
 use Spipu\ConfigurationBundle\Service\ConfigurationManager as Manager;
 use Symfony\Component\Console\Command\Command;

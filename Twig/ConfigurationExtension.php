@@ -13,7 +13,6 @@ declare(strict_types=1);
 
 namespace Spipu\ConfigurationBundle\Twig;
 
-use Spipu\ConfigurationBundle\Exception\ConfigurationException;
 use Spipu\ConfigurationBundle\Service\ConfigurationManager;
 use Twig\Extension\AbstractExtension;
 use Twig\TwigFilter;
