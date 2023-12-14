@@ -16,7 +16,12 @@
     },
     "autoload": {
         "psr-4": {
-            "Spipu\\ConfigurationBundle\\": "./"
+            "Spipu\\ConfigurationBundle\\": "./src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Spipu\\ConfigurationBundle\\Tests\\": "tests/"
         }
     }
 }

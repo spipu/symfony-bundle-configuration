@@ -1,8 +1,8 @@
 services:
     # Generic Declaration
     Spipu\ConfigurationBundle\:
-        resource: '../../*'
-        exclude: '../../{DependencyInjection,Entity,Tests,SpipuConfigurationBundle.php}'
+        resource: '../src/*'
+        exclude: '../src/{Entity,SpipuConfigurationBundle.php}'
         autowire: true
         autoconfigure: true
 
@@ -49,7 +49,7 @@ services:
             - '@doctrine'
 
     Spipu\ConfigurationBundle\Field\:
-        resource: '../../Field'
+        resource: '../src/Field'
         tags: ['spipu.configuration.field']
         autowire: true
 

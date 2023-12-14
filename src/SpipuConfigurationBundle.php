@@ -11,49 +11,94 @@
 
 declare(strict_types=1);
 
-namespace Spipu\ConfigurationBundle\DependencyInjection;
+namespace Spipu\ConfigurationBundle;
 
-use Exception;
 use Spipu\ConfigurationBundle\Service\RoleDefinition;
-use Spipu\CoreBundle\DependencyInjection\RolesHierarchyExtensionExtensionInterface;
+use Spipu\CoreBundle\AbstractBundle;
 use Spipu\CoreBundle\Service\RoleDefinitionInterface;
 use Spipu\UiBundle\Form\Options\BooleanStatus;
-use Symfony\Component\Config\Definition\ConfigurationInterface;
+use Symfony\Component\Config\Definition\Configurator\DefinitionConfigurator;
 use Symfony\Component\Config\Definition\Exception\InvalidConfigurationException;
-use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
-use Symfony\Component\DependencyInjection\Extension\Extension;
-use Symfony\Component\DependencyInjection\Loader\YamlFileLoader;
+use Symfony\Component\DependencyInjection\Loader\Configurator\ContainerConfigurator;
 
-final class SpipuConfigurationExtension extends Extension implements RolesHierarchyExtensionExtensionInterface
+class SpipuConfigurationBundle extends AbstractBundle
 {
-    public function getAlias(): string
-    {
-        return 'spipu_configuration';
-    }
+    protected string $extensionAlias = 'spipu_configuration';
 
     /**
-     * @param array $configs
-     * @param ContainerBuilder $container
-     * @return void
-     * @throws Exception
-     * @SuppressWarnings(PMD.UnusedFormalParameter)
+     * @return string[]
      */
-    public function load(array $configs, ContainerBuilder $container): void
+    public function getAvailableTypes(): array
     {
-        $loader = new YamlFileLoader($container, new FileLocator(__DIR__ . '/../Resources/config'));
-        $loader->load('services.yaml');
+        return [
+            'boolean',
+            'color',
+            'email',
+            'encrypted',
+            'file',
+            'float',
+            'integer',
+            'password',
+            'select',
+            'string',
+            'text',
+            'url',
+        ];
+    }
 
-        $configuration = $this->getConfiguration($configs, $container);
-        $configs = $this->processConfiguration($configuration, $configs);
+    public function configure(DefinitionConfigurator $definition): void
+    {
+        $definition->rootNode()
+            ->normalizeKeys(true)
+            ->useAttributeAsKey('code')
+            ->arrayPrototype()
+                ->children()
+                    ->enumNode('type')
+                        ->isRequired()
+                        ->cannotBeEmpty()
+                        ->values($this->getAvailableTypes())
+                    ->end()
+                    ->scalarNode('options')
+                        ->cannotBeEmpty()
+                    ->end()
+                    ->arrayNode('file_type')
+                        ->beforeNormalization()->castToArray()->end()
+                        ->requiresAtLeastOneElement()
+                        ->scalarPrototype()->end()
+                    ->end()
+                    ->booleanNode('required')
+                        ->isRequired()
+                        ->defaultFalse()
+                    ->end()
+                    ->booleanNode('scoped')
+                        ->defaultFalse()
+                    ->end()
+                    ->scalarNode('default')
+                        ->defaultNull()
+                    ->end()
+                    ->scalarNode('unit')
+                        ->defaultNull()
+                    ->end()
+                    ->scalarNode('help')
+                        ->defaultNull()
+                    ->end()
+                ->end()
+            ->end()
+        ;
+    }
 
-        foreach ($configs as $code => $config) {
-            $configs[$code] = $this->prepareConfig($config, $code);
+    public function loadExtension(array $config, ContainerConfigurator $container, ContainerBuilder $builder): void
+    {
+        parent::loadExtension($config, $container, $builder);
+
+        foreach ($config as $code => $configValues) {
+            $config[$code] = $this->prepareConfig($configValues, $code);
         }
 
-        ksort($configs);
+        ksort($config);
 
-        $container->setParameter('spipu_configuration', $configs);
+        $builder->setParameter('spipu_configuration', $config);
     }
 
     /**
@@ -67,13 +112,19 @@ final class SpipuConfigurationExtension extends Extension implements RolesHierar
     {
         $defaultValues = [
             'code'      => $code,
-            'options'   => null,
-            'unit'      => null,
-            'help'      => null,
+            'default'   => null,
             'file_type' => [],
+            'help'      => null,
+            'options'   => null,
+            'scoped'    => false,
+            'unit'      => null,
         ];
 
         $config = array_merge($defaultValues, $config);
+
+        if (!is_array($config['file_type'])) {
+            $config['file_type'] = [$config['file_type']];
+        }
 
         // Select => Options.
         if ($config['type'] !== 'select' && $config['options'] !== null) {
@@ -124,18 +175,6 @@ final class SpipuConfigurationExtension extends Extension implements RolesHierar
         ksort($config);
 
         return $config;
-    }
-
-    /**
-     * Get the configuration to use
-     * @param array $config
-     * @param ContainerBuilder $container
-     * @return ConfigurationInterface
-     * @SuppressWarnings(PMD.UnusedFormalParameter)
-     */
-    public function getConfiguration(array $config, ContainerBuilder $container): ConfigurationInterface
-    {
-        return new SpipuConfigurationConfiguration();
     }
 
     public function getRolesHierarchy(): RoleDefinitionInterface
