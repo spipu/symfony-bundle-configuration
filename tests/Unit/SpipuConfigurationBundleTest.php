@@ -13,7 +13,7 @@ use Symfony\Component\Config\Definition\Exception\InvalidConfigurationException;
 use Symfony\Component\Config\Definition\Processor;
 use Symfony\Component\DependencyInjection\Extension\ConfigurableExtensionInterface;
 
-class SpipuConfigurationExtensionTest extends TestCase
+class SpipuConfigurationBundleTest extends TestCase
 {
     public function testBase()
     {
