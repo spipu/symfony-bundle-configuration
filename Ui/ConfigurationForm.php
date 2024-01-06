@@ -151,16 +151,25 @@ class ConfigurationForm implements EntityDefinitionInterface
         string $scopeCode,
         int $position
     ): void {
+        $defaultValue = null;
+        if ($definition->getType() === 'select') {
+            try {
+                $defaultValue = $this->storage->getScopeValue($this->configurationCode, 'default');
+            } catch (ConfigurationException $e) {
+                $defaultValue = null;
+            }
+        }
+
         try {
             $currentValue = $this->storage->getScopeValue($this->configurationCode, $scopeCode);
             $hasValue = true;
         } catch (ConfigurationException $e) {
-            $currentValue = null;
+            $currentValue = $defaultValue;
             $hasValue = false;
         }
 
         $valueField = $this->prepareScopeFieldValue($definition, $scopeCode);
-        if ($hasValue && !in_array($currentValue, ['', null]) && $definition->getType() !== 'file') {
+        if (!in_array($currentValue, ['', null], true) && $definition->getType() !== 'file') {
             if (in_array($definition->getType(), ['encrypted', 'password'])) {
                 $currentValue = self::FAKE_VALUE;
             }
