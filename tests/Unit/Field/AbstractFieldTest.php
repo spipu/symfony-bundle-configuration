@@ -3,16 +3,12 @@ namespace Spipu\ConfigurationBundle\Tests\Unit\Field;
 
 use PHPUnit\Framework\TestCase;
 use Spipu\ConfigurationBundle\Exception\ConfigurationException;
-use Spipu\ConfigurationBundle\Field\FieldInterface;
 use Spipu\UiBundle\Entity\Form\Field;
 
 abstract class AbstractFieldTest extends TestCase
 {
     abstract protected function getCode();
 
-    /**
-     * @return FieldInterface
-     */
     abstract protected function getField();
 
     abstract protected function getDefinition(bool $required);

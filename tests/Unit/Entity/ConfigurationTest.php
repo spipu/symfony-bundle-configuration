@@ -1,6 +1,7 @@
 <?php
 namespace Spipu\ConfigurationBundle\Tests\Unit\Entity;
 
+use Closure;
 use PHPUnit\Framework\TestCase;
 use Spipu\ConfigurationBundle\Entity\Configuration;
 
@@ -24,7 +25,7 @@ class ConfigurationTest extends TestCase
         $entity->setScope(null);
         $this->assertSame(null, $entity->getScope());
 
-        $setId = \Closure::bind(
+        $setId = Closure::bind(
             function ($value) {
                 $this->id = $value;
             },
