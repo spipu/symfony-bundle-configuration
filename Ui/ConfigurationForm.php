@@ -256,7 +256,7 @@ class ConfigurationForm implements EntityDefinitionInterface
      * @throws ConfigurationException
      * @SuppressWarnings(PMD.UnusedFormalParameter)
      */
-    public function setSpecificFields(FormInterface $form, EntityInterface $resource = null): void
+    public function setSpecificFields(FormInterface $form, ?EntityInterface $resource = null): void
     {
         $this->saveConfigurationValue($form, 'global');
 
