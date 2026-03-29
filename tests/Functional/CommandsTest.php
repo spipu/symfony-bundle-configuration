@@ -9,6 +9,8 @@
  * file that was distributed with this source code.
  */
 
+declare(strict_types=1);
+
 namespace Spipu\ConfigurationBundle\Tests\Functional;
 
 use Spipu\ConfigurationBundle\Command\ClearCacheCommand;
@@ -21,7 +23,7 @@ use Spipu\CoreBundle\Tests\WebTestCase;
 
 class CommandsTest extends WebTestCase
 {
-    public function testScope()
+    public function testScope(): void
     {
         $commandTester = self::loadCommand(
             ScopeCommand::class,
@@ -37,7 +39,7 @@ class CommandsTest extends WebTestCase
         $this->assertStringContainsString('- [en] English', $output);
     }
 
-    public function testShowOkAll()
+    public function testShowOkAll(): void
     {
         $commandTester = self::loadCommand(ShowCommand::class, 'spipu:configuration:show');
 
@@ -50,7 +52,7 @@ class CommandsTest extends WebTestCase
         $this->assertStringContainsString('| test.type.text | string | yes | yes | My text |', $output);
     }
 
-    public function testShowOkOne()
+    public function testShowOkOne(): void
     {
         $commandTester = self::loadCommand(ShowCommand::class, 'spipu:configuration:show');
 
@@ -62,13 +64,13 @@ class CommandsTest extends WebTestCase
 
     }
 
-    public function testShowOkOneOtherCases()
+    public function testShowOkOneOtherCases(): void
     {
         $this->assertSame('', $this->getConfigurationValue('test.type.file', 'global'));
         $this->assertSame('1', $this->getConfigurationValue('test.type.select', 'global'));
     }
 
-    public function testShowKoNotExist()
+    public function testShowKoNotExist(): void
     {
         $commandTester = self::loadCommand(ShowCommand::class, 'spipu:configuration:show');
 
@@ -77,7 +79,7 @@ class CommandsTest extends WebTestCase
         $commandTester->execute(['--key' => 'bad key', '--scope' => 'global']);
     }
 
-    public function testShowKoNotScoped()
+    public function testShowKoNotScoped(): void
     {
         $commandTester = self::loadCommand(ShowCommand::class, 'spipu:configuration:show');
 
@@ -86,7 +88,7 @@ class CommandsTest extends WebTestCase
         $commandTester->execute(['--key' => 'app.website.name', '--scope' => 'fr']);
     }
 
-    public function testShowKoUnknownScope()
+    public function testShowKoUnknownScope(): void
     {
         $commandTester = self::loadCommand(ShowCommand::class, 'spipu:configuration:show');
 
@@ -95,7 +97,7 @@ class CommandsTest extends WebTestCase
         $commandTester->execute(['--key' => 'test.type.text', '--scope' => 'foo']);
     }
 
-    public function testEditKoFile()
+    public function testEditKoFile(): void
     {
         $commandTester = self::loadCommand(EditCommand::class, 'spipu:configuration:edit');
 
@@ -104,7 +106,7 @@ class CommandsTest extends WebTestCase
         $commandTester->execute(['--key' => 'test.type.file', '--scope' => 'global', '--value' => 'foo']);
     }
 
-    public function testCacheClearOk()
+    public function testCacheClearOk(): void
     {
         $commandTester = self::loadCommand(ClearCacheCommand::class, 'spipu:configuration:clear-cache');
 
@@ -113,7 +115,7 @@ class CommandsTest extends WebTestCase
         $this->assertStringContainsString('=> OK', $output);
     }
 
-    public function testAll()
+    public function testAll(): void
     {
         $this->assertSame('My text', $this->getConfigurationValue('test.type.text', 'default'));
         $this->assertSame('My text', $this->getConfigurationValue('test.type.text', 'global'));

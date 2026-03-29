@@ -1,4 +1,7 @@
 <?php
+
+declare(strict_types=1);
+
 namespace Spipu\ConfigurationBundle\Tests\Unit\Twig;
 
 use Spipu\ConfigurationBundle\Tests\SpipuConfigurationMock;
@@ -17,7 +20,7 @@ class ConfigurationExtensionTest extends TestCase
         return $extension;
     }
 
-    public function testExtension()
+    public function testExtension(): void
     {
         $extension = $this->getExtension();
         $this->assertTrue($extension instanceof ExtensionInterface);

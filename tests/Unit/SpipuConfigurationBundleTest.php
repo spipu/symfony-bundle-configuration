@@ -1,4 +1,7 @@
 <?php
+
+declare(strict_types=1);
+
 namespace Spipu\ConfigurationBundle\Tests\Unit;
 
 use PHPUnit\Framework\TestCase;
@@ -15,7 +18,7 @@ use Symfony\Component\DependencyInjection\Extension\ConfigurableExtensionInterfa
 
 class SpipuConfigurationBundleTest extends TestCase
 {
-    public function testBase()
+    public function testBase(): void
     {
         $builder = SymfonyMock::getContainerBuilder($this);
         $configurator = SymfonyMock::getContainerConfigurator($this);
@@ -35,7 +38,7 @@ class SpipuConfigurationBundleTest extends TestCase
         $this->assertSame([], $builder->getParameter('spipu_configuration'));
     }
 
-    public function testConfigGood()
+    public function testConfigGood(): void
     {
         $config = [
             'test.string'  => [
@@ -116,7 +119,7 @@ class SpipuConfigurationBundleTest extends TestCase
         $this->assertSame($expected, $builder->getParameter('spipu_configuration'));
     }
 
-    public function testConfigErrorSelectWithoutOptions()
+    public function testConfigErrorSelectWithoutOptions(): void
     {
         $config = [
             'test.select'  => [
@@ -135,7 +138,7 @@ class SpipuConfigurationBundleTest extends TestCase
         $bundle->loadExtension($config, $configurator, $builder);
     }
 
-    public function testConfigErrorOptionsWithoutSelect()
+    public function testConfigErrorOptionsWithoutSelect(): void
     {
         $config = [
             'test.string'  => [
@@ -155,7 +158,7 @@ class SpipuConfigurationBundleTest extends TestCase
         $bundle->loadExtension($config, $configurator, $builder);
     }
 
-    public function testConfigErrorFileTypeWithoutFile()
+    public function testConfigErrorFileTypeWithoutFile(): void
     {
         $config = [
             'test.string'   => [
@@ -175,7 +178,7 @@ class SpipuConfigurationBundleTest extends TestCase
         $bundle->loadExtension($config, $configurator, $builder);
     }
 
-    public function testConfigErrorDefaultValueWithEncrypted()
+    public function testConfigErrorDefaultValueWithEncrypted(): void
     {
         $config = [
             'test.string'   => [
@@ -194,7 +197,7 @@ class SpipuConfigurationBundleTest extends TestCase
         $this->expectException(InvalidConfigurationException::class);
         $bundle->loadExtension($config, $configurator, $builder);
     }
-    public function testConfigurationMissingType()
+    public function testConfigurationMissingType(): void
     {
         $configs = [
             0 => [
@@ -213,7 +216,7 @@ class SpipuConfigurationBundleTest extends TestCase
         $processor->processConfiguration($configuration, $configs);
     }
 
-    public function testConfigurationMissingRequired()
+    public function testConfigurationMissingRequired(): void
     {
         $configs = [
             0 => [
@@ -233,7 +236,7 @@ class SpipuConfigurationBundleTest extends TestCase
         $processor->processConfiguration($configuration, $configs);
     }
 
-    public function testConfigurationLight()
+    public function testConfigurationLight(): void
     {
         $expected = [
             'mock.config' => [
@@ -260,7 +263,7 @@ class SpipuConfigurationBundleTest extends TestCase
         $this->assertSame($expected, $result);
     }
 
-    public function testConfigurationDefault()
+    public function testConfigurationDefault(): void
     {
         $builder = SymfonyMock::getContainerBuilder($this);
         $bundle = new SpipuConfigurationBundle();
@@ -274,7 +277,7 @@ class SpipuConfigurationBundleTest extends TestCase
         $this->assertSame('test', $result['mock.config']['default']);
     }
 
-    public function testConfigurationUnit()
+    public function testConfigurationUnit(): void
     {
         $builder = SymfonyMock::getContainerBuilder($this);
         $bundle = new SpipuConfigurationBundle();
@@ -288,7 +291,7 @@ class SpipuConfigurationBundleTest extends TestCase
         $this->assertSame('test', $result['mock.config']['unit']);
     }
 
-    public function testConfigurationHelp()
+    public function testConfigurationHelp(): void
     {
         $builder = SymfonyMock::getContainerBuilder($this);
         $bundle = new SpipuConfigurationBundle();
@@ -302,7 +305,7 @@ class SpipuConfigurationBundleTest extends TestCase
         $this->assertSame('test', $result['mock.config']['help']);
     }
 
-    public function testConfigurationFileType()
+    public function testConfigurationFileType(): void
     {
         $builder = SymfonyMock::getContainerBuilder($this);
         $bundle = new SpipuConfigurationBundle();
@@ -320,7 +323,7 @@ class SpipuConfigurationBundleTest extends TestCase
         $processor->processConfiguration($configuration, $configs);
     }
 
-    public function testConfigurationTypes()
+    public function testConfigurationTypes(): void
     {
         $builder = SymfonyMock::getContainerBuilder($this);
         $bundle = new SpipuConfigurationBundle();
@@ -356,7 +359,7 @@ class SpipuConfigurationBundleTest extends TestCase
         $processor->processConfiguration($configuration, $configs);
     }
 
-    public function testConfigurationOptions()
+    public function testConfigurationOptions(): void
     {
         $builder = SymfonyMock::getContainerBuilder($this);
         $bundle = new SpipuConfigurationBundle();

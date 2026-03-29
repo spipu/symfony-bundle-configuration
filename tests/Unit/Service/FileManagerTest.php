@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Spipu\ConfigurationBundle\Tests\Unit\Service;
 
 use PHPUnit\Framework\TestCase;
@@ -18,7 +20,7 @@ class FileManagerTest extends TestCase
         );
     }
 
-    public function testBase()
+    public function testBase(): void
     {
         $fileManager = self::getService();
 

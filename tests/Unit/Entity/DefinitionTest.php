@@ -1,4 +1,7 @@
 <?php
+
+declare(strict_types=1);
+
 namespace Spipu\ConfigurationBundle\Tests\Unit\Entity;
 
 use PHPUnit\Framework\TestCase;
@@ -7,7 +10,7 @@ use Spipu\ConfigurationBundle\Exception\ConfigurationException;
 
 class DefinitionTest extends TestCase
 {
-    public function testEntityOk()
+    public function testEntityOk(): void
     {
         $entity = new Definition(
             'code.mock.test',
@@ -35,7 +38,7 @@ class DefinitionTest extends TestCase
         $this->assertSame(['test', 'ext'], $entity->getFileTypes());
     }
 
-    public function testEntityKo()
+    public function testEntityKo(): void
     {
         $this->expectException(ConfigurationException::class);
         new Definition(

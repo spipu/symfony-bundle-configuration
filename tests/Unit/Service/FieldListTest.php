@@ -1,4 +1,7 @@
 <?php
+
+declare(strict_types=1);
+
 namespace Spipu\ConfigurationBundle\Tests\Unit\Service;
 
 use Spipu\UiBundle\Entity\Form;
@@ -10,7 +13,7 @@ use Spipu\ConfigurationBundle\Tests\SpipuConfigurationMock;
 
 class FieldListTest extends TestCase
 {
-    public function testBase()
+    public function testBase(): void
     {
         $fieldList = new FieldList([]);
 
@@ -18,7 +21,7 @@ class FieldListTest extends TestCase
         $this->assertSame('list', $fieldList->getCode());
     }
 
-    public function testEmpty()
+    public function testEmpty(): void
     {
         $list = [];
 
@@ -27,7 +30,7 @@ class FieldListTest extends TestCase
         $this->assertSame($list, $fieldList->getFields());
     }
 
-    public function testBad()
+    public function testBad(): void
     {
         $list = [
             new \stdClass(),
@@ -37,7 +40,7 @@ class FieldListTest extends TestCase
         new FieldList($list);
     }
 
-    public function testGood()
+    public function testGood(): void
     {
         $list = [
             'string' => new Field\FieldString(),
@@ -58,7 +61,7 @@ class FieldListTest extends TestCase
         }
     }
 
-    public function testCallBack()
+    public function testCallBack(): void
     {
         $formField = new Form\Field('value', 'good', 10, []);
 

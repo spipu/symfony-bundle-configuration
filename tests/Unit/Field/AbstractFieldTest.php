@@ -1,33 +1,37 @@
 <?php
+
+declare(strict_types=1);
+
 namespace Spipu\ConfigurationBundle\Tests\Unit\Field;
 
 use PHPUnit\Framework\TestCase;
+use Spipu\ConfigurationBundle\Entity\Definition;
 use Spipu\ConfigurationBundle\Exception\ConfigurationException;
 use Spipu\UiBundle\Entity\Form\Field;
 
 abstract class AbstractFieldTest extends TestCase
 {
-    abstract protected function getCode();
+    abstract protected function getCode(): string;
 
-    abstract protected function getField();
+    abstract protected function getField(): object;
 
-    abstract protected function getDefinition(bool $required);
+    abstract protected function getDefinition(bool $required, bool $scoped = false): Definition;
 
-    abstract protected function getGoodValue();
+    abstract protected function getGoodValue(): mixed;
 
-    abstract protected function getEmptyValue();
+    abstract protected function getEmptyValue(): mixed;
 
-    abstract protected function getBadValue();
+    abstract protected function getBadValue(): mixed;
 
-    abstract protected function getFieldClassName();
+    abstract protected function getFieldClassName(): string;
 
-    public function testFieldCode()
+    public function testFieldCode(): void
     {
         $field = $this->getField();
         $this->assertSame($this->getCode(), $field->getCode());
     }
 
-    public function testFieldPrepareValue()
+    public function testFieldPrepareValue(): void
     {
         $field = $this->getField();
 
@@ -42,7 +46,7 @@ abstract class AbstractFieldTest extends TestCase
         $this->assertSame($this->getGoodValue(), $field->prepareValue($definition, $this->getGoodValue()));
     }
 
-    public function testFieldValidateValueNotRequired()
+    public function testFieldValidateValueNotRequired(): void
     {
         $field = $this->getField();
 
@@ -52,7 +56,7 @@ abstract class AbstractFieldTest extends TestCase
         $this->assertSame($this->getGoodValue(), $field->validateValue($definition, $this->getGoodValue()));
     }
 
-    public function testFieldValidateValueRequired()
+    public function testFieldValidateValueRequired(): void
     {
         $field = $this->getField();
 
@@ -65,7 +69,7 @@ abstract class AbstractFieldTest extends TestCase
         }
     }
 
-    public function testFieldValidateValueRequiredKoNull()
+    public function testFieldValidateValueRequiredKoNull(): void
     {
         $field = $this->getField();
         $definition = $this->getDefinition(true);
@@ -74,7 +78,7 @@ abstract class AbstractFieldTest extends TestCase
         $field->validateValue($definition, null);
     }
 
-    public function testFieldValidateValueRequiredKoEmpty()
+    public function testFieldValidateValueRequiredKoEmpty(): void
     {
         $field = $this->getField();
         $definition = $this->getDefinition(true);
@@ -83,7 +87,7 @@ abstract class AbstractFieldTest extends TestCase
         $field->validateValue($definition, '');
     }
 
-    public function testFormFieldRequired()
+    public function testFormFieldRequired(): void
     {
         $field = $this->getField();
         $definition = $this->getDefinition(true);
@@ -97,7 +101,7 @@ abstract class AbstractFieldTest extends TestCase
         $this->assertTrue($formField->getOptions()['required']);
     }
 
-    public function testFormFieldNotRequired()
+    public function testFormFieldNotRequired(): void
     {
         $field = $this->getField();
         $definition = $this->getDefinition(false);

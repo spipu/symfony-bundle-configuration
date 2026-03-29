@@ -1,4 +1,7 @@
 <?php
+
+declare(strict_types=1);
+
 namespace Spipu\ConfigurationBundle\Tests\Unit\Ui\Grid;
 
 use PHPUnit\Framework\TestCase;
@@ -12,7 +15,7 @@ use Spipu\UiBundle\Tests\SpipuUiMock;
 
 class DataProviderTest extends TestCase
 {
-    public function testDataProviderNoFilter()
+    public function testDataProviderNoFilter(): void
     {
         $filters = [];
         $expected = [
@@ -24,7 +27,7 @@ class DataProviderTest extends TestCase
         $this->makeTest($filters, $expected);
     }
 
-    public function testDataProviderFilterCode()
+    public function testDataProviderFilterCode(): void
     {
         $filters = [GridRequest::KEY_FILTERS => ['code'  => 't']];
 
@@ -36,7 +39,7 @@ class DataProviderTest extends TestCase
         $this->makeTest($filters, $expected);
     }
 
-    public function testDataProviderFilterValue()
+    public function testDataProviderFilterValue(): void
     {
         $filters = [GridRequest::KEY_FILTERS => ['value'  => 'url']];
 
@@ -47,7 +50,7 @@ class DataProviderTest extends TestCase
         $this->makeTest($filters, $expected);
     }
 
-    public function testDataProviderClone()
+    public function testDataProviderClone(): void
     {
         $manager = SpipuConfigurationMock::getManager($this);
 

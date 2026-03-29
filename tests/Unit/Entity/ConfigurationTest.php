@@ -1,4 +1,7 @@
 <?php
+
+declare(strict_types=1);
+
 namespace Spipu\ConfigurationBundle\Tests\Unit\Entity;
 
 use Closure;
@@ -7,7 +10,7 @@ use Spipu\ConfigurationBundle\Entity\Configuration;
 
 class ConfigurationTest extends TestCase
 {
-    public function testEntity()
+    public function testEntity(): void
     {
         $entity = new Configuration();
 

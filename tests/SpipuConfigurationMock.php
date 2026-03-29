@@ -9,6 +9,8 @@
  * file that was distributed with this source code.
  */
 
+declare(strict_types=1);
+
 namespace Spipu\ConfigurationBundle\Tests;
 
 use PHPUnit\Framework\MockObject\MockObject;
@@ -33,7 +35,7 @@ class SpipuConfigurationMock extends TestCase
      * @param array $values
      * @return MockObject|ConfigurationManager
      */
-    public static function getManager(TestCase $testCase, array $definition = null, array $values = [])
+    public static function getManager(TestCase $testCase, ?array $definition = null, array $values = []): ConfigurationManager
     {
         if ($definition === null) {
             $definition = [

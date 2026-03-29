@@ -1,4 +1,7 @@
 <?php
+
+declare(strict_types=1);
+
 namespace Spipu\ConfigurationBundle\Tests\Unit\Command;
 
 use PHPUnit\Framework\TestCase;
@@ -8,7 +11,7 @@ use Spipu\CoreBundle\Tests\SymfonyMock;
 
 class ShowCommandTest extends TestCase
 {
-    public function testShowAll()
+    public function testShowAll(): void
     {
         $manager = SpipuConfigurationMock::getManager($this);
         $manager->expects($this->never())->method('getDefinition');
@@ -27,7 +30,7 @@ class ShowCommandTest extends TestCase
         $this->assertSame('Show All Configurations', $result[0]);
     }
 
-    public function testShowOne()
+    public function testShowOne(): void
     {
         $manager = SpipuConfigurationMock::getManager($this);
         $manager->expects($this->never())->method('getDefinitions');

@@ -1,4 +1,7 @@
 <?php
+
+declare(strict_types=1);
+
 namespace Spipu\ConfigurationBundle\Tests\Unit\Field;
 
 use Spipu\ConfigurationBundle\Entity\Definition;
@@ -8,12 +11,12 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 
 class FieldBooleanTest extends AbstractFieldTest
 {
-    protected function getCode()
+    protected function getCode(): string
     {
         return 'boolean';
     }
 
-    protected function getField()
+    protected function getField(): object
     {
         $container = $this->createMock(ContainerInterface::class);
         $container
@@ -26,27 +29,27 @@ class FieldBooleanTest extends AbstractFieldTest
         return new FieldBoolean($container);
     }
 
-    protected function getDefinition(bool $required, bool $scoped = false)
+    protected function getDefinition(bool $required, bool $scoped = false): Definition
     {
         return new Definition('mock.test', $this->getCode(), $required, $scoped, null, 'good_options', null, null, null);
     }
 
-    protected function getGoodValue()
+    protected function getGoodValue(): mixed
     {
         return 1;
     }
 
-    protected function getBadValue()
+    protected function getBadValue(): mixed
     {
         return 2;
     }
 
-    protected function getEmptyValue()
+    protected function getEmptyValue(): mixed
     {
         return 0;
     }
 
-    protected function getFieldClassName()
+    protected function getFieldClassName(): string
     {
         return \Symfony\Component\Form\Extension\Core\Type\ChoiceType::class;
     }

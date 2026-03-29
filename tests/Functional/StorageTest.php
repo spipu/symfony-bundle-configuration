@@ -9,6 +9,8 @@
  * file that was distributed with this source code.
  */
 
+declare(strict_types=1);
+
 namespace Spipu\ConfigurationBundle\Tests\Functional;
 
 use Spipu\ConfigurationBundle\Exception\ConfigurationException;
@@ -17,7 +19,7 @@ use Spipu\CoreBundle\Tests\WebTestCase;
 
 class StorageTest extends WebTestCase
 {
-    public function testGetKoBadScope()
+    public function testGetKoBadScope(): void
     {
         $storage = $this->getStorage();
 
@@ -27,7 +29,7 @@ class StorageTest extends WebTestCase
         $storage->getScopeValue('app.website.name', 'foo');
     }
 
-    public function testGetKoBadKey()
+    public function testGetKoBadKey(): void
     {
         $storage = $this->getStorage();
 
@@ -37,7 +39,7 @@ class StorageTest extends WebTestCase
         $storage->getScopeValue('app.foo.bar', 'fr');
     }
 
-    public function testGetKoNoValue()
+    public function testGetKoNoValue(): void
     {
         $storage = $this->getStorage();
 
@@ -47,7 +49,7 @@ class StorageTest extends WebTestCase
         $storage->getScopeValue('app.website.name', 'fr');
     }
 
-    public function testGetOk()
+    public function testGetOk(): void
     {
         $storage = $this->getStorage();
         $value = $storage->getScopeValue('app.website.name', 'default');

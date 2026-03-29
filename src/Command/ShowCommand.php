@@ -74,7 +74,6 @@ class ShowCommand extends Command
             $scope = '';
         }
 
-
         if ($key) {
             if ($direct) {
                 $this->showOneDirect($output, $key, $scope);

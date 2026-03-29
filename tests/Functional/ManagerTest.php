@@ -9,6 +9,8 @@
  * file that was distributed with this source code.
  */
 
+declare(strict_types=1);
+
 namespace Spipu\ConfigurationBundle\Tests\Functional;
 
 use Spipu\ConfigurationBundle\Exception\ConfigurationException;
@@ -17,7 +19,7 @@ use Spipu\CoreBundle\Tests\WebTestCase;
 
 class ManagerTest extends WebTestCase
 {
-    public function testText()
+    public function testText(): void
     {
         $manager = $this->getManager();
         $this->assertSame('My text', $manager->get('test.type.text'));
@@ -27,7 +29,7 @@ class ManagerTest extends WebTestCase
         $this->assertSame('My text', $manager->get('test.type.text'));
     }
 
-    public function testSetKoNotScoped()
+    public function testSetKoNotScoped(): void
     {
         $manager = $this->getManager();
 
@@ -37,7 +39,7 @@ class ManagerTest extends WebTestCase
         $manager->set('app.website.name', 'My app', 'fr');
     }
 
-    public function testGetKoNotScoped()
+    public function testGetKoNotScoped(): void
     {
         $manager = $this->getManager();
 
@@ -47,7 +49,7 @@ class ManagerTest extends WebTestCase
         $manager->get('app.website.name', 'fr');
     }
 
-    public function testEncrypted()
+    public function testEncrypted(): void
     {
         $manager = $this->getManager();
         $this->assertSame('', $manager->getEncrypted('test.type.encrypted'));
@@ -58,7 +60,7 @@ class ManagerTest extends WebTestCase
         $this->assertSame('', $manager->getEncrypted('test.type.encrypted'));
     }
 
-    public function testPassword()
+    public function testPassword(): void
     {
         $manager = $this->getManager();
         $this->assertSame('', $manager->get('test.type.password'));
@@ -70,7 +72,7 @@ class ManagerTest extends WebTestCase
         $this->assertSame('', $manager->get('test.type.password'));
     }
 
-    public function testDeleteKo()
+    public function testDeleteKo(): void
     {
         $manager = $this->getManager();
         $this->expectException(ConfigurationException::class);

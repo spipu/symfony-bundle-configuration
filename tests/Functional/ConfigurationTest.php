@@ -9,6 +9,8 @@
  * file that was distributed with this source code.
  */
 
+declare(strict_types=1);
+
 namespace Spipu\ConfigurationBundle\Tests\Functional;
 
 use Spipu\CoreBundle\Tests\WebTestCase;
@@ -18,7 +20,7 @@ class ConfigurationTest extends WebTestCase
 {
     use UiWebTestCaseTrait;
 
-    public function testAdmin()
+    public function testAdmin(): void
     {
         $client = static::createClient();
 

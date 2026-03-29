@@ -1,4 +1,7 @@
 <?php
+
+declare(strict_types=1);
+
 namespace Spipu\ConfigurationBundle\Tests\Unit\Service;
 
 use PHPUnit\Framework\TestCase;
@@ -10,7 +13,7 @@ use Spipu\ConfigurationBundle\Tests\SpipuConfigurationMock;
 
 class ScopeServiceTest extends TestCase
 {
-    public function testOkEmpty()
+    public function testOkEmpty(): void
     {
         $scopeList = new ScopeList();
         $scopeService = new ScopeService($scopeList);
@@ -23,7 +26,7 @@ class ScopeServiceTest extends TestCase
         $scopeService->getScope('foo');
     }
 
-    public function testOk()
+    public function testOk(): void
     {
         $scopeList = SpipuConfigurationMock::getScopeListMock([
             new Scope('foo', 'Foo'),
@@ -44,7 +47,7 @@ class ScopeServiceTest extends TestCase
         $scopeService->getScope('fake');
     }
 
-    public function testKoDouble()
+    public function testKoDouble(): void
     {
         $scopeList = SpipuConfigurationMock::getScopeListMock([
             new Scope('foo', 'Foo'),

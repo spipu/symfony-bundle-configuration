@@ -1,4 +1,7 @@
 <?php
+
+declare(strict_types=1);
+
 namespace Spipu\ConfigurationBundle\Tests\Unit\Ui;
 
 use PHPUnit\Framework\TestCase;
@@ -20,7 +23,7 @@ class ConfigurationGridTest extends TestCase
         return $grid;
     }
 
-    public function testGrid()
+    public function testGrid(): void
     {
         $grid = self::getGrid();
         $this->assertInstanceOf(GridDefinitionInterface::class, $grid);

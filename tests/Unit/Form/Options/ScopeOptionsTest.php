@@ -1,4 +1,7 @@
 <?php
+
+declare(strict_types=1);
+
 namespace Spipu\ConfigurationBundle\Tests\Unit\Form\Options;
 
 use Spipu\ConfigurationBundle\Entity\Scope;
@@ -8,7 +11,7 @@ use Spipu\ConfigurationBundle\Tests\ConfigurationScopeListMock;
 
 class ScopeOptionsTest extends TestCase
 {
-    public function testBaseEmpty()
+    public function testBaseEmpty(): void
     {
         $scopeList = new ConfigurationScopeListMock();
         $scopeList->set([]);
@@ -16,7 +19,7 @@ class ScopeOptionsTest extends TestCase
         $this->assertSame([], $options->getOptions());
     }
 
-    public function testBaseFull()
+    public function testBaseFull(): void
     {
         $scopeList = new ConfigurationScopeListMock();
         $scopeList->set(

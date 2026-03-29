@@ -1,4 +1,7 @@
 <?php
+
+declare(strict_types=1);
+
 namespace Spipu\ConfigurationBundle\Tests\Unit\Ui;
 
 use PHPUnit\Framework\TestCase;
@@ -43,7 +46,7 @@ class ConfigurationFormTest extends TestCase
         return $form;
     }
 
-    public function testFormClassic()
+    public function testFormClassic(): void
     {
         $form = $this->getForm('mock.string');
 
@@ -84,7 +87,7 @@ class ConfigurationFormTest extends TestCase
         $form->setSpecificFields($symfonyForm, null);
     }
 
-    public function testFormFile()
+    public function testFormFile(): void
     {
         $form = $this->getForm('mock.file');
 

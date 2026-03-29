@@ -1,4 +1,7 @@
 <?php
+
+declare(strict_types=1);
+
 namespace Spipu\ConfigurationBundle\Tests\Unit\Field;
 
 use Spipu\ConfigurationBundle\Entity\Definition;
@@ -6,42 +9,42 @@ use Spipu\ConfigurationBundle\Field\FieldFloat;
 
 class FieldFloatTest extends AbstractFieldTest
 {
-    protected function getCode()
+    protected function getCode(): string
     {
         return 'float';
     }
 
-    protected function getField()
+    protected function getField(): object
     {
         return new FieldFloat();
     }
 
-    protected function getDefinition(bool $required, bool $scoped = false)
+    protected function getDefinition(bool $required, bool $scoped = false): Definition
     {
         return new Definition('mock.test', $this->getCode(), $required, $scoped, null, null, null, null, null);
     }
 
-    protected function getGoodValue()
+    protected function getGoodValue(): mixed
     {
         return 1.;
     }
 
-    protected function getBadValue()
+    protected function getBadValue(): mixed
     {
         return 'a';
     }
 
-    protected function getEmptyValue()
+    protected function getEmptyValue(): mixed
     {
         return 0.;
     }
 
-    protected function getFieldClassName()
+    protected function getFieldClassName(): string
     {
         return \Symfony\Component\Form\Extension\Core\Type\NumberType::class;
     }
 
-    public function testValidateValueOther()
+    public function testValidateValueOther(): void
     {
         $field = $this->getField();
 

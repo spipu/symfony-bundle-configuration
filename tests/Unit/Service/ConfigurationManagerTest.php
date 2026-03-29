@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Spipu\ConfigurationBundle\Tests\Unit\Service;
 
 use Spipu\ConfigurationBundle\Entity\Configuration;
@@ -61,7 +63,7 @@ class ConfigurationManagerTest extends TestCase
         ];
     }
 
-    public function testDefinitions()
+    public function testDefinitions(): void
     {
         $configurations = $this->getConfigurations();
 
@@ -105,7 +107,7 @@ class ConfigurationManagerTest extends TestCase
         $manager->getDefinition('wrong_code');
     }
 
-    public function testGetValues()
+    public function testGetValues(): void
     {
         $configurations = $this->getConfigurations();
 
@@ -177,7 +179,7 @@ class ConfigurationManagerTest extends TestCase
         $manager->get('wrong_key');
     }
 
-    public function testSetValues()
+    public function testSetValues(): void
     {
         $configurations = $this->getConfigurations();
 
@@ -246,7 +248,7 @@ class ConfigurationManagerTest extends TestCase
         $this->assertSame('43', $entity->getValue());
     }
 
-    public function testSetFileNotAllowed()
+    public function testSetFileNotAllowed(): void
     {
         $configurations = $this->getConfigurations();
 
@@ -270,7 +272,7 @@ class ConfigurationManagerTest extends TestCase
         $manager->setFile('mock.test.file', $file);
     }
 
-    public function testSetFileBadFieldType()
+    public function testSetFileBadFieldType(): void
     {
         $configurations = $this->getConfigurations();
 
@@ -294,7 +296,7 @@ class ConfigurationManagerTest extends TestCase
         $manager->setFile('mock.test.string', $file);
     }
 
-    public function testSetFileBadFileType()
+    public function testSetFileBadFileType(): void
     {
         $configurations = $this->getConfigurations();
 
@@ -318,7 +320,7 @@ class ConfigurationManagerTest extends TestCase
         $manager->setFile('mock.test.file', $file);
     }
 
-    public function testSetFileBadFolder()
+    public function testSetFileBadFolder(): void
     {
         $configurations = $this->getConfigurations();
 
@@ -342,7 +344,7 @@ class ConfigurationManagerTest extends TestCase
         $manager->setFile('mock.test.file', $file);
     }
 
-    public function testSetFileGood()
+    public function testSetFileGood(): void
     {
         $configurations = $this->getConfigurations();
 
@@ -369,7 +371,6 @@ class ConfigurationManagerTest extends TestCase
                     return $list;
                 }
             );
-
 
         $definitions = new Definitions($container);
         $storage = SpipuConfigurationMock::getStorageMock($this, $definitions, $fieldList, $repository, $entityManager);
