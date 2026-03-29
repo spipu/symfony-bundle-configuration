@@ -64,7 +64,7 @@ Every key **must** contain at least two dot-separated parts (e.g., `app.name` is
 | Option | Required | Default | Description |
 |--------|----------|---------|-------------|
 | `type` | yes | — | Field type (see below) |
-| `required` | yes | `false` | Whether an empty value is rejected |
+| `required` | no | `false` | Whether an empty value is rejected |
 | `default` | no | `null` | Default value (string) used when no DB value exists |
 | `scoped` | no | `false` | Whether the value can be overridden per scope |
 | `options` | type=`select` only | `null` | FQCN of a class providing select options |
