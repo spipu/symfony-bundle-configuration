@@ -202,7 +202,7 @@ Options:
 
 ## Admin UI
 
-The admin interface is available at `/configuration/list`. It requires:
+The admin interface is available at `/configuration/list/` (optionally followed by a scope code, e.g. `/configuration/list/fr`). It requires:
 
 - `ROLE_ADMIN_MANAGE_CONFIGURATION_SHOW` to view the list
 - `ROLE_ADMIN_MANAGE_CONFIGURATION_EDIT` to edit a value
