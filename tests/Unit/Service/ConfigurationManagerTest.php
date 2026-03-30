@@ -201,7 +201,7 @@ class ConfigurationManagerTest extends TestCase
             ->expects($this->exactly(1))
             ->method('persist')
             ->willReturnCallback(
-                function ($object) use (&$list) {
+                function (object $object) use (&$list) {
                     /** @var Configuration $object */
                     $this->assertInstanceOf(Configuration::class, $object);
                     $list[$object->getCode()] = $object;

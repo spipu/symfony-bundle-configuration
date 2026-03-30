@@ -29,7 +29,7 @@ class ConfigurationTest extends TestCase
         $this->assertSame(null, $entity->getScope());
 
         $setId = Closure::bind(
-            function ($value) {
+            function (int $value) {
                 $this->id = $value;
             },
             $entity,
