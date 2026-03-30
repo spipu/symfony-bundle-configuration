@@ -15,11 +15,7 @@ use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 class ConfigurationFormTest extends TestCase
 {
-    /**
-     * @param string $code
-     * @return ConfigurationForm
-     */
-    protected function getForm(string $code)
+    protected function getForm(string $code): ConfigurationForm
     {
         $type = explode('.', $code)[1];
         $definition = [$code => $type];

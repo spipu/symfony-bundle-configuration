@@ -76,7 +76,7 @@ class DataProviderTest extends TestCase
         $this->assertSame(3, $clone->getNbTotalRows());
     }
 
-    private function makeTest(array $filters, array $expected)
+    private function makeTest(array $filters, array $expected): void
     {
         $grid = ConfigurationGridTest::getGrid();
 

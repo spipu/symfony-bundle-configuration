@@ -12,10 +12,7 @@ use Spipu\UiBundle\Service\Ui\Definition\GridDefinitionInterface;
 
 class ConfigurationGridTest extends TestCase
 {
-    /**
-     * @return ConfigurationGrid
-     */
-    public static function getGrid()
+    public static function getGrid(): ConfigurationGrid
     {
         $yesNo =  new YesNo();
         $grid = new ConfigurationGrid($yesNo);
