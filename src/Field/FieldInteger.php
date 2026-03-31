@@ -38,7 +38,7 @@ class FieldInteger extends AbstractField implements FieldInterface
     public function validateValue(Definition $definition, mixed $value): mixed
     {
         // Issue on PHP filter_var when testing 0 as int.
-        if ($value === 0 | preg_match('/^0+$/', (string) $value)) {
+        if ($value === 0 || preg_match('/^0+$/', (string) $value)) {
             return 0;
         }
 
