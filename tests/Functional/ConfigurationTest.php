@@ -98,7 +98,7 @@ class ConfigurationTest extends WebTestCase
         $this->assertEquals(200, $client->getResponse()->getStatusCode());
         $this->assertGreaterThan(0, $crawler->filter('h1:contains("Configurations")')->count());
         $gridProperties = $this->getGridProperties($crawler, 'configuration');
-        $this->assertSame(38, $gridProperties['count']['nb']);
+        $this->assertSame(39, $gridProperties['count']['nb']);
 
         // List - Fr scope
         $crawler = $client->request('GET', '/configuration/list/fr');
