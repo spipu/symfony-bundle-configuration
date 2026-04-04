@@ -20,7 +20,7 @@ use Spipu\ConfigurationBundle\Ui\ConfigurationGrid;
 use Spipu\ConfigurationBundle\Ui\Grid\DataProvider;
 use Spipu\UiBundle\Service\Ui\FormFactory;
 use Spipu\UiBundle\Service\Ui\GridFactory;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Spipu\CoreBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 
 abstract class AbstractConfigurationController extends AbstractController
