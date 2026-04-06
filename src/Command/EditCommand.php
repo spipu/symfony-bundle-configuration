@@ -15,11 +15,13 @@ namespace Spipu\ConfigurationBundle\Command;
 
 use Spipu\ConfigurationBundle\Exception\ConfigurationException;
 use Spipu\ConfigurationBundle\Service\ConfigurationManager as Manager;
+use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 
+#[AsCommand(name: 'spipu:configuration:edit', description: 'Edit a Spipu Configuration.')]
 class EditCommand extends Command
 {
     public const OPTION_KEY = 'key';
@@ -40,8 +42,6 @@ class EditCommand extends Command
     protected function configure(): void
     {
         $this
-            ->setName('spipu:configuration:edit')
-            ->setDescription('Edit a Spipu Configuration.')
             ->setHelp('This command allows you to edit a spipu configuration')
             ->addOption(
                 static::OPTION_KEY,

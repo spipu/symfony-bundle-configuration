@@ -14,10 +14,12 @@ declare(strict_types=1);
 namespace Spipu\ConfigurationBundle\Command;
 
 use Spipu\ConfigurationBundle\Service\ScopeService;
+use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
+#[AsCommand(name: 'spipu:configuration:scope', description: 'Show Spipu Configuration scopes.')]
 class ScopeCommand extends Command
 {
     private ScopeService $scopeService;
@@ -33,8 +35,6 @@ class ScopeCommand extends Command
     protected function configure(): void
     {
         $this
-            ->setName('spipu:configuration:scope')
-            ->setDescription('Show Spipu Configuration scopes.')
             ->setHelp('This command shows you all the configuration scopes')
         ;
     }

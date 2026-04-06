@@ -14,11 +14,13 @@ declare(strict_types=1);
 namespace Spipu\ConfigurationBundle\Command;
 
 use Spipu\ConfigurationBundle\Service\ConfigurationManager as Manager;
+use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 
+#[AsCommand(name: 'spipu:configuration:delete', description: 'Delete a Spipu Configuration.')]
 class DeleteCommand extends Command
 {
     public const OPTION_KEY = 'key';
@@ -38,8 +40,6 @@ class DeleteCommand extends Command
     protected function configure(): void
     {
         $this
-            ->setName('spipu:configuration:delete')
-            ->setDescription('Delete a Spipu Configuration.')
             ->setHelp('This command allows you to delete a spipu configuration, in order to use the default value')
             ->addOption(
                 static::OPTION_KEY,

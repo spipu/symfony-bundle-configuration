@@ -14,10 +14,12 @@ declare(strict_types=1);
 namespace Spipu\ConfigurationBundle\Command;
 
 use Spipu\ConfigurationBundle\Service\ConfigurationManager as Manager;
+use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
+#[AsCommand(name: 'spipu:configuration:clear-cache', description: 'Clear the Spipu Configuration cache.')]
 class ClearCacheCommand extends Command
 {
     private Manager $manager;
@@ -34,8 +36,6 @@ class ClearCacheCommand extends Command
     protected function configure(): void
     {
         $this
-            ->setName('spipu:configuration:clear-cache')
-            ->setDescription('Clear the Spipu Configuration cache.')
             ->setHelp('This command allows you to clear the spipu configuration cache')
         ;
     }
