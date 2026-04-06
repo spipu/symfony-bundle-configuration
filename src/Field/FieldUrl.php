@@ -31,11 +31,14 @@ class FieldUrl extends AbstractField implements FieldInterface
 
     public function getFormField(Definition $definition, string $scopeCode, string $scopeName): Field
     {
+        $options = $this->getFieldBuilderOptions($definition, $scopeCode, $scopeName);
+        $options['default_protocol'] = 'https';
+
         return new Field(
             $this->buildFormFieldCode($scopeCode),
             Type\UrlType::class,
             10,
-            $this->getFieldBuilderOptions($definition, $scopeCode, $scopeName)
+            $options
         );
     }
 }

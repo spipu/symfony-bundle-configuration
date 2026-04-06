@@ -216,7 +216,7 @@ class SpipuConfigurationBundleTest extends TestCase
         $processor->processConfiguration($configuration, $configs);
     }
 
-    public function testConfigurationMissingRequired(): void
+    public function testConfigurationDefaultRequired(): void
     {
         $configs = [
             0 => [
@@ -232,8 +232,8 @@ class SpipuConfigurationBundleTest extends TestCase
         $configuration = new Configuration($bundle, $builder, $extension->getAlias());
         $processor = new Processor();
 
-        $this->expectException(InvalidConfigurationException::class);
-        $processor->processConfiguration($configuration, $configs);
+        $result = $processor->processConfiguration($configuration, $configs);
+        $this->assertFalse($result['mock.missing.required']['required']);
     }
 
     public function testConfigurationLight(): void

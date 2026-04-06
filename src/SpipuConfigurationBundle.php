@@ -68,7 +68,6 @@ class SpipuConfigurationBundle extends AbstractBundle
                         ->scalarPrototype()->end()
                     ->end()
                     ->booleanNode('required')
-                        ->isRequired()
                         ->defaultFalse()
                     ->end()
                     ->booleanNode('scoped')

@@ -24,8 +24,8 @@ The **ConfigurationBundle** provides a key-value application configuration syste
 
 ## Requirements
 
-- PHP 8.1+
-- Symfony 6.4+
+- PHP >= 8.3
+- Symfony >= 7.4
 - `spipu/core-bundle`
 - `spipu/ui-bundle`
 - Doctrine ORM with a relational database
