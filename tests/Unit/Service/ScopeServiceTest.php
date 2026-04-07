@@ -24,7 +24,9 @@ class ScopeServiceTest extends TestCase
 
         $this->assertFalse($scopeService->hasScopes());
         $this->assertEmpty($scopeService->getScopes());
+        $this->assertSame([], $scopeService->getSortedScopes());
         $this->assertNull($scopeService->getScope(null));
+        $this->assertNull($scopeService->getScope(''));
 
         $this->expectException(ConfigurationScopeException::class);
         $scopeService->getScope('foo');
@@ -46,6 +48,11 @@ class ScopeServiceTest extends TestCase
         $this->assertSame('Foo', $scopeService->getScope('foo')->getName());
         $this->assertSame('bar', $scopeService->getScope('bar')->getCode());
         $this->assertSame('Bar', $scopeService->getScope('bar')->getName());
+        $this->assertNull($scopeService->getScope(''));
+
+        $sorted = $scopeService->getSortedScopes();
+        $sortedCodes = array_keys($sorted);
+        $this->assertSame(['bar', 'foo'], $sortedCodes);
 
         $this->expectException(ConfigurationScopeException::class);
         $scopeService->getScope('fake');
