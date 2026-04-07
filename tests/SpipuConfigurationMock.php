@@ -63,7 +63,7 @@ class SpipuConfigurationMock extends TestCase
         if (count($values) === 0) {
             $service
                 ->method('get')
-                ->will($testCase->returnArgument(0));
+                ->willReturnArgument(0);
         } else {
             $map = [];
             foreach ($values as $key => $value) {

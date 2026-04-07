@@ -4,13 +4,17 @@ declare(strict_types=1);
 
 namespace Spipu\ConfigurationBundle\Tests\Unit\Field;
 
+use PHPUnit\Framework\Attributes\AllowMockObjectsWithoutExpectations;
+use PHPUnit\Framework\Attributes\CoversClass;
 use Spipu\ConfigurationBundle\Entity\Definition;
 use Spipu\ConfigurationBundle\Exception\ConfigurationException;
 use Spipu\ConfigurationBundle\Field\FieldSelect;
 use Spipu\UiBundle\Tests\SpipuUiMock;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
-class FieldSelectTest extends AbstractFieldTest
+#[AllowMockObjectsWithoutExpectations]
+#[CoversClass(FieldSelect::class)]
+class FieldSelectTest extends AbstractFieldTestCase
 {
     protected function getCode(): string
     {
@@ -23,13 +27,11 @@ class FieldSelectTest extends AbstractFieldTest
         $container
             ->expects($this->any())
             ->method('get')
-            ->will(
-                $this->returnValueMap(
-                    [
-                        ['good_options', 1, SpipuUiMock::getOptionStringMock()],
-                        ['bad_options', 1, new \stdClass()],
-                    ]
-                )
+            ->willReturnMap(
+                [
+                    ['good_options', 1, SpipuUiMock::getOptionStringMock()],
+                    ['bad_options', 1, new \stdClass()],
+                ]
             );
 
         return new FieldSelect($container);

@@ -13,6 +13,8 @@ declare(strict_types=1);
 
 namespace Spipu\ConfigurationBundle\Tests\Functional;
 
+use PHPUnit\Framework\Attributes\AllowMockObjectsWithoutExpectations;
+use PHPUnit\Framework\Attributes\CoversClass;
 use Spipu\ConfigurationBundle\Command\ClearCacheCommand;
 use Spipu\ConfigurationBundle\Command\DeleteCommand;
 use Spipu\ConfigurationBundle\Command\EditCommand;
@@ -21,6 +23,12 @@ use Spipu\ConfigurationBundle\Command\ShowCommand;
 use Spipu\ConfigurationBundle\Exception\ConfigurationException;
 use Spipu\CoreBundle\Tests\WebTestCase;
 
+#[AllowMockObjectsWithoutExpectations]
+#[CoversClass(ClearCacheCommand::class)]
+#[CoversClass(DeleteCommand::class)]
+#[CoversClass(EditCommand::class)]
+#[CoversClass(ScopeCommand::class)]
+#[CoversClass(ShowCommand::class)]
 class CommandsTest extends WebTestCase
 {
     public function testScope(): void

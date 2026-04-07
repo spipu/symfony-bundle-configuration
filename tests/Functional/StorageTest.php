@@ -13,10 +13,14 @@ declare(strict_types=1);
 
 namespace Spipu\ConfigurationBundle\Tests\Functional;
 
+use PHPUnit\Framework\Attributes\AllowMockObjectsWithoutExpectations;
+use PHPUnit\Framework\Attributes\CoversClass;
 use Spipu\ConfigurationBundle\Exception\ConfigurationException;
 use Spipu\ConfigurationBundle\Service\Storage;
 use Spipu\CoreBundle\Tests\WebTestCase;
 
+#[AllowMockObjectsWithoutExpectations]
+#[CoversClass(Storage::class)]
 class StorageTest extends WebTestCase
 {
     public function testGetKoBadScope(): void

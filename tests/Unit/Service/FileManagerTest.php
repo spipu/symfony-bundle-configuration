@@ -4,10 +4,14 @@ declare(strict_types=1);
 
 namespace Spipu\ConfigurationBundle\Tests\Unit\Service;
 
+use PHPUnit\Framework\Attributes\AllowMockObjectsWithoutExpectations;
+use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\TestCase;
 use Spipu\ConfigurationBundle\Service\FileManager;
 use Spipu\ConfigurationBundle\Service\FileManagerInterface;
 
+#[AllowMockObjectsWithoutExpectations]
+#[CoversClass(FileManager::class)]
 class FileManagerTest extends TestCase
 {
     public static function getService(bool $allow = true): FileManagerInterface

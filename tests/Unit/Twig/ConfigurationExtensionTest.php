@@ -4,11 +4,15 @@ declare(strict_types=1);
 
 namespace Spipu\ConfigurationBundle\Tests\Unit\Twig;
 
+use PHPUnit\Framework\Attributes\AllowMockObjectsWithoutExpectations;
+use PHPUnit\Framework\Attributes\CoversClass;
 use Spipu\ConfigurationBundle\Tests\SpipuConfigurationMock;
 use Spipu\ConfigurationBundle\Twig\ConfigurationExtension;
 use PHPUnit\Framework\TestCase;
 use Twig\Extension\ExtensionInterface;
 
+#[AllowMockObjectsWithoutExpectations]
+#[CoversClass(ConfigurationExtension::class)]
 class ConfigurationExtensionTest extends TestCase
 {
     public function getExtension(): ConfigurationExtension

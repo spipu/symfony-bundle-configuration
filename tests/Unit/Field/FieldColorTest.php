@@ -4,10 +4,14 @@ declare(strict_types=1);
 
 namespace Spipu\ConfigurationBundle\Tests\Unit\Field;
 
+use PHPUnit\Framework\Attributes\AllowMockObjectsWithoutExpectations;
+use PHPUnit\Framework\Attributes\CoversClass;
 use Spipu\ConfigurationBundle\Entity\Definition;
 use Spipu\ConfigurationBundle\Field\FieldColor;
 
-class FieldColorTest extends AbstractFieldTest
+#[AllowMockObjectsWithoutExpectations]
+#[CoversClass(FieldColor::class)]
+class FieldColorTest extends AbstractFieldTestCase
 {
     protected function getCode(): string
     {

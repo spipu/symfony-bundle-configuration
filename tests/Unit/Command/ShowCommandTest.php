@@ -4,11 +4,15 @@ declare(strict_types=1);
 
 namespace Spipu\ConfigurationBundle\Tests\Unit\Command;
 
+use PHPUnit\Framework\Attributes\AllowMockObjectsWithoutExpectations;
+use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\TestCase;
 use Spipu\ConfigurationBundle\Command\ShowCommand;
 use Spipu\ConfigurationBundle\Tests\SpipuConfigurationMock;
 use Spipu\CoreBundle\Tests\SymfonyMock;
 
+#[AllowMockObjectsWithoutExpectations]
+#[CoversClass(ShowCommand::class)]
 class ShowCommandTest extends TestCase
 {
     public function testShowAll(): void

@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Spipu\ConfigurationBundle\Tests\Unit\Service;
 
+use PHPUnit\Framework\Attributes\AllowMockObjectsWithoutExpectations;
+use PHPUnit\Framework\Attributes\CoversClass;
 use Spipu\UiBundle\Entity\Form;
 use Spipu\ConfigurationBundle\Exception\ConfigurationException;
 use Spipu\ConfigurationBundle\Field;
@@ -11,6 +13,8 @@ use Spipu\ConfigurationBundle\Service\FieldList;
 use PHPUnit\Framework\TestCase;
 use Spipu\ConfigurationBundle\Tests\SpipuConfigurationMock;
 
+#[AllowMockObjectsWithoutExpectations]
+#[CoversClass(FieldList::class)]
 class FieldListTest extends TestCase
 {
     public function testBase(): void

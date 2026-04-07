@@ -13,9 +13,14 @@ declare(strict_types=1);
 
 namespace Spipu\ConfigurationBundle\Tests\Functional;
 
+use PHPUnit\Framework\Attributes\AllowMockObjectsWithoutExpectations;
+use PHPUnit\Framework\Attributes\CoversClass;
+use Spipu\ConfigurationBundle\Controller\ConfigurationController;
 use Spipu\CoreBundle\Tests\WebTestCase;
 use Spipu\UiBundle\Tests\UiWebTestCaseTrait;
 
+#[AllowMockObjectsWithoutExpectations]
+#[CoversClass(ConfigurationController::class)]
 class ConfigurationTest extends WebTestCase
 {
     use UiWebTestCaseTrait;

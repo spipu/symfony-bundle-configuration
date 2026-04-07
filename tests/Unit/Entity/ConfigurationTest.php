@@ -5,9 +5,13 @@ declare(strict_types=1);
 namespace Spipu\ConfigurationBundle\Tests\Unit\Entity;
 
 use Closure;
+use PHPUnit\Framework\Attributes\AllowMockObjectsWithoutExpectations;
+use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\TestCase;
 use Spipu\ConfigurationBundle\Entity\Configuration;
 
+#[AllowMockObjectsWithoutExpectations]
+#[CoversClass(Configuration::class)]
 class ConfigurationTest extends TestCase
 {
     public function testEntity(): void

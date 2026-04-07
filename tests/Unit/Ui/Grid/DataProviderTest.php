@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Spipu\ConfigurationBundle\Tests\Unit\Ui\Grid;
 
+use PHPUnit\Framework\Attributes\AllowMockObjectsWithoutExpectations;
+use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\TestCase;
 use Spipu\ConfigurationBundle\Tests\SpipuConfigurationMock;
 use Spipu\ConfigurationBundle\Tests\Unit\Ui\ConfigurationGridTest;
@@ -13,6 +15,8 @@ use Spipu\UiBundle\Service\Ui\Grid\DataProvider\DataProviderInterface;
 use Spipu\UiBundle\Service\Ui\Grid\GridRequest;
 use Spipu\UiBundle\Tests\SpipuUiMock;
 
+#[AllowMockObjectsWithoutExpectations]
+#[CoversClass(DataProvider::class)]
 class DataProviderTest extends TestCase
 {
     public function testDataProviderNoFilter(): void

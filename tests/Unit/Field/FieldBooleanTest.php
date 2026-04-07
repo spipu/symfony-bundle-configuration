@@ -4,12 +4,16 @@ declare(strict_types=1);
 
 namespace Spipu\ConfigurationBundle\Tests\Unit\Field;
 
+use PHPUnit\Framework\Attributes\AllowMockObjectsWithoutExpectations;
+use PHPUnit\Framework\Attributes\CoversClass;
 use Spipu\ConfigurationBundle\Entity\Definition;
 use Spipu\ConfigurationBundle\Field\FieldBoolean;
 use Spipu\UiBundle\Form\Options\BooleanStatus;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
-class FieldBooleanTest extends AbstractFieldTest
+#[AllowMockObjectsWithoutExpectations]
+#[CoversClass(FieldBoolean::class)]
+class FieldBooleanTest extends AbstractFieldTestCase
 {
     protected function getCode(): string
     {
@@ -22,9 +26,7 @@ class FieldBooleanTest extends AbstractFieldTest
         $container
             ->expects($this->any())
             ->method('get')
-            ->will(
-                $this->returnValueMap([['good_options', 1, new BooleanStatus()]])
-            );
+            ->willReturnMap([['good_options', 1, new BooleanStatus()]]);
 
         return new FieldBoolean($container);
     }

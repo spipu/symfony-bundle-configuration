@@ -4,12 +4,16 @@ declare(strict_types=1);
 
 namespace Spipu\ConfigurationBundle\Tests\Unit\Ui;
 
+use PHPUnit\Framework\Attributes\AllowMockObjectsWithoutExpectations;
+use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\TestCase;
 use Spipu\ConfigurationBundle\Ui\ConfigurationGrid;
 use Spipu\UiBundle\Entity\Grid;
 use Spipu\UiBundle\Form\Options\YesNo;
 use Spipu\UiBundle\Service\Ui\Definition\GridDefinitionInterface;
 
+#[AllowMockObjectsWithoutExpectations]
+#[CoversClass(ConfigurationGrid::class)]
 class ConfigurationGridTest extends TestCase
 {
     public static function getGrid(): ConfigurationGrid

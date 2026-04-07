@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Spipu\ConfigurationBundle\Tests\Unit\Service;
 
+use PHPUnit\Framework\Attributes\AllowMockObjectsWithoutExpectations;
+use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\TestCase;
 use Spipu\ConfigurationBundle\Entity\Scope;
 use Spipu\ConfigurationBundle\Exception\ConfigurationScopeException;
@@ -11,6 +13,8 @@ use Spipu\ConfigurationBundle\Service\ScopeList;
 use Spipu\ConfigurationBundle\Service\ScopeService;
 use Spipu\ConfigurationBundle\Tests\SpipuConfigurationMock;
 
+#[AllowMockObjectsWithoutExpectations]
+#[CoversClass(ScopeService::class)]
 class ScopeServiceTest extends TestCase
 {
     public function testOkEmpty(): void

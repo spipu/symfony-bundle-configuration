@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Spipu\ConfigurationBundle\Tests\Unit\Ui;
 
+use PHPUnit\Framework\Attributes\AllowMockObjectsWithoutExpectations;
+use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\TestCase;
 use Spipu\ConfigurationBundle\Service\Storage;
 use Spipu\ConfigurationBundle\Tests\SpipuConfigurationMock;
@@ -13,6 +15,8 @@ use Spipu\UiBundle\Entity\Form;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 
+#[AllowMockObjectsWithoutExpectations]
+#[CoversClass(ConfigurationForm::class)]
 class ConfigurationFormTest extends TestCase
 {
     protected function getForm(string $code): ConfigurationForm
@@ -69,16 +73,28 @@ class ConfigurationFormTest extends TestCase
         $this->assertSame(false, $field->getValue());
 
         $symfonyForm = $this->createMock(FormInterface::class);
+        $offsetMatcher = $this->exactly(2);
         $symfonyForm
-            ->expects($this->exactly(2))
+            ->expects($offsetMatcher)
             ->method('offsetGet')
-            ->withConsecutive(['check_global'], ['value_global'])
-            ->willReturn($symfonyForm);
+            ->willReturnCallback(function (mixed $key) use ($offsetMatcher, $symfonyForm): FormInterface {
+                match ($offsetMatcher->numberOfInvocations()) {
+                    1 => $this->assertSame('check_global', $key),
+                    2 => $this->assertSame('value_global', $key),
+                };
+                return $symfonyForm;
+            });
 
+        $dataMatcher = $this->exactly(2);
         $symfonyForm
-            ->expects($this->exactly(2))
+            ->expects($dataMatcher)
             ->method('getData')
-            ->willReturnOnConsecutiveCalls(0, 'new value');
+            ->willReturnCallback(function () use ($dataMatcher): mixed {
+                return match ($dataMatcher->numberOfInvocations()) {
+                    1 => 0,
+                    2 => 'new value',
+                };
+            });
 
         $form->setSpecificFields($symfonyForm, null);
     }
@@ -101,16 +117,29 @@ class ConfigurationFormTest extends TestCase
 
         $symfonyForm = $this->createMock(FormInterface::class);
 
+        $offsetMatcher = $this->exactly(2);
         $symfonyForm
-            ->expects($this->exactly(2))
+            ->expects($offsetMatcher)
             ->method('offsetGet')
-            ->withConsecutive(['check_global'], ['value_global'])
-            ->willReturn($symfonyForm);
+            ->willReturnCallback(function (mixed $key) use ($offsetMatcher, $symfonyForm): FormInterface {
+                match ($offsetMatcher->numberOfInvocations()) {
+                    1 => $this->assertSame('check_global', $key),
+                    2 => $this->assertSame('value_global', $key),
+                };
+                return $symfonyForm;
+            });
 
+        $uploadedFile = $this->createMock(UploadedFile::class);
+        $dataMatcher = $this->exactly(2);
         $symfonyForm
-            ->expects($this->exactly(2))
+            ->expects($dataMatcher)
             ->method('getData')
-            ->willReturnOnConsecutiveCalls(0, $this->createMock(UploadedFile::class));
+            ->willReturnCallback(function () use ($dataMatcher, $uploadedFile): mixed {
+                return match ($dataMatcher->numberOfInvocations()) {
+                    1 => 0,
+                    2 => $uploadedFile,
+                };
+            });
 
         $form->setSpecificFields($symfonyForm, null);
     }

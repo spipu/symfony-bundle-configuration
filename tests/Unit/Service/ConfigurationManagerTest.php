@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Spipu\ConfigurationBundle\Tests\Unit\Service;
 
+use PHPUnit\Framework\Attributes\AllowMockObjectsWithoutExpectations;
+use PHPUnit\Framework\Attributes\CoversClass;
 use Spipu\ConfigurationBundle\Entity\Configuration;
 use Spipu\ConfigurationBundle\Entity\Definition;
 use Spipu\ConfigurationBundle\Exception\ConfigurationException;
@@ -19,6 +21,8 @@ use Spipu\CoreBundle\Service\HasherFactory;
 use Spipu\CoreBundle\Service\Encryptor;
 use Spipu\CoreBundle\Tests\SymfonyMock;
 
+#[AllowMockObjectsWithoutExpectations]
+#[CoversClass(ConfigurationManager::class)]
 class ConfigurationManagerTest extends TestCase
 {
     /**

@@ -4,12 +4,14 @@ declare(strict_types=1);
 
 namespace Spipu\ConfigurationBundle\Tests\Unit\Field;
 
+use PHPUnit\Framework\Attributes\CoversNothing;
 use PHPUnit\Framework\TestCase;
 use Spipu\ConfigurationBundle\Entity\Definition;
 use Spipu\ConfigurationBundle\Exception\ConfigurationException;
 use Spipu\UiBundle\Entity\Form\Field;
 
-abstract class AbstractFieldTest extends TestCase
+#[CoversNothing]
+abstract class AbstractFieldTestCase extends TestCase
 {
     abstract protected function getCode(): string;
 
