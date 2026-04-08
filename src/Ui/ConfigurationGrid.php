@@ -90,7 +90,7 @@ class ConfigurationGrid implements GridDefinitionInterface
                     $this->editRouteParams + ['scopeCode' => $this->currentScope]
                 ))
                     ->setCssClass('success')
-                    ->setIcon('edit')
+                    ->setIcon('pen-to-square')
                     ->setNeededRole($this->showNeededRole)
             )
         ;
