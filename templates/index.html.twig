@@ -7,19 +7,19 @@
     <div class="col-12 col-md-6">
         <h1>{% block main_title %}{{ 'spipu.configuration.page.admin.list'|trans() }}{% endblock %}</h1>
     </div>
-    <div class="col-12 col-md-6">
-        {% if hasScopes %}
-            <div class="form-inline float-right pt-2">
-                <label for="scopeCode" class="mr-2">{{ 'spipu.configuration.scope.label'|trans }}</label>
-                <select class="form-control" id="scopeCode">
-                    <option value="">{{ 'spipu.configuration.scope.global'|trans }}</option>
-                    {% for scope in scopes %}
-                        <option value="{{ scope.code }}" {% if scope.code == currentScope %}selected="selected"{% endif %}>{{ scope.name }}</option>
-                    {% endfor %}
-                </select>
-            </div>
-        {% endif %}
-    </div>
+    {% if hasScopes %}
+        <div class="col-12 col-md-3 text-end">
+            <label for="scopeCode" class="me-2 mt-2">{{ 'spipu.configuration.scope.label'|trans }}</label>
+        </div>
+        <div class="col-12 col-md-3">
+            <select class="form-select" id="scopeCode">
+                <option value="">{{ 'spipu.configuration.scope.global'|trans }}</option>
+                {% for scope in scopes %}
+                    <option value="{{ scope.code }}" {% if scope.code == currentScope %}selected="selected"{% endif %}>{{ scope.name }}</option>
+                {% endfor %}
+            </select>
+        </div>
+    {% endif %}
 {% endblock %}
 
 {% block javascripts %}

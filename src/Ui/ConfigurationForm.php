@@ -75,7 +75,7 @@ class ConfigurationForm implements EntityDefinitionInterface
         $definition = $this->getFieldDefinition();
 
         $fieldSet = new FieldSet('configuration', $definition->getCode(), 10);
-        $fieldSet->setCssClass('col-xs-12 col-md-8 m-auto');
+        $fieldSet->setCssClass('col-12 col-md-8 m-auto');
 
         $position = 0;
         $this->prepareScopeField($fieldSet, $definition, 'default', ++$position);

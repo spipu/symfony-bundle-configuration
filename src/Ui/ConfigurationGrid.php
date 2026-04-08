@@ -56,7 +56,7 @@ class ConfigurationGrid implements GridDefinitionInterface
                             ->setTemplateField('@SpipuConfiguration/grid/field/code.html.twig')
                     )
                     ->setFilter((new Grid\ColumnFilter(true, true)))
-                    ->setOptions(['td-css-class' => 'pl-4 text-left w-25'])
+                    ->setOptions(['td-css-class' => 'ps-4 text-start w-25'])
             )
             ->addColumn(
                 (new Grid\Column('value', 'spipu.configuration.field.value', 'value', 20))
@@ -65,7 +65,7 @@ class ConfigurationGrid implements GridDefinitionInterface
                             ->setTemplateField('@SpipuConfiguration/grid/field/value.html.twig')
                     )
                     ->setFilter((new Grid\ColumnFilter(true)))
-                    ->setOptions(['td-css-class' => 'text-left w-50'])
+                    ->setOptions(['td-css-class' => 'text-start w-50'])
             )
             ->addColumn(
                 (new Grid\Column('type', 'spipu.configuration.field.type', 'type', 30))
